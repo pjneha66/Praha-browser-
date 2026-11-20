@@ -1474,7 +1474,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1490,7 +1490,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1528,7 +1528,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1544,7 +1544,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1553,7 +1553,7 @@ class CrashReporterTest {
 
             val crashIDs =
                 arrayOf(
-                    "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp"
+                    "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp"
                 )
 
             val result =
@@ -1587,7 +1587,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1603,7 +1603,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/1a64d53e-7d34-416a-9679-ffdc2c6e0ba8.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1619,7 +1619,7 @@ class CrashReporterTest {
                     stacktrace = "<native crash>",
                     throwableData = null,
                     minidumpPath =
-                        "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/4b8c7669-8bee-4785-b87d-5c58dbb27e8e.dmp",
+                        "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/4b8c7669-8bee-4785-b87d-5c58dbb27e8e.dmp",
                     processType = null,
                     processVisibility = null,
                     extrasPath = null,
@@ -1628,8 +1628,8 @@ class CrashReporterTest {
 
             val crashIDs =
                 arrayOf(
-                    "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
-                    "/data/data/org.mozilla.fenix.debug/files/mozilla/Crash Reports/pending/4b8c7669-8bee-4785-b87d-5c58dbb27e8e.dmp",
+                    "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/46c43391-3e08-4222-a334-80fe13e0433b.dmp",
+                    "/data/data/org.praha.praha.debug/files/mozilla/Crash Reports/pending/4b8c7669-8bee-4785-b87d-5c58dbb27e8e.dmp",
                 )
 
             val result =

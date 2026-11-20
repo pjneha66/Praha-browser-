@@ -1830,7 +1830,7 @@ class ContextMenuCandidateTest {
 
         doReturn(AppLinkRedirect(null, "", null, mock()))
             .`when`(getAppLinkRedirectMock)
-            .invoke(eq("intent:www.example.com#Intent;scheme=https;package=org.mozilla.fenix;end"))
+            .invoke(eq("intent:www.example.com#Intent;scheme=https;package=org.praha.praha;end"))
 
         doReturn(AppLinkRedirect(null, "", null, null))
             .`when`(getAppLinkRedirectMock)
@@ -1861,7 +1861,7 @@ class ContextMenuCandidateTest {
         assertTrue(
             openLinkInExternalApp.showFor(
                 tab,
-                HitResult.UNKNOWN("intent:www.example.com#Intent;scheme=https;package=org.mozilla.fenix;end"),
+                HitResult.UNKNOWN("intent:www.example.com#Intent;scheme=https;package=org.praha.praha;end"),
             )
         )
 
@@ -1909,7 +1909,7 @@ class ContextMenuCandidateTest {
 
         openLinkInExternalApp.action.invoke(
             tab,
-            HitResult.UNKNOWN("intent:www.example.com#Intent;scheme=https;package=org.mozilla.fenix;end"),
+            HitResult.UNKNOWN("intent:www.example.com#Intent;scheme=https;package=org.praha.praha;end"),
         )
 
         openLinkInExternalApp.action.invoke(
@@ -1929,7 +1929,7 @@ class ContextMenuCandidateTest {
             .invoke(eq("https://www.example.com"))
         doReturn(AppLinkRedirect(null, "", null, mock()))
             .`when`(getAppLinkRedirectMock)
-            .invoke(eq("intent:www.example.com#Intent;scheme=https;package=org.mozilla.fenix;end"))
+            .invoke(eq("intent:www.example.com#Intent;scheme=https;package=org.praha.praha;end"))
         val openAppLinkRedirectMock: AppLinksUseCases.OpenAppLinkRedirect = mock()
         val appLinksUseCasesMock: AppLinksUseCases = mock()
         doReturn(getAppLinkRedirectMock).`when`(appLinksUseCasesMock).appLinkRedirectIncludeInstall
@@ -1954,7 +1954,7 @@ class ContextMenuCandidateTest {
         assertFalse(
             openLinkInExternalApp.showFor(
                 tab,
-                HitResult.UNKNOWN("intent:www.example.com#Intent;scheme=https;package=org.mozilla.fenix;end"),
+                HitResult.UNKNOWN("intent:www.example.com#Intent;scheme=https;package=org.praha.praha;end"),
             )
         )
 

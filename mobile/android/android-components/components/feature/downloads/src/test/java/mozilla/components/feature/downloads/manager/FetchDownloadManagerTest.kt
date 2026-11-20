@@ -328,7 +328,7 @@ class FetchDownloadManagerTest {
         override val fileSizeFormatter: FileSizeFormatter = FakeFileSizeFormatter()
         override val downloadEstimator: DownloadEstimator = DownloadEstimator(FakeDateTimeProvider())
         override val downloadFileUtils: DownloadFileUtils = FakeDownloadFileUtils()
-        override val packageNameProvider = FakePackageNameProvider("org.mozilla.fenix.test")
+        override val packageNameProvider = FakePackageNameProvider("org.praha.praha.test")
         override val downloadFileWriter: DownloadFileWriter = FakeDownloadFileWriter()
     }
 }

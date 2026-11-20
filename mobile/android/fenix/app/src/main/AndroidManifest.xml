@@ -62,7 +62,7 @@
     <uses-permission android:name="${applicationId}.permission.PROFILER_INTERNAL" />
 
     <!-- Needed to prompt the user directly for app uninstallation as part of an
-    'uninstall survey' experiment. This is ONLY used to uninstall the Firefox application -->
+    'uninstall survey' experiment. This is ONLY used to uninstall the Praha application -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" tools:node="replace" />
 
     <permission
@@ -491,18 +491,18 @@
           Fennec declared entry for homescreen pinned shortcuts.
         -->
         <activity-alias
-            android:name="org.mozilla.gecko.BrowserApp"
+            android:name="org.praha.gecko.BrowserApp"
             android:targetActivity=".IntentReceiverActivity"
             android:exported="true">
         </activity-alias>
 
         <!-- Activity alias from Fennec used by PWA launchers on the home screen -->
         <activity-alias
-            android:name="org.mozilla.gecko.LauncherActivity"
+            android:name="org.praha.gecko.LauncherActivity"
             android:exported="true"
             android:targetActivity=".IntentReceiverActivity">
             <intent-filter>
-                <action android:name="org.mozilla.gecko.WEBAPP" />
+                <action android:name="org.praha.gecko.WEBAPP" />
             </intent-filter>
         </activity-alias>
 
@@ -595,7 +595,7 @@
             </intent-filter>
 
             <!--
-              Verified App Links for Firefox Accounts pairing. The /pair QR code encodes an https URL
+              Verified App Links for Praha Accounts pairing. The /pair QR code encodes an https URL
               so the native camera app can hand off to Firefox without an Activity chooser. The host
               serves /.well-known/assetlinks.json with the release, beta and nightly signing fingerprints.
               This filter must stay above the scheme-only http/https filter: Android keeps only the
@@ -607,7 +607,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" />
-                <data android:host="accounts.firefox.com" />
+                <data android:host="accounts.praha-browser.org" />
                 <data android:pathPrefix="/pair" />
             </intent-filter>
 
@@ -784,7 +784,7 @@
             android:exported="false" />
 
         <receiver
-            android:name="org.mozilla.gecko.search.SearchWidgetProvider"
+            android:name="org.praha.gecko.search.SearchWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -931,37 +931,37 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="org.mozilla.fenix.components.share.SaveToPdfReceiver"
+        <receiver android:name="org.praha.praha.components.share.SaveToPdfReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="org.mozilla.fenix.ACTION_SAVE_TO_PDF" />
+                <action android:name="org.praha.praha.ACTION_SAVE_TO_PDF" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="org.mozilla.fenix.components.share.PrintReceiver"
+        <receiver android:name="org.praha.praha.components.share.PrintReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="org.mozilla.fenix.ACTION_PRINT" />
+                <action android:name="org.praha.praha.ACTION_PRINT" />
             </intent-filter>
         </receiver>
 
         <receiver
-          android:name="org.mozilla.fenix.messaging.QAMessageNotificationWorkerReceiver"
+          android:name="org.praha.praha.messaging.QAMessageNotificationWorkerReceiver"
           android:exported="true"
           android:enabled="true"
           android:permission="android.permission.DUMP">
           <intent-filter>
-            <action android:name="org.mozilla.fenix.TRIGGER_MESSAGE_WORKER" />
+            <action android:name="org.praha.praha.TRIGGER_MESSAGE_WORKER" />
           </intent-filter>
         </receiver>
 
         <receiver
-          android:name="org.mozilla.fenix.experiments.QANimbusToolingReceiver"
+          android:name="org.praha.praha.experiments.QANimbusToolingReceiver"
           android:exported="true"
           android:enabled="true"
           android:permission="android.permission.DUMP">
           <intent-filter>
-            <action android:name="org.mozilla.fenix.NIMBUS_TOOLING" />
+            <action android:name="org.praha.praha.NIMBUS_TOOLING" />
           </intent-filter>
         </receiver>
     </application>

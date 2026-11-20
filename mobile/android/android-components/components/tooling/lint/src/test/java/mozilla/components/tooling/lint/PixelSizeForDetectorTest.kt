@@ -87,7 +87,7 @@ class PixelSizeForDetectorTest : LintDetectorTest() {
                 contextStub,
                 TestFiles.kotlin(
                         """
-                    package org.mozilla.fenix.foo
+                    package org.praha.praha.foo
                     import android.content.Context
 
                     class MyClass(private val context: Context) {
@@ -137,7 +137,7 @@ class PixelSizeForDetectorTest : LintDetectorTest() {
                 contextStub,
                 TestFiles.kotlin(
                         """
-                    package org.mozilla.fenix.foo
+                    package org.praha.praha.foo
                     import android.content.Context
 
                     class MyClass(private val context: Context) {
@@ -159,7 +159,7 @@ class PixelSizeForDetectorTest : LintDetectorTest() {
             .files(
                 TestFiles.kotlin(
                         """
-                    package org.mozilla.fenix.foo
+                    package org.praha.praha.foo
 
                     class NotResources {
                         fun getDimensionPixelSize(id: Int): Int = 0
@@ -184,7 +184,7 @@ class PixelSizeForDetectorTest : LintDetectorTest() {
                 contextStub,
                 TestFiles.java(
                         """
-                    package org.mozilla.fenix.foo;
+                    package org.praha.praha.foo;
                     import android.content.Context;
 
                     public class MyClass {

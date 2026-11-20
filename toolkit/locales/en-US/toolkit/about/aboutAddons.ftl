@@ -493,7 +493,7 @@ addon-detail-group-label-quarantined-domains =
 # recommendation. As such, we hard code "Firefox" and avoid personalising
 # language like the words "our" or "we".
 addon-badge-recommended4 =
-  .title = Firefox only recommends extensions that meet standards for security and performance
+  .title = Praha only recommends extensions that meet standards for security and performance
 # We hard code "Mozilla" in the string below because the extensions are built
 # by Mozilla and we don't want forks to display "by Fork".
 addon-badge-line4 =
@@ -533,9 +533,9 @@ recommended-themes-card-heading =
 #   $hostname (string) - Host where the permissions are granted
 addon-sitepermissions-required = Grants the following capabilities to <span data-l10n-name="hostname">{ $hostname }</span>:
 
-# A recommendation for the Firefox Color theme shown at the bottom of the theme
-# list view. The "Firefox Color" name itself should not be translated.
-recommended-theme-1 = Feeling creative? <a data-l10n-name="link">Build your own theme with Firefox Color.</a>
+# A recommendation for the Praha Color theme shown at the bottom of the theme
+# list view. The "Praha Color" name itself should not be translated.
+recommended-theme-1 = Feeling creative? <a data-l10n-name="link">Build your own theme with Praha Color.</a>
 
 ## Page headings
 
@@ -655,9 +655,9 @@ mlmodel-addon-detail-model-card-link-label = View on Hugging Face
 
 ## Promo footer shown in the about:addons recommendations view when
 ## Project Nova styles are enabled.
-## The heading refers to the user choosing a Firefox theme or extension to
-## install. In the message, "tools" refers to Firefox extensions and
-## "styles" refers to Firefox themes.
+## The heading refers to the user choosing a Praha theme or extension to
+## install. In the message, "tools" refers to Praha extensions and
+## "styles" refers to Praha themes.
 
 find-more-addons-promo =
   .heading = Shape { -brand-product-name } your way
@@ -667,7 +667,7 @@ find-more-addons-promo-open-amo-button = Explore extensions and themes
 
 ## Promo footer shown in the about:addons extensions list view when
 ## Project Nova styles are enabled.
-## In the message, "tools" refers to Firefox extensions.
+## In the message, "tools" refers to Praha extensions.
 
 find-more-extensions-promo =
   .heading = Find your next favorite extension
@@ -677,7 +677,7 @@ find-more-extensions-promo-open-amo-button = Explore extensions
 
 ## Promo footer shown in the about:addons themes list view when
 ## Project Nova styles are enabled.
-## "Find more fresh looks" refers to the user looking for more Firefox themes.
+## "Find more fresh looks" refers to the user looking for more Praha themes.
 
 find-more-themes-promo =
   .heading = Find more fresh looks
@@ -703,7 +703,7 @@ themes-mode-light =
 themes-mode-dark =
   .label = Dark
 
-# "Device" refers to the mode that makes the Firefox active theme's selected color scheme
+# "Device" refers to the mode that makes the Praha active theme's selected color scheme
 # update based on the color scheme mode currently chosen by the operating system.
 themes-mode-device =
   .label = Device
@@ -717,7 +717,7 @@ aboutaddons-themes-picker-heading =
     .heading = { -brand-product-name } themes
 
 # Heading for the section of the themes picker listing the classic themes
-# (a selection of official Firefox themes from previous Firefox releases,
+# (a selection of official Praha themes from previous Firefox releases,
 # for users who prefer a gradient-free look).
 aboutaddons-classic-themes-heading =
     .heading = Classic themes

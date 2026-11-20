@@ -12,7 +12,7 @@ import org.junit.Test
 
 class MaterialTypographyUsageRuleTest {
 
-    private val fenixConfig = TestConfig("appTypographyName" to "org.mozilla.fenix.theme.FirefoxTheme.typography")
+    private val fenixConfig = TestConfig("appTypographyName" to "org.praha.praha.theme.FirefoxTheme.typography")
 
     @Test
     fun `GIVEN no appTypographyName is configured WHEN MaterialTheme typography is accessed THEN it is flagged with a generic message`() {
@@ -37,7 +37,7 @@ class MaterialTypographyUsageRuleTest {
     fun `GIVEN appTypographyName is configured WHEN MaterialTheme typography is accessed THEN the message mentions the appTypographyName to use`() {
         val code =
             """
-            package org.mozilla.fenix.compose
+            package org.praha.praha.compose
             import androidx.compose.material3.MaterialTheme
             val typography = MaterialTheme.typography
             """
@@ -47,7 +47,7 @@ class MaterialTypographyUsageRuleTest {
 
         assertEquals(1, findings.size)
         assertEquals(
-            "Use org.mozilla.fenix.theme.FirefoxTheme.typography " + "instead of MaterialTheme.typography.",
+            "Use org.praha.praha.theme.FirefoxTheme.typography " + "instead of MaterialTheme.typography.",
             findings.first().message,
         )
     }
@@ -56,7 +56,7 @@ class MaterialTypographyUsageRuleTest {
     fun `WHEN MaterialTheme typography with a property is accessed THEN it is flagged`() {
         val code =
             """
-            package org.mozilla.fenix.compose
+            package org.praha.praha.compose
             import androidx.compose.material3.MaterialTheme
             val typography = MaterialTheme.typography.bodyLarge
             val color = MaterialTheme.colorScheme.primary
@@ -72,7 +72,7 @@ class MaterialTypographyUsageRuleTest {
     fun `WHEN the fully qualified MaterialTheme typography is accessed THEN it is flagged`() {
         val code =
             """
-            package org.mozilla.fenix.compose
+            package org.praha.praha.compose
             val typography = androidx.compose.material3.MaterialTheme.typography
             """
                 .trimIndent()
@@ -86,7 +86,7 @@ class MaterialTypographyUsageRuleTest {
     fun `WHEN MaterialTheme typography appears in an import directive THEN it is flagged`() {
         val code =
             """
-            package org.mozilla.fenix.compose
+            package org.praha.praha.compose
             import androidx.compose.material3.MaterialTheme.typography
             """
                 .trimIndent()
@@ -100,8 +100,8 @@ class MaterialTypographyUsageRuleTest {
     fun `GIVEN appTypographyName is configured WHEN the configured app typography is accessed THEN it is not flagged`() {
         val code =
             """
-            package org.mozilla.fenix.compose
-            import org.mozilla.fenix.theme.FirefoxTheme
+            package org.praha.praha.compose
+            import org.praha.praha.theme.FirefoxTheme
             val typography = FirefoxTheme.typography.body1
             """
                 .trimIndent()
@@ -115,7 +115,7 @@ class MaterialTypographyUsageRuleTest {
     fun `WHEN MaterialTheme typography is accessed multiple times THEN each usage is flagged`() {
         val code =
             """
-            package org.mozilla.fenix.compose
+            package org.praha.praha.compose
             import androidx.compose.material3.MaterialTheme
             val bodyLarge = MaterialTheme.typography.bodyLarge
             val titleLarge = MaterialTheme.typography.titleLarge

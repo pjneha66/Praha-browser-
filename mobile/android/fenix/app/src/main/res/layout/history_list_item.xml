@@ -37,7 +37,7 @@
         android:visibility="gone"
         tools:text="Header" />
 
-    <org.mozilla.fenix.library.LibrarySiteItemView
+    <org.praha.praha.library.LibrarySiteItemView
         android:id="@+id/history_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

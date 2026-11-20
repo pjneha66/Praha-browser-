@@ -48,7 +48,7 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
 
-        applicationId "org.mozilla"
+        applicationId "org.praha"
         minSdk config.minSdkVersion
         targetSdk config.targetSdkVersion
         versionCode 1
@@ -62,13 +62,13 @@ android {
         // Blank in debug builds so that tests are deterministic.
         buildConfigField "String", "VCS_HASH", "\"\""
         // This should be the "public" base URL of AMO.
-        buildConfigField "String", "AMO_BASE_URL", "\"https://addons.mozilla.org\""
+        buildConfigField "String", "buildConfigField "String", "AMO_BASE_URL", "\"https://addons.praha-browser.org\""
         buildConfigField "String", "AMO_COLLECTION_NAME", "\"Extensions-for-Android\""
-        buildConfigField "String", "AMO_COLLECTION_USER", "\"mozilla\""
+        buildConfigField "String", "buildConfigField "String", "AMO_COLLECTION_USER", "\"praha\"
         // This should be the base URL used to call the AMO API.
-        buildConfigField "String", "AMO_SERVER_URL", "\"https://services.addons.mozilla.org\""
+        buildConfigField "String", "buildConfigField "String", "AMO_SERVER_URL", "\"https://services.addons.praha-browser.org\""
 
-        def deepLinkSchemeValue = "fenix-dev"
+        def deepLinkSchemeValue = "praha-dev"
         buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
 
         manifestPlaceholders = [
@@ -118,7 +118,7 @@ android {
         nightly releaseTemplate >> {
             applicationIdSuffix ".fenix"
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
-            def deepLinkSchemeValue = "fenix-nightly"
+            def deepLinkSchemeValue = "praha-nightly"
             buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
             manifestPlaceholders.putAll([
                     "deepLinkScheme": deepLinkSchemeValue
@@ -126,35 +126,35 @@ android {
         }
         beta releaseTemplate >> {
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
-            applicationIdSuffix ".firefox_beta"
-            def deepLinkSchemeValue = "fenix-beta"
+            applicationIdSuffix ".praha_beta"
+            def deepLinkSchemeValue = "praha-beta"
             buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
             manifestPlaceholders.putAll([
-                    // This release type is meant to replace Firefox (Beta channel) and therefore needs to inherit
+                    // This release type is meant to replace Praha (Beta channel) and therefore needs to inherit
                     // its sharedUserId for all eternity. See:
                     // https://searchfox.org/mozilla-esr68/search?q=moz_android_shared_id&case=false&regexp=false&path=
                     // Shipping an app update without sharedUserId can have
                     // fatal consequences. For example see:
                     //  - https://issuetracker.google.com/issues/36924841
                     //  - https://issuetracker.google.com/issues/36905922
-                    "sharedUserId": "org.mozilla.firefox.sharedID",
+                    "sharedUserId": "org.praha.praha.sharedID",
                     "deepLinkScheme": deepLinkSchemeValue,
             ])
         }
         release releaseTemplate >> {
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
-            applicationIdSuffix ".firefox"
-            def deepLinkSchemeValue = "fenix"
+            applicationIdSuffix ".praha"
+            def deepLinkSchemeValue = "praha"
             buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
             manifestPlaceholders.putAll([
-                    // This release type is meant to replace Firefox (Release channel) and therefore needs to inherit
+                    // This release type is meant to replace Praha (Release channel) and therefore needs to inherit
                     // its sharedUserId for all eternity. See:
                     // https://searchfox.org/mozilla-esr68/search?q=moz_android_shared_id&case=false&regexp=false&path=
                     // Shipping an app update without sharedUserId can have
                     // fatal consequences. For example see:
                     //  - https://issuetracker.google.com/issues/36924841
                     //  - https://issuetracker.google.com/issues/36905922
-                    "sharedUserId": "org.mozilla.firefox.sharedID",
+                    "sharedUserId": "org.praha.praha.sharedID",
                     "deepLinkScheme": deepLinkSchemeValue,
             ])
         }
@@ -281,7 +281,7 @@ android {
         }
     }
 
-    namespace = 'org.mozilla.fenix'
+    namespace = 'org.praha.praha'
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -449,7 +449,7 @@ android.buildTypes.debug.with {
 ext {
     // Enable expiration by major version.
     gleanExpireByVersion = Config.majorVersion(project)
-    gleanNamespace = "mozilla.telemetry.glean"
+    gleanNamespace = "praha.telemetry.glean"
     gleanYamlFiles = GleanIndex.getGleanYamlFiles(project)
 }
 apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"

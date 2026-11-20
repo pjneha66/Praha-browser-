@@ -1033,7 +1033,7 @@ void nsRFPService::GetSpoofedUserAgent(nsACString& userAgent,
                               std::size(LEGACY_UA_GECKO_TRAIL) - 1 + 9 + 3 + 2;
   userAgent.SetCapacity(preallocatedLength);
 
-  // "Mozilla/5.0 (%s; rv:%d.0) Gecko/%d Firefox/%d.0"
+  // "Mozilla/5.0 (%s; rv:%d.0) Gecko/%d Praha/%d.0"
   userAgent.AssignLiteral("Mozilla/5.0 (");
   if (aAndroidDesktopMode) {
     userAgent.AppendLiteral(SPOOFED_UA_OS_OTHER);
@@ -1050,7 +1050,7 @@ void nsRFPService::GetSpoofedUserAgent(nsACString& userAgent,
 #else
   userAgent.AppendLiteral(LEGACY_UA_GECKO_TRAIL);
 #endif
-  userAgent.AppendLiteral(" Firefox/" MOZILLA_UAVERSION);
+  userAgent.AppendLiteral(" Praha/" MOZILLA_UAVERSION);
 
   MOZ_ASSERT(userAgent.Length() <= preallocatedLength);
 }
