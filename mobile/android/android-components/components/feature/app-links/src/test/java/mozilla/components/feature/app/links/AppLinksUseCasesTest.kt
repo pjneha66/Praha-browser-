@@ -61,8 +61,8 @@ class AppLinksUseCasesTest {
     private val urlWithAndroidFallbackLink = "https://mozilla.org/?afl=https://example.com"
     private val urlWithFallbackLink = "https://mozilla.org/?link=https://example.com"
     private val urlWithBrowserFallbackLink = "https://mozilla.org/?S.browser_fallback_url=https://example.com"
-    private val appIntentWithUnsafeScheme = "intent:foo#Intent;package=org.mozilla.fenix;scheme=file;end;"
-    private val appIntentWithUnsafeUpperScheme = "intent:foo#Intent;package=org.mozilla.fenix;scheme=FILE;end;"
+    private val appIntentWithUnsafeScheme = "intent:foo#Intent;package=org.praha.praha;scheme=file;end;"
+    private val appIntentWithUnsafeUpperScheme = "intent:foo#Intent;package=org.praha.praha;scheme=FILE;end;"
 
     @Before
     fun setup() {

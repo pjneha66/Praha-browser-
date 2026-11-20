@@ -154,7 +154,7 @@ internal class FillRequestHandlerTest {
         val credentials = generateRandomLoginFor("amazon.co.uk")
         createTestCase<LoginFillResponseBuilder>(
             filename = "fixtures/browser_fenix_amazon.co.uk.xml",
-            packageName = "org.mozilla.fenix",
+            packageName = "org.praha.praha",
             logins = mapOf(credentials),
             assertThat = { builder ->
                 assertNotNull(builder)

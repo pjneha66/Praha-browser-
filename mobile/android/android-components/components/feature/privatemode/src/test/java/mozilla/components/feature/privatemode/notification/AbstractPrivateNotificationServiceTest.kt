@@ -151,8 +151,8 @@ class AbstractPrivateNotificationServiceTest {
 
             val mockTaskCompoentClasses =
                 listOf(
-                    "org.mozilla.fenix.IntentReceiverActivity",
-                    "org.mozilla.fenix.customtabs.ExternalAppBrowserActivity",
+                    "org.praha.praha.IntentReceiverActivity",
+                    "org.praha.praha.customtabs.ExternalAppBrowserActivity",
                     "comp1",
                     "comp2",
                 )

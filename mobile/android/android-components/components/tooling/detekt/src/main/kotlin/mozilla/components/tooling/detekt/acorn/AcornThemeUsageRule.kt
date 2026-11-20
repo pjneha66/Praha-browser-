@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.psi.KtImportDirective
  *
  * [appThemeName] is an optional parameter provided to the detekt [config] that is used to specify the full import
  * namespace to use instead of the app-level theme wrapper when constructing the reported message (e.g.
- * org.mozilla.fenix.theme.FirefoxTheme).
+ * org.praha.praha.theme.FirefoxTheme).
  */
 class AcornThemeUsageRule(config: Config = Config.empty) : Rule(config) {
     override val issue: Issue

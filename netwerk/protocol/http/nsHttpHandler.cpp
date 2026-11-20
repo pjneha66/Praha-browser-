@@ -443,7 +443,7 @@ nsresult nsHttpHandler::Init() {
                                        gCallbackPrefs, this);
   PrefsChanged(nullptr);
 
-  mCompatFirefox.AssignLiteral("Firefox/" MOZILLA_UAVERSION);
+  mCompatPraha.AssignLiteral("Praha/" MOZILLA_UAVERSION);
 
   nsCOMPtr<nsIXULAppInfo> appInfo;
   appInfo = mozilla::components::XULRuntime::Service();
@@ -493,7 +493,7 @@ nsresult nsHttpHandler::Init() {
   LOG(("> product-sub = %s\n", mProductSub.get()));
   LOG(("> app-name = %s\n", mAppName.get()));
   LOG(("> app-version = %s\n", mAppVersion.get()));
-  LOG(("> compat-firefox = %s\n", mCompatFirefox.get()));
+  LOG(("> compat-praha = %s\n", mCompatPraha.get()));
   LOG(("> user-agent = %s\n", UserAgent(false).get()));
 #endif
 
@@ -1019,7 +1019,7 @@ void nsHttpHandler::BuildUserAgent() {
 #endif
                          mOscpu.Length() + mMisc.Length() + mProduct.Length() +
                          mProductSub.Length() + mAppName.Length() +
-                         mAppVersion.Length() + mCompatFirefox.Length() +
+                         mAppVersion.Length() + mCompatPraha.Length() +
                          mCompatDevice.Length() + mDeviceModelId.Length() + 13);
 
   // Application portion
@@ -1056,13 +1056,13 @@ void nsHttpHandler::BuildUserAgent() {
   mUserAgent += '/';
   mUserAgent += mProductSub;
 
-  bool isFirefox = mAppName.EqualsLiteral("Firefox");
-  if (isFirefox || mCompatFirefoxEnabled) {
-    // "Firefox/x.y" (compatibility) app token
+  bool isPraha = mAppName.EqualsLiteral("Praha");
+  if (isPraha || mCompatPrahaEnabled) {
+    // "Praha/x.y" (compatibility) app token
     mUserAgent += ' ';
-    mUserAgent += mCompatFirefox;
+    mUserAgent += mCompatPraha;
   }
-  if (!isFirefox) {
+  if (!isPraha) {
     // App portion
     mUserAgent += ' ';
     mUserAgent += mAppName;
@@ -1289,9 +1289,9 @@ void nsHttpHandler::PrefsChanged(const char* pref) {
 
   bool cVar = false;
 
-  if (PREF_CHANGED(UA_PREF("compatMode.firefox"))) {
-    rv = Preferences::GetBool(UA_PREF("compatMode.firefox"), &cVar);
-    mCompatFirefoxEnabled = (NS_SUCCEEDED(rv) && cVar);
+  if (PREF_CHANGED(UA_PREF("compatMode.praha"))) {
+    rv = Preferences::GetBool(UA_PREF("compatMode.praha"), &cVar);
+    mCompatPrahaEnabled = (NS_SUCCEEDED(rv) && cVar);
     mUserAgentIsDirty = true;
   }
 

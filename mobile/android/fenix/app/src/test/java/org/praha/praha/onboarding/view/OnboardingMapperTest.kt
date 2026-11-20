@@ -1,0 +1,172 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.praha.praha.onboarding.view
+
+import mozilla.components.ui.icons.R as iconsR
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.praha.praha.R
+import org.praha.praha.nimbus.MarketingCardVariant
+
+class OnboardingMapperTest {
+
+    @Test
+    fun `GIVEN a default browser page WHEN mapToOnboardingPageState is called THEN creates the expected OnboardingPageState`() {
+        val expected =
+            OnboardingPageState(
+                imageRes = R.drawable.ic_onboarding_welcome,
+                title = "default browser title",
+                description = "default browser body with link text",
+                primaryButton = Action("default browser primary button text", unitLambda),
+                secondaryButton = Action("default browser secondary button text", unitLambda),
+            )
+
+        val onboardingPageUiData =
+            OnboardingPageUiData(
+                type = OnboardingPageUiData.Type.DEFAULT_BROWSER,
+                imageRes = R.drawable.ic_onboarding_welcome,
+                title = "default browser title",
+                description = "default browser body with link text",
+                primaryButtonLabel = "default browser primary button text",
+                secondaryButtonLabel = "default browser secondary button text",
+            )
+        val actual =
+            mapToOnboardingPageState(
+                onboardingPageUiData = onboardingPageUiData,
+                onMakeFirefoxDefaultClick = unitLambda,
+                onMakeFirefoxDefaultSkipClick = unitLambda,
+                onSignInButtonClick = {},
+                onSignInSkipClick = {},
+                onSyncPairingScanClick = {},
+                onSyncPairingEmailClick = {},
+                onSyncPairingSkipClick = {},
+                onTermsOfServiceButtonClick = {},
+            )
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `GIVEN a sync page WHEN mapToOnboardingPageState is called THEN creates the expected OnboardingPageState`() {
+        val expected =
+            OnboardingPageState(
+                imageRes = R.drawable.ic_onboarding_sync,
+                title = "sync title",
+                description = "sync body",
+                primaryButton = Action("sync primary button text", unitLambda),
+                secondaryButton = Action("sync secondary button text", unitLambda),
+            )
+
+        val onboardingPageUiData =
+            OnboardingPageUiData(
+                type = OnboardingPageUiData.Type.SYNC_SIGN_IN,
+                imageRes = R.drawable.ic_onboarding_sync,
+                title = "sync title",
+                description = "sync body",
+                primaryButtonLabel = "sync primary button text",
+                secondaryButtonLabel = "sync secondary button text",
+            )
+        val actual =
+            mapToOnboardingPageState(
+                onboardingPageUiData = onboardingPageUiData,
+                onMakeFirefoxDefaultClick = {},
+                onMakeFirefoxDefaultSkipClick = {},
+                onSignInButtonClick = unitLambda,
+                onSignInSkipClick = unitLambda,
+                onSyncPairingScanClick = {},
+                onSyncPairingEmailClick = {},
+                onSyncPairingSkipClick = {},
+                onTermsOfServiceButtonClick = {},
+            )
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `GIVEN a sync pairing page WHEN mapToOnboardingPageState is called THEN creates the expected OnboardingPageState`() {
+        val onScanClick = { dummyUnitFunc() }
+        val onEmailClick = { dummyUnitFunc() }
+        val onSkipClick = { dummyUnitFunc() }
+        val expected =
+            OnboardingPageState(
+                imageRes = R.drawable.nova_onboarding_sync_qr,
+                title = "sync pairing title",
+                description = "sync pairing body",
+                primaryButton =
+                    Action(
+                        text = "sync pairing scan button text",
+                        onClick = onScanClick,
+                        leadingIconRes = iconsR.drawable.mozac_ic_qr_code_24,
+                    ),
+                secondaryButton = Action("sync pairing email button text", onEmailClick),
+                onSkipClick = onSkipClick,
+            )
+
+        val actual =
+            mapToOnboardingPageState(
+                onboardingPageUiData = syncPairingPageUiData,
+                onMakeFirefoxDefaultClick = {},
+                onMakeFirefoxDefaultSkipClick = {},
+                onSignInButtonClick = {},
+                onSignInSkipClick = {},
+                onSyncPairingScanClick = onScanClick,
+                onSyncPairingEmailClick = onEmailClick,
+                onSyncPairingSkipClick = onSkipClick,
+                onTermsOfServiceButtonClick = {},
+            )
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `GIVEN a marketing data collection opt out page WHEN mapToOnboardingPageState is called THEN creates the expected OnboardingPageState`() {
+        val marketingData =
+            OnboardingMarketingData(
+                marketingCardVariant = MarketingCardVariant.DEFAULT,
+                bodyOneText = "marketing data body one",
+                bodyOneLinkText = "marketing data body one link",
+                bodyTwoText = "marketing data body two",
+            )
+
+        val expected =
+            OnboardingPageState(
+                imageRes = R.drawable.ic_high_five,
+                title = "marketing data title",
+                description = "marketing data body",
+                primaryButton = Action("marketing data button text", unitLambda),
+                marketingData = marketingData,
+            )
+
+        val onboardingPageUiData =
+            OnboardingPageUiData(
+                type = OnboardingPageUiData.Type.MARKETING_DATA,
+                imageRes = R.drawable.ic_high_five,
+                title = "marketing data title",
+                description = "marketing data body",
+                primaryButtonLabel = "marketing data button text",
+                marketingData = marketingData,
+            )
+
+        val actual =
+            mapToOnboardingPageState(
+                onboardingPageUiData = onboardingPageUiData,
+                onMakeFirefoxDefaultClick = {},
+                onMakeFirefoxDefaultSkipClick = {},
+                onSignInButtonClick = {},
+                onSignInSkipClick = {},
+                onSyncPairingScanClick = {},
+                onSyncPairingEmailClick = {},
+                onSyncPairingSkipClick = {},
+                onTermsOfServiceButtonClick = {},
+                onMarketingDataContinueClick = unitLambda,
+            )
+
+        assertEquals(expected, actual)
+    }
+}
+
+private val unitLambda = { dummyUnitFunc() }
+
+private fun dummyUnitFunc() {}

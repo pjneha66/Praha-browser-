@@ -1223,7 +1223,7 @@ def check_places_and_geckoview_history(places, geckoview_history):
 
 option(
     env="MOZ_TELEMETRY_REPORTING",
-    default=mozilla_official,
+    default=False,
     help="Enable telemetry reporting",
 )
 
@@ -1232,10 +1232,10 @@ set_define("MOZ_TELEMETRY_REPORTING", True, when="MOZ_TELEMETRY_REPORTING")
 
 @depends("MOZ_TELEMETRY_REPORTING", milestone.is_nightly)
 def telemetry_on_by_default(reporting, is_nightly):
-    return reporting and is_nightly
+return False
 
 
-set_define("MOZ_TELEMETRY_ON_BY_DEFAULT", True, when=telemetry_on_by_default)
+set_define("MOZ_TELEMETRY_ON_BY_DEFAULT", False)
 
 # Miscellaneous programs
 # ==============================================================
@@ -1260,7 +1260,7 @@ simple_keyfile("Adjust SDK")
 
 id_and_secret_keyfile("Leanplum SDK")
 
-simple_keyfile("Pocket API")
+# simple_keyfile("Pocket API")  # Removed: Praha does not include Pocket
 
 
 # WebRender Debugger integration

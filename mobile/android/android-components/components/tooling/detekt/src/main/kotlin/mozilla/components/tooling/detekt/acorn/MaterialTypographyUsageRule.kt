@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
  *
  * `appTypographyName` is an optional parameter provided to the detekt rule config that is used to specify the full
  * import namespace for where to access the `typography` properties from (e.g.
- * org.mozilla.fenix.theme.FirefoxTheme.typography).
+ * org.praha.praha.theme.FirefoxTheme.typography).
  */
 class MaterialTypographyUsageRule(config: Config = Config.empty) : Rule(config) {
     override val issue: Issue

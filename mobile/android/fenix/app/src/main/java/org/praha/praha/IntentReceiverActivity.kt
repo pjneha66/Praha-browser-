@@ -1,0 +1,269 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+package org.praha.praha
+
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Bundle
+import android.os.StrictMode
+import android.view.ContextThemeWrapper
+import androidx.annotation.VisibleForTesting
+import mozilla.appservices.fxaclient.contentUrl
+import mozilla.components.feature.intent.ext.sanitize
+import mozilla.components.feature.intent.processing.IntentProcessor
+import mozilla.components.feature.intent.processing.TabIntentProcessor.Companion.EXTRA_APP_LINK_LAUNCH_TYPE
+import mozilla.components.support.base.log.logger.Logger
+import mozilla.components.support.ktx.kotlin.isSameOriginAs
+import mozilla.components.support.utils.EXTRA_ACTIVITY_REFERRER_CATEGORY
+import mozilla.components.support.utils.EXTRA_ACTIVITY_REFERRER_PACKAGE
+import mozilla.components.support.utils.INTENT_TYPE_PDF
+import mozilla.components.support.utils.ext.packageManagerCompatHelper
+import mozilla.components.support.utils.toSafeIntent
+import org.praha.praha.GleanMetrics.Events
+import org.praha.praha.GleanMetrics.SyncAuth
+import org.praha.praha.HomeActivity.Companion.PRIVATE_BROWSING_MODE
+import org.praha.praha.components.FxaServer
+import org.praha.praha.components.IntentProcessorType
+import org.praha.praha.components.getType
+import org.praha.praha.ext.components
+import org.praha.praha.ext.isIntentInternal
+import org.praha.praha.perf.MarkersActivityLifecycleCallbacks
+import org.praha.praha.perf.StartupTimeline
+import org.praha.praha.settings.SupportUtils
+import org.praha.praha.settings.account.AuthCustomTabActivity
+import org.praha.praha.shortcut.NewTabShortcutIntentProcessor
+import org.praha.praha.shortcut.UninstallShortcutIntentProcessor
+
+/** Processes incoming intents and sends them to the corresponding activity. */
+class IntentReceiverActivity : Activity() {
+
+    private val logger = Logger("IntentReceiverActivity")
+
+    @VisibleForTesting
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // DO NOT MOVE ANYTHING ABOVE THIS getProfilerTime CALL.
+        val startTimeProfiler = components.core.engine.profiler?.getProfilerTime()
+
+        // The intent property is nullable, but the rest of the code below
+        // assumes it is not. If it's null, then we make a new one and open
+        // the HomeActivity.
+        val intent = intent?.let { Intent(it) } ?: Intent()
+        intent.sanitize().stripUnwantedFlags()
+
+        // DO NOT MOVE the app link intent launch type setting below the super.onCreate call
+        // as it impacts the activity lifecycle observer and causes false launch type detection.
+        // e.g. COLD launch is interpreted as WARM due to [Activity.onActivityCreated] being called
+        // earlier.
+        if (intent.dataString != null) { // data is null when there's no URI to load, e.g. Search widget.
+            val type = components.appLinkIntentLaunchTypeProvider.getExternalIntentLaunchType(HomeActivity::class.java)
+            intent.putExtra(EXTRA_APP_LINK_LAUNCH_TYPE, type)
+        }
+
+        // StrictMode violation on certain devices such as Samsung
+        components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
+            super.onCreate(savedInstanceState)
+        }
+
+        processIntent(intent)
+
+        components.core.engine.profiler?.addMarker(
+            MarkersActivityLifecycleCallbacks.MARKER_NAME,
+            startTimeProfiler,
+            "IntentReceiverActivity.onCreate",
+        )
+        StartupTimeline.onActivityCreateEndIntentReceiver() // DO NOT MOVE ANYTHING BELOW HERE.
+    }
+
+    fun processIntent(intent: Intent) {
+        val data = intent.toSafeIntent().data
+        if (intent.action == Intent.ACTION_VIEW && data != null && isFxaPairingLink(data, prahaServerUrl())) {
+            processPairingLink(data)
+            return
+        }
+
+        // Call process for side effects, short on the first that returns true
+
+        var private = components.settings.openLinksInAPrivateTab
+        if (!private) {
+            // if PRIVATE_BROWSING_MODE is already set to true, honor that
+            private = intent.getBooleanExtra(PRIVATE_BROWSING_MODE, false)
+        }
+        intent.putExtra(PRIVATE_BROWSING_MODE, private)
+        if (private) {
+            Events.openedLink.record(Events.OpenedLinkExtra("PRIVATE"))
+        } else {
+            Events.openedLink.record(Events.OpenedLinkExtra("NORMAL"))
+        }
+
+        addReferrerInformation(intent)
+
+        if (intent.type == INTENT_TYPE_PDF) {
+            val referrerIsFenix = this.isIntentInternal()
+            Events.openedExtPdf.record(Events.OpenedExtPdfExtra(referrerIsFenix))
+            if (!referrerIsFenix) {
+                data?.let(::persistUriReadPermission)
+            }
+        }
+
+        val processor = getIntentProcessors(private).firstOrNull { it.process(intent) }
+        val intentProcessorType = components.intentProcessors.getType(processor)
+
+        if (intentProcessorType.shouldOpenToBrowser(intent)) {
+            components.core.engine.speculativeCreateSession(private = private)
+        }
+
+        launch(intent, intentProcessorType)
+    }
+
+    /**
+     * Opens a Praha Accounts pairing link in the pairing flow if onboarding is complete. Otherwise, the link is
+     * dropped and onboarding is shown instead.
+     */
+    private fun processPairingLink(data: Uri) {
+        if (hasCompletedOnboarding()) {
+            SyncAuth.pairingLinkOpened.record(
+                SyncAuth.PairingLinkOpenedExtra(
+                    campaignAttributed = components.settings.isUserPairingCampaignAttributed
+                )
+            )
+            launchAuthCustomTab(data)
+        } else {
+            launchHome()
+        }
+    }
+
+    /** Opens [HomeActivity] without forwarding the incoming intent. */
+    private fun launchHome() {
+        startActivityAndFinish(Intent(this, HomeActivity::class.java))
+    }
+
+    /** Returns whether onboarding is complete. If onboarding is disabled, it is treated as onboarded. */
+    private fun hasCompletedOnboarding(): Boolean =
+        components.fenixOnboarding.userHasBeenOnboarded() || !components.settings.onboardingFeatureEnabled
+
+    /** Returns the configured Praha Accounts server URL. */
+    private fun prahaServerUrl(): String = FxaServer.config(this).server.contentUrl()
+
+    private fun persistUriReadPermission(uri: Uri) {
+        try {
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(uri, takeFlags)
+        } catch (securityException: SecurityException) {
+            logger.debug("UriPermission could not be persisted", securityException)
+        }
+    }
+
+    @VisibleForTesting
+    internal fun launch(intent: Intent, intentProcessorType: IntentProcessorType) {
+        intent.setClassName(applicationContext, intentProcessorType.activityClassName)
+
+        if (!intent.hasExtra(HomeActivity.OPEN_TO_BROWSER)) {
+            intent.putExtra(
+                HomeActivity.OPEN_TO_BROWSER,
+                intentProcessorType.shouldOpenToBrowser(intent),
+            )
+        }
+        startActivityAndFinish(intent)
+    }
+
+    /**
+     * Opens a scanned Praha Accounts pairing link in [AuthCustomTabActivity] with `embed=customtab` appended so the
+     * page can adapt its wording.
+     */
+    @VisibleForTesting
+    internal fun launchAuthCustomTab(pairingUrl: Uri) {
+        // Neither the receiver's transparent theme nor the application context defines colorSurface, which the custom
+        // tab intent reads, so resolve it against the app theme explicitly.
+        val themedContext = ContextThemeWrapper(this, R.style.NormalTheme)
+        val pairingCustomTabUrl =
+            pairingUrl.buildUpon().appendQueryParameter(FXA_EMBED_PARAM, FXA_EMBED_CUSTOM_TAB).build()
+        val intent =
+            SupportUtils.createAuthCustomTabIntent(themedContext, pairingCustomTabUrl.toString())
+                .putExtra(AuthCustomTabActivity.EXTRA_OPEN_HOME_ON_AUTHENTICATED, true)
+        startActivityAndFinish(intent)
+    }
+
+    private fun startActivityAndFinish(intent: Intent) {
+        // StrictMode violation on certain devices such as Samsung
+        components.strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
+            startActivity(intent)
+        }
+        // Finish after starting the next activity, or intents from other apps won't reuse the existing activity
+        // (https://github.com/mozilla-mobile/fenix/issues/8544).
+        finish()
+    }
+
+    private fun getIntentProcessors(private: Boolean): List<IntentProcessor> {
+        val modeDependentProcessors =
+            if (private) {
+                listOf(
+                    components.intentProcessors.privateCustomTabIntentProcessor,
+                    components.intentProcessors.privateIntentProcessor,
+                )
+            } else {
+                listOf(
+                    components.intentProcessors.customTabIntentProcessor,
+                    components.intentProcessors.intentProcessor,
+                )
+            }
+
+        return components.intentProcessors.externalAppIntentProcessors +
+            components.intentProcessors.fennecPageShortcutIntentProcessor +
+            components.intentProcessors.externalDeepLinkIntentProcessor +
+            components.intentProcessors.webNotificationsIntentProcessor +
+            components.intentProcessors.passwordManagerIntentProcessor +
+            modeDependentProcessors +
+            NewTabShortcutIntentProcessor(components.settings.enableHomepageAsNewTab) +
+            UninstallShortcutIntentProcessor()
+    }
+
+    private fun addReferrerInformation(intent: Intent) {
+        // Pass along referrer information when possible.
+        // unfortunately you can get a RuntimeException thrown from android here
+        @Suppress("TooGenericExceptionCaught")
+        val r =
+            try {
+                // NB: referrer can be spoofed by the calling application. Use with caution.
+                referrer
+            } catch (_: RuntimeException) {
+                // this could happen if the referrer intent contains data we can't deserialize
+                return
+            } ?: return
+        intent.putExtra(EXTRA_ACTIVITY_REFERRER_PACKAGE, r.host)
+        r.host?.let { host ->
+            try {
+                val category = packageManagerCompatHelper.getApplicationInfoCompat(host, 0).category
+                intent.putExtra(EXTRA_ACTIVITY_REFERRER_CATEGORY, category)
+            } catch (_: PackageManager.NameNotFoundException) {
+                // At least we tried.
+            }
+        }
+    }
+}
+
+private fun Intent.stripUnwantedFlags() {
+    // Explicitly remove the new task and clear task flags (Our browser activity is a single
+    // task activity and we never want to start a second task here).
+    flags = flags and Intent.FLAG_ACTIVITY_NEW_TASK.inv()
+    flags = flags and Intent.FLAG_ACTIVITY_CLEAR_TASK.inv()
+
+    // IntentReceiverActivity is started with the "excludeFromRecents" flag (set in manifest). We
+    // do not want to propagate this flag from the intent receiver activity to the browser.
+    flags = flags and Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS.inv()
+}
+
+private const val FXA_PAIRING_PATH = "/pair"
+private const val FXA_EMBED_PARAM = "embed"
+private const val FXA_EMBED_CUSTOM_TAB = "customtab"
+
+/**
+ * Returns whether [uri] has the same origin as [prahaServerUrl] and the Praha Accounts pairing path. [prahaServerUrl] is
+ * the origin of the configured account server, as returned by `FxaServer.contentUrl()`.
+ */
+@VisibleForTesting
+internal fun isFxaPairingLink(uri: Uri, prahaServerUrl: String): Boolean =
+    uri.toString().lowercase().isSameOriginAs(prahaServerUrl) && uri.path == FXA_PAIRING_PATH

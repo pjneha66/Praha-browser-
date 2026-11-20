@@ -218,7 +218,7 @@
 
     <fragment
         android:id="@+id/tabManagementFragment"
-        android:name="org.mozilla.fenix.tabstray.ui.TabManagementFragment">
+        android:name="org.praha.praha.tabstray.ui.TabManagementFragment">
         <argument
             android:name="enterMultiselect"
             android:defaultValue="false"
@@ -226,11 +226,11 @@
         <argument
             android:name="page"
             android:defaultValue="NormalTabs"
-            app:argType="org.mozilla.fenix.tabstray.redux.state.Page" />
+            app:argType="org.praha.praha.tabstray.redux.state.Page" />
         <argument
             android:name="accessPoint"
             android:defaultValue="None"
-            app:argType="org.mozilla.fenix.tabstray.ui.AccessPoint" />
+            app:argType="org.praha.praha.tabstray.ui.AccessPoint" />
         <argument
             android:name="groupId"
             android:defaultValue="@null"
@@ -243,25 +243,25 @@
 
     <dialog
         android:id="@+id/tabGroupFlowFragment"
-        android:name="org.mozilla.fenix.tabgroups.flow.TabGroupFlowFragment">
+        android:name="org.praha.praha.tabgroups.flow.TabGroupFlowFragment">
         <argument
             android:name="entryPoint"
-            app:argType="org.mozilla.fenix.tabgroups.flow.TabGroupFlowEntryPoint" />
+            app:argType="org.praha.praha.tabgroups.flow.TabGroupFlowEntryPoint" />
     </dialog>
 
     <fragment
         android:id="@+id/startupFragment"
-        android:name="org.mozilla.fenix.StartupFragment">
+        android:name="org.praha.praha.StartupFragment">
     </fragment>
 
     <fragment
         android:id="@+id/crashListFragment"
-        android:name="org.mozilla.fenix.crashes.CrashListFragment"
+        android:name="org.praha.praha.crashes.CrashListFragment"
         android:label="CrashListFragment" />
 
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="org.mozilla.fenix.onboarding.OnboardingFragment">
+        android:name="org.praha.praha.onboarding.OnboardingFragment">
         <action
             android:id="@+id/action_home"
             app:destination="@id/homeFragment"
@@ -271,7 +271,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="org.mozilla.fenix.home.HomeFragment"
+        android:name="org.praha.praha.home.HomeFragment"
         tools:layout="@layout/fragment_home">
         <argument
             android:name="sessionToDelete"
@@ -286,7 +286,7 @@
         <argument
             android:name="search_access_point"
             android:defaultValue="NONE"
-            app:argType="org.mozilla.fenix.components.metrics.MetricsUtils$Source" />
+            app:argType="org.praha.praha.components.metrics.MetricsUtils$Source" />
         <argument
             android:name="focusOnAddressBar"
             android:defaultValue="false"
@@ -318,7 +318,7 @@
 
     <fragment
         android:id="@+id/shortcutsFragment"
-        android:name="org.mozilla.fenix.home.topsites.ShortcutsFragment">
+        android:name="org.praha.praha.home.topsites.ShortcutsFragment">
         <action
             android:id="@+id/action_shortcutsFragment_to_browserFragment"
             app:destination="@id/browserFragment"
@@ -328,11 +328,11 @@
 
     <fragment
         android:id="@+id/storiesFragment"
-        android:name="org.mozilla.fenix.home.pocket.StoriesFragment" />
+        android:name="org.praha.praha.home.pocket.StoriesFragment" />
 
     <dialog
         android:id="@+id/researchSurfaceDialogFragment"
-        android:name="org.mozilla.fenix.experiments.ResearchSurfaceDialogFragment" >
+        android:name="org.praha.praha.experiments.ResearchSurfaceDialogFragment" >
         <argument
             android:name="KEY_MESSAGE_TEXT"
             app:nullable="true"
@@ -349,11 +349,11 @@
 
     <dialog
         android:id="@+id/wallpaperOnboardingDialogFragment"
-        android:name="org.mozilla.fenix.onboarding.WallpaperOnboardingDialogFragment" />
+        android:name="org.praha.praha.onboarding.WallpaperOnboardingDialogFragment" />
 
     <dialog
         android:id="@+id/microsurveyDialogFragment"
-        android:name="org.mozilla.fenix.microsurvey.ui.MicrosurveyBottomSheetFragment">
+        android:name="org.praha.praha.microsurvey.ui.MicrosurveyBottomSheetFragment">
         <argument
             android:name="microsurvey_id"
             app:argType="string"
@@ -362,7 +362,7 @@
 
     <dialog
       android:id="@+id/uninstallSurveyBottomSheetFragment"
-      android:name="org.mozilla.fenix.experiments.UninstallSurveyBottomSheetFragment">
+      android:name="org.praha.praha.experiments.UninstallSurveyBottomSheetFragment">
       <argument
         android:name="microsurvey_id"
         app:argType="string"
@@ -371,46 +371,46 @@
 
     <dialog
         android:id="@+id/termsOfUseDialogFragment"
-        android:name="org.mozilla.fenix.termsofuse.ui.TermsOfUseBottomSheetFragment">
+        android:name="org.praha.praha.termsofuse.ui.TermsOfUseBottomSheetFragment">
         <argument
             android:name="surface"
-            app:argType="org.mozilla.fenix.termsofuse.store.Surface"
+            app:argType="org.praha.praha.termsofuse.store.Surface"
             app:nullable="false" />
     </dialog>
 
     <dialog
         android:id="@+id/ipProtectionOnboardingDialogFragment"
-        android:name="org.mozilla.fenix.ipprotection.ui.IPProtectionBottomSheetFragment">
+        android:name="org.praha.praha.ipprotection.ui.IPProtectionBottomSheetFragment">
         <argument
             android:name="surface"
-            app:argType="org.mozilla.fenix.ipprotection.store.Surface"
+            app:argType="org.praha.praha.ipprotection.store.Surface"
             app:nullable="false" />
         <argument
             android:name="promptDetails"
-            app:argType="org.mozilla.fenix.ipprotection.store.IPProtectionPromptState$PromptDetails"
+            app:argType="org.praha.praha.ipprotection.store.IPProtectionPromptState$PromptDetails"
             app:nullable="false" />
     </dialog>
 
     <dialog
       android:id="@+id/ipProtectionUnavailableDialogFragment"
-      android:name="org.mozilla.fenix.ipprotection.ui.IPProtectionUnavailableDialogFragment" />
+      android:name="org.praha.praha.ipprotection.ui.IPProtectionUnavailableDialogFragment" />
 
     <fragment
         android:id="@+id/recentlyClosedFragment"
-        android:name="org.mozilla.fenix.library.recentlyclosed.RecentlyClosedFragment" />
+        android:name="org.praha.praha.library.recentlyclosed.RecentlyClosedFragment" />
 
     <fragment
         android:id="@+id/SitePermissionsManagePhoneFeature"
-        android:name="org.mozilla.fenix.settings.sitepermissions.SitePermissionsManagePhoneFeatureFragment"
+        android:name="org.praha.praha.settings.sitepermissions.SitePermissionsManagePhoneFeatureFragment"
         tools:layout="@layout/fragment_manage_site_permissions_feature_phone">
         <argument
             android:name="phoneFeature"
-            app:argType="org.mozilla.fenix.settings.PhoneFeature" />
+            app:argType="org.praha.praha.settings.PhoneFeature" />
     </fragment>
 
     <fragment
         android:id="@+id/browserFragment"
-        android:name="org.mozilla.fenix.browser.BrowserFragment"
+        android:name="org.praha.praha.browser.BrowserFragment"
         app:exitAnim="@anim/fade_out"
         tools:layout="@layout/fragment_browser">
         <argument
@@ -459,7 +459,7 @@
 
     <fragment
         android:id="@+id/externalAppBrowserFragment"
-        android:name="org.mozilla.fenix.customtabs.ExternalAppBrowserFragment"
+        android:name="org.praha.praha.customtabs.ExternalAppBrowserFragment"
         tools:layout="@layout/fragment_browser">
         <argument
             android:name="activeSessionId"
@@ -489,30 +489,30 @@
 
     <fragment
         android:id="@+id/historyFragment"
-        android:name="org.mozilla.fenix.library.history.HistoryFragment"
+        android:name="org.praha.praha.library.history.HistoryFragment"
         android:label="@string/library_history"
         tools:layout="@layout/fragment_history">
     </fragment>
 
     <fragment
         android:id="@+id/historyMetadataGroupFragment"
-        android:name="org.mozilla.fenix.library.historymetadata.HistoryMetadataGroupFragment">
+        android:name="org.praha.praha.library.historymetadata.HistoryMetadataGroupFragment">
         <argument
             android:name="title"
             app:argType="string" />
         <argument
             android:name="historyMetadataItems"
-            app:argType="org.mozilla.fenix.library.history.History[]" />
+            app:argType="org.praha.praha.library.history.History[]" />
     </fragment>
 
     <fragment
         android:id="@+id/downloadsFragment"
-        android:name="org.mozilla.fenix.downloads.listscreen.DownloadFragment"
+        android:name="org.praha.praha.downloads.listscreen.DownloadFragment"
         android:label="Downloads" />
 
     <fragment
         android:id="@+id/webCompatReporterFragment"
-        android:name="org.mozilla.fenix.webcompat.ui.WebCompatReporterFragment"
+        android:name="org.praha.praha.webcompat.ui.WebCompatReporterFragment"
         android:label="@string/webcompat_reporter_screen_title">
         <argument
             android:name="tabUrl"
@@ -521,7 +521,7 @@
 
     <fragment
         android:id="@+id/bookmarkFragment"
-        android:name="org.mozilla.fenix.bookmarks.BookmarkFragment">
+        android:name="org.praha.praha.bookmarks.BookmarkFragment">
         <argument
             android:name="currentRoot"
             app:argType="string" />
@@ -535,7 +535,7 @@
 
     <fragment
         android:id="@+id/bookmarkEditFragment"
-        android:name="org.mozilla.fenix.bookmarks.EditBookmarkFragment">
+        android:name="org.praha.praha.bookmarks.EditBookmarkFragment">
         <argument
             android:name="guidToEdit"
             app:argType="string"
@@ -548,12 +548,12 @@
 
     <fragment
         android:id="@+id/emailMasksSettingsFragment"
-        android:name="org.mozilla.fenix.settings.emailmasks.EmailMasksSettingsFragment"
+        android:name="org.praha.praha.settings.emailmasks.EmailMasksSettingsFragment"
         android:label="@string/preferences_email_masks" />
 
     <fragment
         android:id="@+id/savedLoginsAuthFragment"
-        android:name="org.mozilla.fenix.settings.logins.fragment.SavedLoginsAuthFragment"
+        android:name="org.praha.praha.settings.logins.fragment.SavedLoginsAuthFragment"
         android:label="@string/preferences_passwords_logins_and_passwords_2">
         <action
             android:id="@+id/action_savedLoginsAuthFragment_to_loginsListFragment"
@@ -587,7 +587,7 @@
 
     <fragment
         android:id="@+id/loginExceptionsFragment"
-        android:name="org.mozilla.fenix.exceptions.login.LoginExceptionsFragment"
+        android:name="org.praha.praha.exceptions.login.LoginExceptionsFragment"
         android:label="@string/preferences_passwords_exceptions"
         tools:layout="@layout/fragment_exceptions" />
 
@@ -599,7 +599,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="org.mozilla.fenix.settings.SettingsFragment"
+        android:name="org.praha.praha.settings.SettingsFragment"
         android:label="@string/settings_title">
         <argument
             android:name="preference_to_scroll_to"
@@ -871,19 +871,19 @@
     </fragment>
     <dialog
         android:id="@+id/profilerStartDialogFragment"
-        android:name="org.mozilla.fenix.perf.ProfilerStartDialogFragment">
+        android:name="org.praha.praha.perf.ProfilerStartDialogFragment">
     </dialog>
     <dialog
         android:id="@+id/profilerStopDialogFragment"
-        android:name="org.mozilla.fenix.perf.ProfilerStopDialogFragment">
+        android:name="org.praha.praha.perf.ProfilerStopDialogFragment">
     </dialog>
     <fragment
         android:id="@+id/settingsSearchFragment"
-        android:name="org.mozilla.fenix.settings.settingssearch.SettingsSearchFragment"
+        android:name="org.praha.praha.settings.settingssearch.SettingsSearchFragment"
         android:label="@string/settings_title" />
     <fragment
         android:id="@+id/tabsSettingsFragment"
-        android:name="org.mozilla.fenix.settings.TabsSettingsFragment"
+        android:name="org.praha.praha.settings.TabsSettingsFragment"
         android:label="@string/preferences_tabs" >
         <argument
             android:name="preference_to_scroll_to"
@@ -893,7 +893,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeSettingsFragment"
-        android:name="org.mozilla.fenix.settings.HomeSettingsFragment"
+        android:name="org.praha.praha.settings.HomeSettingsFragment"
         android:label="@string/preferences_home_2">
         <argument
             android:name="preference_to_scroll_to"
@@ -910,11 +910,11 @@
     </fragment>
     <fragment
         android:id="@+id/wallpaperSettingsFragment"
-        android:name="org.mozilla.fenix.settings.wallpaper.WallpaperSettingsFragment"
+        android:name="org.praha.praha.settings.wallpaper.WallpaperSettingsFragment"
         android:label="@string/customize_wallpapers"/>
     <fragment
         android:id="@+id/ipProtectionFragment"
-        android:name="org.mozilla.fenix.settings.IPProtectionFragment"
+        android:name="org.praha.praha.settings.IPProtectionFragment"
         android:label="@string/ip_protection_settings_title" >
         <argument
             android:name="start_auth_flow"
@@ -922,7 +922,7 @@
             app:argType="boolean" />
         <argument
             android:name="entrypoint"
-            app:argType="org.mozilla.fenix.components.accounts.FenixFxAEntryPoint" />
+            app:argType="org.praha.praha.components.accounts.FenixFxAEntryPoint" />
         <action
           android:id="@+id/action_ipProtectionFragment_to_ipProtectionLocationFragment"
           app:destination="@id/ipProtectionLocationsFragment"
@@ -933,12 +933,12 @@
     </fragment>
     <fragment
       android:id="@+id/ipProtectionLocationsFragment"
-      android:name="org.mozilla.fenix.settings.ipprotection.IPProtectionLocationsFragment"
+      android:name="org.praha.praha.settings.ipprotection.IPProtectionLocationsFragment"
       android:label="@string/ip_protection_locations_title" >
     </fragment>
     <fragment
         android:id="@+id/aiControlsFragment"
-        android:name="org.mozilla.fenix.settings.ai.AIControlsFragment"
+        android:name="org.praha.praha.settings.ai.AIControlsFragment"
         android:label="@string/preferences_ai_controls">
         <action
             android:id="@+id/action_aiControlsFragment_to_translationsSettingsFragment"
@@ -962,7 +962,7 @@
     </fragment>
     <fragment
         android:id="@+id/dataChoicesFragment"
-        android:name="org.mozilla.fenix.settings.datachoices.DataChoicesFragment"
+        android:name="org.praha.praha.settings.datachoices.DataChoicesFragment"
         android:label="@string/preferences_data_collection">
         <action
             android:id="@+id/action_dataChoicesFragment_to_studiesFragment"
@@ -980,11 +980,11 @@
     </fragment>
     <fragment
         android:id="@+id/studiesFragment"
-        android:name="org.mozilla.fenix.settings.studies.StudiesFragment"
+        android:name="org.praha.praha.settings.studies.StudiesFragment"
         android:label="@string/preference_experiments_2" />
     <fragment
         android:id="@+id/sitePermissionsFragment"
-        android:name="org.mozilla.fenix.settings.sitepermissions.SiteSettingsFragment"
+        android:name="org.praha.praha.settings.sitepermissions.SiteSettingsFragment"
         android:label="@string/preferences_site_settings">
         <argument
             android:name="preference_to_scroll_to"
@@ -1011,7 +1011,7 @@
 
     <fragment
         android:id="@+id/accessibilityFragment"
-        android:name="org.mozilla.fenix.settings.AccessibilityFragment"
+        android:name="org.praha.praha.settings.AccessibilityFragment"
         android:label="@string/preferences_accessibility" >
         <argument
             android:name="preference_to_scroll_to"
@@ -1022,7 +1022,7 @@
 
     <fragment
         android:id="@+id/accountSettingsFragment"
-        android:name="org.mozilla.fenix.settings.account.AccountSettingsFragment"
+        android:name="org.praha.praha.settings.account.AccountSettingsFragment"
         android:label="@string/preferences_account_settings">
         <argument
             android:name="preference_to_scroll_to"
@@ -1036,7 +1036,7 @@
 
     <fragment
         android:id="@+id/turnOnSyncFragment"
-        android:name="org.mozilla.fenix.settings.account.TurnOnSyncFragment"
+        android:name="org.praha.praha.settings.account.TurnOnSyncFragment"
         android:label="@string/preferences_sign_in"
         tools:layout="@layout/fragment_turn_on_sync">
         <action
@@ -1044,22 +1044,22 @@
             app:destination="@id/pairFragment" />
         <argument
             android:name="entrypoint"
-            app:argType="org.mozilla.fenix.components.accounts.FenixFxAEntryPoint" />
+            app:argType="org.praha.praha.components.accounts.FenixFxAEntryPoint" />
     </fragment>
 
     <fragment
         android:id="@+id/pairFragment"
-        android:name="org.mozilla.fenix.settings.PairFragment"
+        android:name="org.praha.praha.settings.PairFragment"
         android:label="@string/preferences_sign_in"
         tools:layout="@layout/fragment_pair" >
         <argument
             android:name="entrypoint"
-            app:argType="org.mozilla.fenix.components.accounts.FenixFxAEntryPoint" />
+            app:argType="org.praha.praha.components.accounts.FenixFxAEntryPoint" />
     </fragment>
 
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="org.mozilla.fenix.settings.about.AboutFragment"
+        android:name="org.praha.praha.settings.about.AboutFragment"
         tools:layout="@layout/fragment_about">
         <action
             android:id="@+id/action_aboutFragment_to_aboutLibrariesFragment"
@@ -1078,7 +1078,7 @@
     </fragment>
     <fragment
         android:id="@+id/secretSettingsPreference"
-        android:name="org.mozilla.fenix.settings.SecretSettingsFragment"
+        android:name="org.praha.praha.settings.SecretSettingsFragment"
         android:label="@string/preferences_debug_settings">
         <argument
             android:name="preference_to_scroll_to"
@@ -1113,26 +1113,26 @@
     </fragment>
     <dialog
         android:id="@+id/debugInfoBottomSheetFragment"
-        android:name="org.mozilla.fenix.debugsettings.info.DebugInfoBottomSheetFragment" />
+        android:name="org.praha.praha.debugsettings.info.DebugInfoBottomSheetFragment" />
     <fragment
         android:id="@+id/secretSettingsSearchFragment"
-        android:name="org.mozilla.fenix.settings.settingssearch.secretsettings.SecretSettingsSearchFragment"
+        android:name="org.praha.praha.settings.settingssearch.secretsettings.SecretSettingsSearchFragment"
         android:label="@string/settings_search_title" />
     <fragment
         android:id="@+id/remoteSettingsServerFragment"
-        android:name="org.mozilla.fenix.settings.RemoteSettingsServerFragment"
+        android:name="org.praha.praha.settings.RemoteSettingsServerFragment"
         android:label="@string/preferences_debug_settings_remote_settings_server_label" />
     <fragment
         android:id="@+id/searchOptimizationFragment"
-        android:name="org.mozilla.fenix.settings.SearchOptimizationFragment"
+        android:name="org.praha.praha.settings.SearchOptimizationFragment"
         android:label="@string/preferences_debug_settings_search_optimization" />
     <fragment
         android:id="@+id/aboutLibrariesFragment"
-        android:name="org.mozilla.fenix.settings.about.AboutLibrariesFragment"
+        android:name="org.praha.praha.settings.about.AboutLibrariesFragment"
         tools:layout="@layout/fragment_about_libraries" />
     <fragment
         android:id="@+id/customizationFragment"
-        android:name="org.mozilla.fenix.settings.CustomizationFragment"
+        android:name="org.praha.praha.settings.CustomizationFragment"
         android:label="@string/preferences_customize">
         <argument
             android:name="preference_to_scroll_to"
@@ -1156,7 +1156,7 @@
     </fragment>
     <fragment
         android:id="@+id/privateBrowsingFragment"
-        android:name="org.mozilla.fenix.settings.PrivateBrowsingFragment"
+        android:name="org.praha.praha.settings.PrivateBrowsingFragment"
         android:label="@string/preferences_private_browsing_options" >
         <argument
             android:name="preference_to_scroll_to"
@@ -1166,11 +1166,11 @@
     </fragment>
     <fragment
         android:id="@+id/httpsOnlyFragment"
-        android:name="org.mozilla.fenix.settings.HttpsOnlyFragment"
+        android:name="org.praha.praha.settings.HttpsOnlyFragment"
         android:label="@string/preferences_https_only_title" />
     <fragment
         android:id="@+id/trackingProtectionFragment"
-        android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
+        android:name="org.praha.praha.settings.TrackingProtectionFragment">
         <argument
             android:name="preference_to_scroll_to"
             android:defaultValue="@null"
@@ -1193,7 +1193,7 @@
     </fragment>
     <fragment
         android:id="@+id/openLinksInAppsFragment"
-        android:name="org.mozilla.fenix.settings.OpenLinksInAppsFragment" >
+        android:name="org.praha.praha.settings.OpenLinksInAppsFragment" >
         <argument
             android:name="preference_to_scroll_to"
             android:defaultValue="@null"
@@ -1202,7 +1202,7 @@
     </fragment>
     <fragment
         android:id="@+id/openDownloadsSettingsFragment"
-        android:name="org.mozilla.fenix.settings.downloads.DownloadsSettingsFragment">
+        android:name="org.praha.praha.settings.downloads.DownloadsSettingsFragment">
         <argument
             android:name="preference_to_scroll_to"
             android:defaultValue="@null"
@@ -1211,39 +1211,39 @@
     </fragment>
     <fragment
         android:id="@+id/firefoxLabsFragment"
-        android:name="org.mozilla.fenix.settings.labs.FirefoxLabsFragment" />
+        android:name="org.praha.praha.settings.labs.FirefoxLabsFragment" />
     <fragment
         android:id="@+id/linkSharingFragment"
-        android:name="org.mozilla.fenix.settings.LinkSharingFragment" />
+        android:name="org.praha.praha.settings.LinkSharingFragment" />
     <fragment
         android:id="@+id/remoteImprovementsFragment"
-        android:name="org.mozilla.fenix.settings.RemoteImprovementsFragment" />
+        android:name="org.praha.praha.settings.RemoteImprovementsFragment" />
     <fragment
         android:id="@+id/deleteBrowsingDataFragment"
-        android:name="org.mozilla.fenix.settings.deletebrowsingdata.DeleteBrowsingDataFragment"
+        android:name="org.praha.praha.settings.deletebrowsingdata.DeleteBrowsingDataFragment"
         android:label="@string/preferences_delete_browsing_data"
         tools:layout="@layout/fragment_delete_browsing_data" />
     <fragment
         android:id="@+id/trackingProtectionExceptionsFragment"
-        android:name="org.mozilla.fenix.exceptions.trackingprotection.TrackingProtectionExceptionsFragment"
+        android:name="org.praha.praha.exceptions.trackingprotection.TrackingProtectionExceptionsFragment"
         android:label="@string/preference_exceptions"
         tools:layout="@layout/fragment_exceptions" />
     <fragment
         android:id="@+id/syncDebugFragment"
-        android:name="org.mozilla.fenix.settings.SyncDebugFragment"
+        android:name="org.praha.praha.settings.SyncDebugFragment"
         android:label="@string/preferences_sync_debug" />
     <dialog
         android:id="@+id/createShortcutFragment"
-        android:name="org.mozilla.fenix.shortcut.CreateShortcutFragment"
+        android:name="org.praha.praha.shortcut.CreateShortcutFragment"
         tools:layout="@layout/fragment_create_shortcut" />
     <dialog
         android:id="@+id/createXiaomiShortcutFragment"
-        android:name="org.mozilla.fenix.shortcut.CreateXiaomiShortcutFragment"
+        android:name="org.praha.praha.shortcut.CreateXiaomiShortcutFragment"
         tools:layout="@layout/fragment_create_xiaomi_shortcut" />
 
     <dialog
         android:id="@+id/shareFragment"
-        android:name="org.mozilla.fenix.share.ShareFragment"
+        android:name="org.praha.praha.share.ShareFragment"
         tools:layout="@layout/fragment_share">
         <argument
             android:name="data"
@@ -1277,45 +1277,45 @@
     </dialog>
     <fragment
         android:id="@+id/accountProblemFragment"
-        android:name="org.mozilla.fenix.settings.account.AccountProblemFragment">
+        android:name="org.praha.praha.settings.account.AccountProblemFragment">
         <action
             android:id="@+id/action_accountProblemFragment_to_signOutFragment"
             app:destination="@id/signOutFragment" />
         <argument
             android:name="entrypoint"
-            app:argType="org.mozilla.fenix.components.accounts.FenixFxAEntryPoint" />
+            app:argType="org.praha.praha.components.accounts.FenixFxAEntryPoint" />
     </fragment>
     <dialog
         android:id="@+id/signOutFragment"
-        android:name="org.mozilla.fenix.settings.account.SignOutFragment"
+        android:name="org.praha.praha.settings.account.SignOutFragment"
         tools:layout="@layout/fragment_sign_out" />
     <fragment
         android:id="@+id/trackingProtectionBlockingFragment"
-        android:name="org.mozilla.fenix.trackingprotection.TrackingProtectionBlockingFragment"
+        android:name="org.praha.praha.trackingprotection.TrackingProtectionBlockingFragment"
         tools:layout="@layout/fragment_tracking_protection_blocking">
         <argument
             android:name="protectionMode"
-            app:argType="org.mozilla.fenix.trackingprotection.TrackingProtectionMode" />
+            app:argType="org.praha.praha.trackingprotection.TrackingProtectionMode" />
     </fragment>
     <fragment
         android:id="@+id/deleteBrowsingDataOnQuitFragment"
-        android:name="org.mozilla.fenix.settings.deletebrowsingdata.DeleteBrowsingDataOnQuitFragment" />
+        android:name="org.praha.praha.settings.deletebrowsingdata.DeleteBrowsingDataOnQuitFragment" />
 
     <fragment
         android:id="@+id/addNewDeviceFragment"
-        android:name="org.mozilla.fenix.share.AddNewDeviceFragment"
+        android:name="org.praha.praha.share.AddNewDeviceFragment"
         tools:layout="@layout/fragment_add_new_device" />
     <fragment
         android:id="@+id/localeSettingsFragment"
-        android:name="org.mozilla.fenix.settings.advanced.LocaleSettingsFragment"
+        android:name="org.praha.praha.settings.advanced.LocaleSettingsFragment"
         tools:layout="@layout/fragment_locale_settings" />
     <fragment
         android:id="@+id/saveLoginSettingFragment"
-        android:name="org.mozilla.fenix.settings.logins.fragment.SavedLoginsSettingFragment"
+        android:name="org.praha.praha.settings.logins.fragment.SavedLoginsSettingFragment"
         android:label="SaveLoginSettingFragment" />
     <fragment
         android:id="@+id/webExtensionActionPopupFragment"
-        android:name="org.mozilla.fenix.addons.WebExtensionActionPopupFragment"
+        android:name="org.praha.praha.addons.WebExtensionActionPopupFragment"
         tools:layout="@layout/fragment_add_on_internal_settings">
         <argument
             android:name="webExtensionId"
@@ -1327,7 +1327,7 @@
     </fragment>
     <dialog
         android:id="@+id/tabHistoryDialogFragment"
-        android:name="org.mozilla.fenix.tabhistory.TabHistoryDialogFragment"
+        android:name="org.praha.praha.tabhistory.TabHistoryDialogFragment"
         tools:layout="@layout/fragment_tab_history_dialog">
         <argument
             android:name="activeSessionId"
@@ -1336,10 +1336,10 @@
     </dialog>
     <fragment
         android:id="@+id/dohSettingsFragment"
-        android:name="org.mozilla.fenix.settings.doh.DohSettingsFragment" />
+        android:name="org.praha.praha.settings.doh.DohSettingsFragment" />
     <fragment
         android:id="@+id/addonDetailsFragment"
-        android:name="org.mozilla.fenix.addons.AddonDetailsFragment"
+        android:name="org.praha.praha.addons.AddonDetailsFragment"
         tools:layout="@layout/fragment_add_on_details">
         <argument
             android:name="addon"
@@ -1348,19 +1348,19 @@
 
     <fragment
         android:id="@+id/gleanDebugToolsFragment"
-        android:name="org.mozilla.fenix.debugsettings.gleandebugtools.GleanDebugToolsFragment" />
+        android:name="org.praha.praha.debugsettings.gleandebugtools.GleanDebugToolsFragment" />
 
     <fragment
         android:id="@+id/unlockPrivateTabsFragment"
-        android:name="org.mozilla.fenix.pbmlock.UnlockPrivateTabsFragment">
+        android:name="org.praha.praha.pbmlock.UnlockPrivateTabsFragment">
         <argument
             android:name="navigationOrigin"
-            app:argType="org.mozilla.fenix.pbmlock.NavigationOrigin" />
+            app:argType="org.praha.praha.pbmlock.NavigationOrigin" />
     </fragment>
 
     <fragment
         android:id="@+id/appIconSelectionFragment"
-        android:name="org.mozilla.fenix.iconpicker.ui.AppIconSelectionFragment" />
+        android:name="org.praha.praha.iconpicker.ui.AppIconSelectionFragment" />
 
     <navigation
         android:id="@+id/site_permissions_exceptions_graph"
@@ -1368,7 +1368,7 @@
 
         <fragment
             android:id="@+id/sitePermissionsExceptionsFragment"
-            android:name="org.mozilla.fenix.settings.sitepermissions.SitePermissionsExceptionsFragment"
+            android:name="org.praha.praha.settings.sitepermissions.SitePermissionsExceptionsFragment"
             android:label="@string/preference_exceptions"
             tools:layout="@layout/fragment_site_permissions_exceptions">
             <action
@@ -1379,11 +1379,11 @@
 
         <fragment
             android:id="@+id/sitePermissionsManageExceptionsPhoneFeatureFragment"
-            android:name="org.mozilla.fenix.settings.sitepermissions.SitePermissionsManageExceptionsPhoneFeatureFragment"
+            android:name="org.praha.praha.settings.sitepermissions.SitePermissionsManageExceptionsPhoneFeatureFragment"
             tools:layout="@layout/fragment_manage_site_permissions_feature_phone">
             <argument
                 android:name="phoneFeature"
-                app:argType="org.mozilla.fenix.settings.PhoneFeature" />
+                app:argType="org.praha.praha.settings.PhoneFeature" />
             <argument
                 android:name="sitePermissions"
                 app:argType="mozilla.components.concept.engine.permission.SitePermissions" />
@@ -1391,7 +1391,7 @@
 
         <fragment
             android:id="@+id/sitePermissionsDetailsExceptionsFragment"
-            android:name="org.mozilla.fenix.settings.sitepermissions.SitePermissionsDetailsExceptionsFragment">
+            android:name="org.praha.praha.settings.sitepermissions.SitePermissionsDetailsExceptionsFragment">
             <action
                 android:id="@+id/action_site_permissions_to_exceptions_to_manage_phone_feature"
                 app:destination="@id/sitePermissionsManageExceptionsPhoneFeatureFragment"
@@ -1404,7 +1404,7 @@
 
     <fragment
         android:id="@+id/installedAddonDetailsFragment"
-        android:name="org.mozilla.fenix.addons.InstalledAddonDetailsFragment"
+        android:name="org.praha.praha.addons.InstalledAddonDetailsFragment"
         tools:layout="@layout/fragment_installed_add_on_details">
         <action
             android:id="@+id/action_installedAddonFragment_to_addonInternalSettingsFragment"
@@ -1421,7 +1421,7 @@
     </fragment>
     <fragment
         android:id="@+id/notYetSupportedAddonFragment"
-        android:name="org.mozilla.fenix.addons.NotYetSupportedAddonFragment"
+        android:name="org.praha.praha.addons.NotYetSupportedAddonFragment"
         tools:layout="@layout/fragment_not_yet_supported_addons">
         <argument
             android:name="addons"
@@ -1429,14 +1429,14 @@
     </fragment>
     <fragment
         android:id="@+id/addonPermissionsDetailFragment"
-        android:name="org.mozilla.fenix.addons.AddonPermissionsDetailsFragment">
+        android:name="org.praha.praha.addons.AddonPermissionsDetailsFragment">
         <argument
             android:name="addon"
             app:argType="mozilla.components.feature.addons.Addon" />
     </fragment>
     <fragment
         android:id="@+id/addonInternalSettingsFragment"
-        android:name="org.mozilla.fenix.addons.AddonInternalSettingsFragment"
+        android:name="org.praha.praha.addons.AddonInternalSettingsFragment"
         tools:layout="@layout/fragment_add_on_internal_settings">
         <argument
             android:name="optionsPageUrl"
@@ -1453,7 +1453,7 @@
 
     <dialog
         android:id="@+id/downloadAddonDialogFragment"
-        android:name="org.mozilla.fenix.addons.DownloadAddonDialogFragment">
+        android:name="org.praha.praha.addons.DownloadAddonDialogFragment">
         <argument
             android:name="addonDownloadUrl"
             app:argType="string"
@@ -1477,7 +1477,7 @@
         app:startDestination="@id/addonsManagementFragment">
         <fragment
             android:id="@+id/addonsManagementFragment"
-            android:name="org.mozilla.fenix.addons.AddonsManagementFragment"
+            android:name="org.praha.praha.addons.AddonsManagementFragment"
             tools:layout="@layout/fragment_add_ons_management">
             <action
                 android:id="@+id/action_addonsManagementFragment_to_addonDetailsFragment"
@@ -1501,7 +1501,7 @@
         app:startDestination="@id/searchEngineFragment">
         <fragment
             android:id="@+id/searchEngineFragment"
-            android:name="org.mozilla.fenix.settings.search.SearchEngineFragment"
+            android:name="org.praha.praha.settings.search.SearchEngineFragment"
             android:label="@string/preferences_search">
             <argument
                 android:name="preference_to_scroll_to"
@@ -1517,21 +1517,21 @@
         </fragment>
         <fragment
             android:id="@+id/defaultEngineFragment"
-            android:name="org.mozilla.fenix.settings.search.DefaultSearchEngineFragment">
+            android:name="org.praha.praha.settings.search.DefaultSearchEngineFragment">
             <action
                 android:id="@+id/action_defaultEngineFragment_to_saveSearchEngineFragment"
                 app:destination="@+id/saveSearchEngineFragment" />
         </fragment>
         <fragment
             android:id="@+id/searchShortcutsFragment"
-            android:name="org.mozilla.fenix.settings.search.SearchShortcutsFragment">
+            android:name="org.praha.praha.settings.search.SearchShortcutsFragment">
             <action
                 android:id="@+id/action_searchShortcutsFragment_to_saveSearchEngineFragment"
                 app:destination="@+id/saveSearchEngineFragment" />
         </fragment>
         <fragment
             android:id="@+id/saveSearchEngineFragment"
-            android:name="org.mozilla.fenix.settings.search.SaveSearchEngineFragment">
+            android:name="org.praha.praha.settings.search.SaveSearchEngineFragment">
             <argument
                 android:name="searchEngineIdentifier"
                 app:argType="string"
@@ -1544,7 +1544,7 @@
         app:startDestination="@id/nimbusExperimentsFragment">
         <fragment
             android:id="@+id/nimbusExperimentsFragment"
-            android:name="org.mozilla.fenix.nimbus.NimbusExperimentsFragment"
+            android:name="org.praha.praha.nimbus.NimbusExperimentsFragment"
             android:label="@string/preferences_nimbus_experiments"
             tools:layout="@layout/mozac_service_nimbus_experiments">
             <action
@@ -1553,7 +1553,7 @@
         </fragment>
         <fragment
             android:id="@+id/nimbusBranchesFragment"
-            android:name="org.mozilla.fenix.nimbus.NimbusBranchesFragment"
+            android:name="org.praha.praha.nimbus.NimbusBranchesFragment"
             tools:layout="@layout/mozac_service_nimbus_experiment_details">
             <argument
                 android:name="experimentId"
@@ -1577,7 +1577,7 @@
         app:startDestination="@id/autofillSettingFragment">
         <fragment
             android:id="@+id/autofillSettingFragment"
-            android:name="org.mozilla.fenix.settings.autofill.AutofillSettingFragment"
+            android:name="org.praha.praha.settings.autofill.AutofillSettingFragment"
             android:label="@string/preferences_credit_cards_2">
             <action
                 android:id="@+id/action_autofillSettingFragment_to_creditCardEditorFragment"
@@ -1610,7 +1610,7 @@
         </fragment>
         <fragment
             android:id="@+id/creditCardEditorFragment"
-            android:name="org.mozilla.fenix.settings.creditcards.CreditCardEditorFragment"
+            android:name="org.praha.praha.settings.creditcards.CreditCardEditorFragment"
             android:label="@string/credit_cards_add_card">
             <argument
                 android:name="creditCard"
@@ -1620,7 +1620,7 @@
         </fragment>
         <fragment
             android:id="@+id/creditCardsManagementFragment"
-            android:name="org.mozilla.fenix.settings.creditcards.CreditCardsManagementFragment"
+            android:name="org.praha.praha.settings.creditcards.CreditCardsManagementFragment"
             android:label="@string/credit_cards_saved_cards">
             <action
                 android:id="@+id/action_creditCardsManagementFragment_to_creditCardEditorFragment"
@@ -1632,7 +1632,7 @@
         </fragment>
         <fragment
             android:id="@+id/addressEditorFragment"
-            android:name="org.mozilla.fenix.settings.address.AddressEditorFragment">
+            android:name="org.praha.praha.settings.address.AddressEditorFragment">
             <argument
                 android:name="address"
                 android:defaultValue="@null"
@@ -1641,7 +1641,7 @@
         </fragment>
         <fragment
             android:id="@+id/addressManagementFragment"
-            android:name="org.mozilla.fenix.settings.address.AddressManagementFragment"
+            android:name="org.praha.praha.settings.address.AddressManagementFragment"
             android:label="@string/addresses_manage_addresses">
             <action
                 android:id="@+id/action_addressManagementFragment_to_addressEditorFragment"
@@ -1653,7 +1653,7 @@
         app:startDestination="@id/savedLoginsFragment">
         <fragment
             android:id="@+id/savedLoginsFragment"
-            android:name="org.mozilla.fenix.settings.logins.fragment.SavedLoginsFragment">
+            android:name="org.praha.praha.settings.logins.fragment.SavedLoginsFragment">
             <action
                 android:id="@+id/action_savedLoginsFragment_to_browserFragment"
                 app:destination="@id/browserFragment"
@@ -1664,7 +1664,7 @@
 
     <dialog
         android:id="@+id/translationsDialogFragment"
-        android:name="org.mozilla.fenix.translations.TranslationsDialogFragment">
+        android:name="org.praha.praha.translations.TranslationsDialogFragment">
         <argument
             android:name="sessionId"
             android:defaultValue="@null"
@@ -1673,7 +1673,7 @@
         <argument
             android:name="translationsDialogAccessPoint"
             android:defaultValue="Translations"
-            app:argType="org.mozilla.fenix.translations.TranslationsDialogAccessPoint" />
+            app:argType="org.praha.praha.translations.TranslationsDialogAccessPoint" />
         <action
             android:id="@+id/action_translationsDialogFragment_to_translationSettingsFragment"
             app:destination="@id/translations_settings_graph" />
@@ -1681,7 +1681,7 @@
 
     <dialog
         android:id="@+id/summarizationFragment"
-        android:name="org.mozilla.fenix.summarization.SummarizationFragment">
+        android:name="org.praha.praha.summarization.SummarizationFragment">
         <argument
             android:name="sessionId"
             android:defaultValue="@null"
@@ -1699,14 +1699,14 @@
 
     <fragment
         android:id="@+id/pageSummariesSettingsFragment"
-        android:name="org.mozilla.fenix.settings.pagesummaries.PageSummariesSettingsFragment" />
+        android:name="org.praha.praha.settings.pagesummaries.PageSummariesSettingsFragment" />
 
     <navigation
         android:id="@+id/translations_settings_graph"
         app:startDestination="@id/translationSettingsFragment">
         <fragment
             android:id="@+id/translationSettingsFragment"
-            android:name="org.mozilla.fenix.translations.settings.TranslationSettingsFragment">
+            android:name="org.praha.praha.translations.settings.TranslationSettingsFragment">
             <action
                 android:id="@+id/action_translationSettingsFragment_to_translationsDialogFragment"
                 app:destination="@id/translationsDialogFragment"
@@ -1724,14 +1724,14 @@
         </fragment>
         <fragment
             android:id="@+id/automaticTranslationPreferenceFragment"
-            android:name="org.mozilla.fenix.translations.preferences.automatic.AutomaticTranslationPreferenceFragment">
+            android:name="org.praha.praha.translations.preferences.automatic.AutomaticTranslationPreferenceFragment">
             <action
                 android:id="@+id/action_automaticTranslationPreference_to_automaticTranslationOptionsPreference"
                 app:destination="@id/automaticTranslationOptionsPreferenceFragment" />
         </fragment>
         <fragment
             android:id="@+id/automaticTranslationOptionsPreferenceFragment"
-            android:name="org.mozilla.fenix.translations.preferences.automatic.AutomaticTranslationOptionsPreferenceFragment">
+            android:name="org.praha.praha.translations.preferences.automatic.AutomaticTranslationOptionsPreferenceFragment">
             <argument
                 android:name="selectedLanguageCode"
                 app:argType="string" />
@@ -1742,34 +1742,34 @@
         </fragment>
         <fragment
             android:id="@+id/neverTranslateSitePreferenceFragment"
-            android:name="org.mozilla.fenix.translations.preferences.nevertranslatesite.NeverTranslateSitesPreferenceFragment">
+            android:name="org.praha.praha.translations.preferences.nevertranslatesite.NeverTranslateSitesPreferenceFragment">
             <action
                 android:id="@+id/action_neverTranslateSitePreference_to_neverTranslateSiteDialogPreference"
                 app:destination="@id/neverTranslateSiteDialogPreferenceFragment" />
         </fragment>
         <dialog
             android:id="@+id/neverTranslateSiteDialogPreferenceFragment"
-            android:name="org.mozilla.fenix.translations.preferences.nevertranslatesite.NeverTranslateSiteDialogPreferenceFragment">
+            android:name="org.praha.praha.translations.preferences.nevertranslatesite.NeverTranslateSiteDialogPreferenceFragment">
             <argument
                 android:name="neverTranslateSiteUrl"
                 app:argType="string" />
         </dialog>
         <fragment
             android:id="@+id/downloadLanguagesPreferenceFragment"
-            android:name="org.mozilla.fenix.translations.preferences.downloadlanguages.DownloadLanguagesPreferenceFragment">
+            android:name="org.praha.praha.translations.preferences.downloadlanguages.DownloadLanguagesPreferenceFragment">
             <action
                 android:id="@+id/action_downloadLanguagesPreference_to_downloadLanguagesDialogPreference"
                 app:destination="@id/downloadLanguagesDialogPreferenceFragment" />
         </fragment>
         <dialog
             android:id="@+id/downloadLanguagesDialogPreferenceFragment"
-            android:name="org.mozilla.fenix.translations.preferences.downloadlanguages.LanguageDialogPreferenceFragment">
+            android:name="org.praha.praha.translations.preferences.downloadlanguages.LanguageDialogPreferenceFragment">
             <argument
                 android:name="modelState"
                 app:argType="mozilla.components.concept.engine.translate.ModelState" />
             <argument
                 android:name="itemType"
-                app:argType="org.mozilla.fenix.translations.preferences.downloadlanguages.DownloadLanguageItemTypePreference" />
+                app:argType="org.praha.praha.translations.preferences.downloadlanguages.DownloadLanguageItemTypePreference" />
             <argument
                 android:name="languageCode"
                 app:nullable="true"
@@ -1789,7 +1789,7 @@
     app:startDestination="@id/menuFragment">
     <argument
       android:name="accessPoint"
-      app:argType="org.mozilla.fenix.components.menu.MenuAccessPoint" />
+      app:argType="org.praha.praha.components.menu.MenuAccessPoint" />
     <argument
       android:name="customTabSessionId"
       android:defaultValue="@null"
@@ -1802,10 +1802,10 @@
 
     <dialog
       android:id="@+id/menuFragment"
-      android:name="org.mozilla.fenix.components.menu.MenuFragment">
+      android:name="org.praha.praha.components.menu.MenuFragment">
       <argument
         android:name="accessPoint"
-        app:argType="org.mozilla.fenix.components.menu.MenuAccessPoint" />
+        app:argType="org.praha.praha.components.menu.MenuAccessPoint" />
       <argument
         android:name="customTabSessionId"
         android:defaultValue="@null"
@@ -1859,7 +1859,7 @@
 
         <fragment
             android:id="@+id/customizeMenuFragment"
-            android:name="org.mozilla.fenix.components.menu.compose.customize.CustomizeMenuFragment"
+            android:name="org.praha.praha.components.menu.compose.customize.CustomizeMenuFragment"
             android:label="@string/customize_menu">
             <action
                 android:id="@+id/action_customizeMenuFragment_to_menuFragment"
@@ -1871,7 +1871,7 @@
 
         <dialog
             android:id="@+id/resetToDefaultDialogFragment"
-            android:name="org.mozilla.fenix.components.menu.compose.customize.ResetToDefaultDialogFragment" />
+            android:name="org.praha.praha.components.menu.compose.customize.ResetToDefaultDialogFragment" />
     </navigation>
 
     <navigation
@@ -1908,7 +1908,7 @@
             app:argType="boolean" />
         <dialog
             android:id="@+id/trustPanelFragment"
-            android:name="org.mozilla.fenix.settings.trustpanel.TrustPanelFragment">
+            android:name="org.praha.praha.settings.trustpanel.TrustPanelFragment">
             <argument
                 android:name="sessionId"
                 app:argType="string" />
@@ -1946,7 +1946,7 @@
 
     <dialog
         android:id="@+id/global_protections_dashboard"
-        android:name="org.mozilla.fenix.trackingprotection.ProtectionsDashboardFragment">
+        android:name="org.praha.praha.trackingprotection.ProtectionsDashboardFragment">
         <argument
             android:name="customTabSessionId"
             app:argType="string"
