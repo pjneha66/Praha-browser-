@@ -4,7 +4,7 @@
 
 @media not ((prefers-contrast) and (prefers-color-scheme: light)) {
   #aboutDialogContainer {
-    background-color: #20123a;
+    background-color: #102b29;
     color: #fff;
     color-scheme: dark;
   }

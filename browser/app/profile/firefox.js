@@ -4006,3 +4006,7 @@ pref("distribution.mozillaonline.ignore", true);
 #ifdef XP_MACOSX
   pref("browser.macAppMenu.setAsDefaultShown", false);
 #endif
+
+#ifdef MOZ_PRAHA_BROWSER
+#include praha.js
+#endif

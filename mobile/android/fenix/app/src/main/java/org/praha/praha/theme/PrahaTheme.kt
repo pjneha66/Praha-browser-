@@ -8,6 +8,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.graphics.Color
 import mozilla.components.compose.base.theme.AcornColors
 import mozilla.components.compose.base.theme.AcornGradientScheme
 import mozilla.components.compose.base.theme.AcornTheme
@@ -29,7 +30,7 @@ import mozilla.components.compose.base.theme.privateAcornGradientScheme
 import mozilla.components.compose.base.theme.privateColorPalette
 
 /**
- * The theme for Mozilla Firefox for Android (Fenix).
+ * The Praha theme for Android.
  *
  * @param theme The current [Theme] that is displayed.
  * @param content The children composables to be laid out.
@@ -49,8 +50,8 @@ fun PrahaTheme(
 
     val colorScheme: ColorScheme =
         when (theme) {
-            Theme.Light -> acornLightColorScheme()
-            Theme.Dark -> acornDarkColorScheme()
+            Theme.Light -> acornLightColorScheme().copy(primary = Color(0xFF123E39), onPrimary = Color.White)
+            Theme.Dark -> acornDarkColorScheme().copy(primary = Color(0xFFADF3CE), onPrimary = Color(0xFF123E39))
             Theme.Oled -> acornOledColorScheme()
             Theme.Private -> acornPrivateColorScheme()
         }

@@ -518,6 +518,14 @@ export let ContentBlockingPrefs = {
 
   init() {
     this.setPrefExpectationsAndUpdate();
+    if (
+      Services.prefs.getBoolPref("browser.contentblocking.strictByDefault", false) &&
+      !Services.prefs.prefHasUserValue(this.PREF_CB_CATEGORY) &&
+      !Services.prefs.prefIsLocked(this.PREF_CB_CATEGORY) &&
+      this.prefsMatch("standard")
+    ) {
+      this.setPrefsToCategory("strict", false, false);
+    }
     this.matchCBCategory();
 
     for (let prefix of PREF_PREFIXES_TO_OBSERVE) {

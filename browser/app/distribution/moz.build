@@ -4,7 +4,15 @@
 
 DIST_SUBDIR = ""
 
-if CONFIG["BUILT_BY_MOZILLA"]:
+if CONFIG["BUILT_BY_MOZILLA"] and not CONFIG["MOZ_PRAHA_BROWSER"]:
     FINAL_TARGET_FILES.distribution += [
         "distribution.ini",
     ]
+
+if CONFIG["MOZ_PRAHA_BROWSER"]:
+    GeneratedFile(
+        "uBlock0@raymondhill.net.xpi",
+        script="ublock.py",
+        inputs=["ublock.xpi"],
+    )
+    FINAL_TARGET_FILES.distribution.extensions += ["!uBlock0@raymondhill.net.xpi"]

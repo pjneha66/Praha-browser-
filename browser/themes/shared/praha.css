@@ -1,0 +1,37 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@media not ((forced-colors) or (prefers-contrast)) {
+  #main-window:not([lwtheme], [privatebrowsingmode]) {
+    --toolbox-background-color: light-dark(#d8eee6, #102b29);
+    --toolbox-text-color: light-dark(#123e39, #e1f7ee);
+    --toolbar-background-color: light-dark(#f2f8f6, #192f2d);
+    --toolbar-text-color: light-dark(#123e39, #e1f7ee);
+    --tab-border-radius: var(--border-radius-medium);
+    --tab-text-color-selected: light-dark(#123e39, #e1f7ee);
+    --tab-background-color-selected: light-dark(#f2f8f6, #234641);
+  }
+}
+
+.popup-notification-description[popupid="addon-webext-permissions"] {
+  border-inline-start: var(--border-width) solid currentColor;
+  padding-inline-start: var(--space-medium);
+}
+
+#PanelUI-menu-button:not([badge-status]) {
+  list-style-image: url("chrome://browser/skin/praha-menu.svg");
+}
+
+#urlbar:not([breakout-extend]) {
+  --urlbar-background-border-radius: var(--border-radius-medium);
+}
+
+#contentAreaContextMenu {
+  --menuitem-border-radius: var(--border-radius-medium);
+}
+
+#appMenu-popup,
+#notification-popup {
+  --panel-border-radius: var(--border-radius-large);
+}

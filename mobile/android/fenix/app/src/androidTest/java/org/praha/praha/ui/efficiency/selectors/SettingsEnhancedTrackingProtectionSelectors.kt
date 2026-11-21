@@ -71,7 +71,7 @@ object SettingsEnhancedTrackingProtectionSelectors : SelectorContainer {
     val STANDARD_OPTION =
         Selector(
             strategy = SelectorStrategy.ESPRESSO_BY_TEXT,
-            value = getStringResource(R.string.preference_enhanced_tracking_protection_standard_default_1),
+            value = getStringResource(R.string.tracking_protection_standard),
             description = "Standard tracking protection option",
             scrollDirection = SwipeDirection.DOWN,
         )

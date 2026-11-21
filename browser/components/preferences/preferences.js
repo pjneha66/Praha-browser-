@@ -716,6 +716,13 @@ function recordSettingChangeTelemetry(id) {
   });
 }
 
+function defaultSettingsPane() {
+  if (AppConstants.MOZ_APP_NAME == "praha") {
+    return "panePrivacy";
+  }
+  return srdSectionPrefs.all ? "paneSync" : "paneGeneral";
+}
+
 /**
  * @param {string} [aCategory] The pane to show, defaults to the hash of URL or general
  * @param {"Click"|"Initial"|"Hash"} [aShowReason]
@@ -726,12 +733,11 @@ async function gotoPref(
   aCategory,
   aShowReason = aCategory ? "Click" : "Initial"
 ) {
-  let redesignEnabled = srdSectionPrefs.all;
   let categories = document.getElementById("categories");
-  const kDefaultCategoryInternalName = redesignEnabled
-    ? "paneSync"
-    : "paneGeneral";
-  const kDefaultCategory = redesignEnabled ? "sync" : "general";
+  const kDefaultCategoryInternalName = defaultSettingsPane();
+  const kDefaultCategory = internalPrefCategoryNameToFriendlyName(
+    kDefaultCategoryInternalName
+  );
   let hash = document.location.hash;
   let category = aCategory || hash.substring(1) || kDefaultCategoryInternalName;
 
