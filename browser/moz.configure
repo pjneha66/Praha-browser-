@@ -54,6 +54,15 @@ imply_option("MOZ_STUB_INSTALLER", True, when=requires_stub_installer)
 include("../toolkit/moz.configure")
 
 
+@depends(moz_branding_directory)
+def praha_browser(directory):
+    return directory == "browser/branding/praha"
+
+
+set_config("MOZ_PRAHA_BROWSER", praha_browser)
+set_define("MOZ_PRAHA_BROWSER", True, when=praha_browser)
+
+
 @depends("--enable-maintenance-service", when=target_is_windows)
 @imports(_from="mozbuild.nsis", _import="installer_files")
 def nsis_installer_files(maintenance_service):

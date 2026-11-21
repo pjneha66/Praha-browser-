@@ -1,0 +1,28 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:root {
+  color-scheme: light dark;
+  background: light-dark(#f2f8f6, #102b29);
+  color: light-dark(#123e39, #e1f7ee);
+  font: 1rem/1.6 system-ui, sans-serif;
+}
+main { max-inline-size: 38rem; margin: 8vh auto; padding-inline: 1.5rem; }
+header { display: flex; align-items: center; gap: 1rem; font-weight: 700; }
+h1 { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; }
+dl { border-block: 1px solid; padding-block: 0.5rem 1.5rem; }
+dt { margin-block-start: 1rem; font-weight: 700; }
+dd { margin: 0; }
+a { color: inherit; font-weight: 700; }
+
+.shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.shortcuts a {
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}

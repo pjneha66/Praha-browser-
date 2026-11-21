@@ -6,8 +6,8 @@
 
 // === Tracking Protection: ETP Strict by default ===
 pref("browser.contentblocking.enabled", true);
-pref("browser.contentblocking.features.strict", "tp,tpPrivate,cookieBehavior5,cookieBehaviorPBM5,cryptoTP,fp,stp,emailTP,emailTPPrivate,-consentmanagerSkip,-consentmanagerSkipPrivate,lvl2,rp,rpTop,qps,qpsPBM,fpp,fppPrivate,btp,lna");
-pref("browser.contentblocking.defaultMode", "strict");
+pref("browser.contentblocking.strictByDefault", true);
+pref("privacy.trackingprotection.harmfuladdon.enabled", true);
 pref("browser.contentblocking.report.toggle.ui.enabled", true);
 
 // === Resist Fingerprinting ===
@@ -15,9 +15,6 @@ pref("privacy.resistFingerprinting", true);
 pref("privacy.resistFingerprinting.pbmode", true);
 pref("privacy.resistFingerprinting.letterboxing", true);
 
-// === Cookies: Block third-party cookies, Total Cookie Protection ===
-pref("network.cookie.cookieBehavior", 5);
-pref("network.cookie.cookieBehavior.pbmode", 5);
 pref("network.cookie.lifetimePolicy", 0); // 0 = accept until expired
 
 // === Referrer: Strip on cross-site navigation ===
@@ -26,9 +23,7 @@ pref("network.http.referer.default.sameOriginPolicy", 1);
 pref("network.http.referer.trimmingPolicy", 2); // 2 = trim to origin
 
 // === URL tracking parameter stripping ===
-pref("privacy.query_stripping.enabled", true);
 pref("privacy.query_stripping.strip_on_share.enabled", true);
-pref("privacy.query_stripping.pbmode.enabled", true);
 
 // === WebRTC: Disable to prevent IP leaks ===
 pref("media.peerconnection.enabled", false);
@@ -37,11 +32,12 @@ pref("media.peerconnection.ice.no_host", true);
 pref("media.peerconnection.ice.default_address_only", true);
 
 // === DNS-over-HTTPS ===
-pref("network.doh.enabled", true);
-pref("network.doh.mode", 2); // 2 = TRR Mode: Default (use DoH when available)
-pref("network.doh.bootstrapAddress", "1.1.1.1");
+pref("network.trr.uri", "https://cloudflare-dns.com/dns-query");
+pref("network.trr.mode", 2); // 2 = TRR Mode: Default (use DoH when available)
+pref("network.trr.bootstrapAddress", "1.1.1.1");
 
 // === HTTPS-only mode ===
+pref("dom.security.https_only_mode", true);
 pref("security.mixed_content.block_display_content", true);
 pref("security.mixed_content.block_display_content.notify", true);
 
@@ -95,11 +91,13 @@ pref("browser.search.defaultenginename", "DuckDuckGo");
 pref("browser.newtabpage.enabled", false);
 pref("browser.newtab.url", "about:blank");
 
-// === Home: Blank ===
-pref("browser.startup.homepage", "about:blank");
+// === Home: Local Praha shortcuts ===
+pref("browser.startup.homepage", "about:branding");
 pref("browser.startup.homepage_override.mstone", "");
 
 // === Delete cookies and site data on quit ===
+pref("privacy.sanitize.sanitizeOnShutdown", true);
+pref("privacy.clearOnShutdown_v2.siteSettings", true);
 pref("privacy.clearOnShutdown.cookies", true);
 pref("privacy.clearOnShutdown.cache", true);
 pref("privacy.clearOnShutdown.history", true);
@@ -112,14 +110,6 @@ pref("signon.rememberSignons", false);
 
 // === Form autofill disabled ===
 pref("browser.formfill.enable", false);
-
-// === Tracking protection in all windows (not just private) ===
-pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.pbmode.enabled", true);
-pref("privacy.trackingprotection.harmfuladdon.enabled", true);
-pref("privacy.trackingprotection.fingerprinting.enabled", true);
-pref("privacy.trackingprotection.cryptomining.enabled", true);
-pref("privacy.trackingprotection.socialtracking.enabled", true);
 
 // === Disable webRTC IP handling policies that leak IPs ===
 pref("media.peerconnection.ice.obfuscateCandidates", true);

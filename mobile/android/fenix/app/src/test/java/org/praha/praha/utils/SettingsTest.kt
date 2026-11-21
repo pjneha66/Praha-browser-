@@ -187,7 +187,9 @@ class SettingsTest {
     fun isTelemetryEnabled() {
         // When just created
         // Then
-        assertTrue(settings.isTelemetryEnabled)
+        assertFalse(settings.isTelemetryEnabled)
+        assertFalse(settings.isDailyUsagePingEnabled)
+        assertFalse(settings.isExperimentationEnabled)
     }
 
     @Test
@@ -460,7 +462,8 @@ class SettingsTest {
     fun shouldUseTrackingProtectionStrict() {
         // When
         // Then
-        assertFalse(settings.useStrictTrackingProtection)
+        assertTrue(settings.useStrictTrackingProtection)
+        assertFalse(settings.useStandardTrackingProtection)
     }
 
     @Test

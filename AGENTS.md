@@ -1,4 +1,8 @@
-# Global instructions
+# Praha contributor guide
+
+Use the branded mozconfig and extension preparation step in [README.md](README.md). Run `python3 tools/praha/test_inputs.py` before submitting packaging or branding changes. Keep build artifacts and signing keys out of the repository. Keep license notices and upstream compatibility identifiers intact; do not globally replace vendor names. Record unverified release gates in [PLAN.md](PLAN.md).
+
+## Working in the engine tree
 Limit the amount of comments you put in the code to a strict minimum. You should almost never add comments, except sometimes on non-trivial code, function definitions if the arguments aren't self-explanatory, and class definitions and their members.
 
 Do not remove existing comments unless they are directly related to what you are changing.

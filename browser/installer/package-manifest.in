@@ -150,7 +150,11 @@
 ; [Base Browser Files]
 #ifndef XP_UNIX
 @BINPATH@/@MOZ_APP_NAME@.exe
+#ifdef MOZ_PRAHA_BROWSER
+@BINPATH@/praha.VisualElementsManifest.xml
+#else
 @BINPATH@/firefox.VisualElementsManifest.xml
+#endif
 @BINPATH@/browser/VisualElements/VisualElements_150.png
 @BINPATH@/browser/VisualElements/VisualElements_70.png
 @BINPATH@/private_browsing.exe
@@ -267,7 +271,11 @@
 ; [Default Preferences]
 ; All the pref files must be part of base to prevent migration bugs
 @RESPATH@/browser/@PREF_DIR@/firefox.js
+#ifdef MOZ_PRAHA_BROWSER
+@RESPATH@/browser/@PREF_DIR@/praha-branding.js
+#else
 @RESPATH@/browser/@PREF_DIR@/firefox-branding.js
+#endif
 @RESPATH@/greprefs.js
 @RESPATH@/defaults/autoconfig/prefcalls.js
 @RESPATH@/browser/defaults/permissions
@@ -470,6 +478,6 @@ bin/libfreebl_64int_3.so
 @BINPATH@/desktop-launcher/desktop-launcher@BIN_SUFFIX@
 #endif
 
-#if defined(BUILT_BY_MOZILLA)
+#if defined(BUILT_BY_MOZILLA) || defined(MOZ_PRAHA_BROWSER)
 @RESPATH@/distribution/*
 #endif

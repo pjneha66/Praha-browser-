@@ -538,11 +538,7 @@ var gSearchResultsPane = {
         window.history.back();
         await paneRestored;
       } else {
-        let redesignEnabled = Services.prefs.getBoolPref(
-          "browser.settings-redesign.enabled"
-        );
-        let defaultPane = redesignEnabled ? "paneSync" : "paneGeneral";
-        await gotoPref(defaultPane);
+        await gotoPref(defaultSettingsPane());
       }
       if (signal.aborted) {
         return;

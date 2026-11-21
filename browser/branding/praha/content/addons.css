@@ -1,0 +1,10 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@media not ((forced-colors) or (prefers-contrast)) {
+  body { background-color: light-dark(#f2f8f6, #102b29); }
+  addon-card > .addon.card[active="true"] {
+    border-inline-start: 0.25rem solid light-dark(#123e39, #adf3ce);
+  }
+}

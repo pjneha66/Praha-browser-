@@ -1230,11 +1230,6 @@ option(
 set_define("MOZ_TELEMETRY_REPORTING", True, when="MOZ_TELEMETRY_REPORTING")
 
 
-@depends("MOZ_TELEMETRY_REPORTING", milestone.is_nightly)
-def telemetry_on_by_default(reporting, is_nightly):
-return False
-
-
 set_define("MOZ_TELEMETRY_ON_BY_DEFAULT", False)
 
 # Miscellaneous programs
