@@ -22,6 +22,7 @@
   backdrop-filter: blur(12px);
   cursor: pointer;
   user-select: none;
+  touch-action: none;
   animation: prahaPillIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 

@@ -175,16 +175,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (vaultBtn) {
     vaultBtn.addEventListener('click', async () => {
       if (currentTabId) {
-        browser.tabs.executeScript(currentTabId, {
-          code: `(() => {
-            const btn = document.getElementById('praha-media-fab');
-            if (btn) btn.click();
-            setTimeout(() => {
-              const vaultTab = document.querySelector('.praha-tab[data-tab="vault"]');
-              if (vaultTab) vaultTab.click();
-            }, 300);
-          })()`
-        }).then(() => window.close()).catch(() => {});
+        browser.tabs.sendMessage(currentTabId, { type: 'OPEN_VAULT_SHEET' })
+          .catch(() => {
+            browser.tabs.executeScript(currentTabId, {
+              code: `(() => {
+                const btn = document.getElementById('praha-media-pill');
+                if (btn) btn.click();
+                setTimeout(() => {
+                  const vaultTab = document.querySelector('.praha-tab-btn[data-tab="vault"]');
+                  if (vaultTab) vaultTab.click();
+                }, 300);
+              })()`
+            }).catch(() => {});
+          })
+          .finally(() => window.close());
       }
     });
   }

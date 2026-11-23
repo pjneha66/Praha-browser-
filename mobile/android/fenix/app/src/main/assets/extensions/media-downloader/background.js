@@ -13,17 +13,55 @@ browser.storage.local.get(['praha_geo_config', 'praha_doh_provider']).then(res =
 
 // 1. Chrome Extension (.crx) to Firefox (.xpi) Converter & Installer
 async function convertCrxToXpi(crxArrayBuffer, extensionId) {
+  if (!crxArrayBuffer || crxArrayBuffer.byteLength < 16) {
+    throw new Error('Truncated CRX archive (under 16 bytes)');
+  }
+  if (crxArrayBuffer.byteLength > 50 * 1024 * 1024) {
+    throw new Error('CRX file exceeds 50MB size limit');
+  }
+
   const uint8 = new Uint8Array(crxArrayBuffer);
-  // Find zip header magic bytes PK\x03\x04 (0x50, 0x4B, 0x03, 0x04)
   let zipOffset = -1;
-  for (let i = 0; i < Math.min(uint8.length - 4, 150000); i++) {
-    if (uint8[i] === 0x50 && uint8[i+1] === 0x4B && uint8[i+2] === 0x03 && uint8[i+3] === 0x04) {
-      zipOffset = i;
-      break;
+
+  // Header bounds checking: check for 'Cr24' magic (0x43, 0x72, 0x32, 0x34)
+  if (uint8[0] === 0x43 && uint8[1] === 0x72 && uint8[2] === 0x32 && uint8[3] === 0x34) {
+    const view = new DataView(crxArrayBuffer);
+    const version = view.getUint32(4, true);
+    if (version === 2) {
+      const pubKeyLen = view.getUint32(8, true);
+      const sigLen = view.getUint32(12, true);
+      const headerLen = 16 + pubKeyLen + sigLen;
+      if (headerLen > crxArrayBuffer.byteLength) {
+        throw new Error('Truncated or malformed CRX2 archive header');
+      }
+      zipOffset = headerLen;
+    } else if (version === 3) {
+      const headerLen = view.getUint32(8, true);
+      const totalHeader = 12 + headerLen;
+      if (totalHeader > crxArrayBuffer.byteLength) {
+        throw new Error('Truncated or malformed CRX3 archive header');
+      }
+      zipOffset = totalHeader;
     }
   }
 
-  const zipData = zipOffset >= 0 ? uint8.slice(zipOffset) : uint8;
+  // Fallback to scanning for ZIP magic PK\x03\x04 if zipOffset not determined or not aligned
+  if (zipOffset < 0 || zipOffset > uint8.length - 4 ||
+      !(uint8[zipOffset] === 0x50 && uint8[zipOffset+1] === 0x4B && uint8[zipOffset+2] === 0x03 && uint8[zipOffset+3] === 0x04)) {
+    zipOffset = -1;
+    for (let i = 0; i < Math.min(uint8.length - 4, 150000); i++) {
+      if (uint8[i] === 0x50 && uint8[i+1] === 0x4B && uint8[i+2] === 0x03 && uint8[i+3] === 0x04) {
+        zipOffset = i;
+        break;
+      }
+    }
+  }
+
+  if (zipOffset < 0) {
+    throw new Error('Invalid CRX: ZIP header not found');
+  }
+
+  const zipData = uint8.slice(zipOffset);
   if (typeof JSZip === 'undefined') {
     throw new Error('JSZip library not available');
   }
@@ -61,6 +99,16 @@ async function convertCrxToXpi(crxArrayBuffer, extensionId) {
 }
 
 async function installChromeExtensionById(extensionId, tabId) {
+  if (!extensionId || !/^[a-z]{32}$/i.test(extensionId)) {
+    throw new Error('Invalid extension ID format (must be 32 alphabetic characters)');
+  }
+  return fetchCrxAndPrepareInstall(extensionId, tabId);
+}
+
+async function fetchCrxAndPrepareInstall(extensionId, tabId) {
+  if (!tabId || tabId < 0) {
+    throw new Error('Valid tabId required for CRX installation prompt');
+  }
   const crxUrl = `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=120.0&acceptformat=crx2,crx3&x=id%3D${encodeURIComponent(extensionId)}%26uc`;
   const response = await fetch(crxUrl);
   if (!response.ok) {
@@ -68,29 +116,136 @@ async function installChromeExtensionById(extensionId, tabId) {
   }
 
   const arrayBuffer = await response.arrayBuffer();
-  const { blob, name } = await convertCrxToXpi(arrayBuffer, extensionId);
-  const xpiUrl = URL.createObjectURL(blob);
-
-  if (tabId) {
-    browser.tabs.executeScript(tabId, {
-      code: `(() => {
-        const a = document.createElement('a');
-        a.href = ${JSON.stringify(xpiUrl)};
-        a.download = ${JSON.stringify(name)};
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => a.remove(), 2000);
-      })()`
-    });
-  } else {
-    browser.tabs.create({ url: xpiUrl });
+  if (arrayBuffer.byteLength > 50 * 1024 * 1024) {
+    throw new Error('CRX file exceeds 50MB limit');
   }
+
+  const { blob, name } = await convertCrxToXpi(arrayBuffer, extensionId);
+  const pendingId = 'crx_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+  const timer = setTimeout(() => {
+    pendingCrxInstalls.delete(pendingId);
+  }, 300000);
+
+  pendingCrxInstalls.set(pendingId, { blob, name, timer, tabId });
+
+  await browser.tabs.sendMessage(tabId, {
+    type: 'PROMPT_CRX_CONFIRM',
+    pendingId,
+    name
+  }).catch((err) => {
+    clearTimeout(timer);
+    pendingCrxInstalls.delete(pendingId);
+    throw err;
+  });
+  return { pendingId, name };
 }
 
 // 2. IndexedDB Private Media Vault
 const DB_NAME = 'PrahaMediaVault';
 const DB_STORE = 'vault_items';
+
+// Vault Security: WebCrypto PBKDF2 Authentication, Session Auto-Lock & Persistent Lockout
+let vaultUnlocked = false;
+let vaultAutoLockTimer = null;
+const AUTO_LOCK_TIMEOUT_MS = 300000; // 5-minute inactivity auto-lock
+
+function setVaultAutoLock() {
+  clearTimeout(vaultAutoLockTimer);
+  vaultAutoLockTimer = setTimeout(() => {
+    vaultUnlocked = false;
+  }, AUTO_LOCK_TIMEOUT_MS);
+}
+
+async function getVaultLockoutState() {
+  const res = await browser.storage.local.get(['praha_vault_lockout']).catch(() => ({}));
+  return res.praha_vault_lockout || { failedAttempts: 0, lockoutUntil: 0, lockoutCount: 0 };
+}
+
+async function setVaultLockoutState(state) {
+  await browser.storage.local.set({ praha_vault_lockout: state }).catch(() => {});
+}
+
+function timingSafeEqualHex(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+async function hashVaultPin(pin, saltHex) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(pin),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  );
+  let salt;
+  if (saltHex) {
+    const matches = saltHex.match(/.{1,2}/g) || [];
+    salt = new Uint8Array(matches.map(byte => parseInt(byte, 16)));
+  } else {
+    salt = crypto.getRandomValues(new Uint8Array(16));
+    saltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  // Domain-separated verifier derivation using a distinct info string
+  const verifierSalt = new Uint8Array([...salt, ...enc.encode('praha-vault-verifier-v1')]);
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: verifierSalt,
+      iterations: 100000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    256
+  );
+  const hashHex = Array.from(new Uint8Array(derivedBits)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return { hash: hashHex, salt: saltHex };
+}
+
+async function getVaultAuth() {
+  const res = await browser.storage.local.get(['praha_vault_auth', 'praha_vault_pin', 'praha_vault_salt']).catch(() => ({}));
+  if (res.praha_vault_auth && res.praha_vault_auth.hash && res.praha_vault_auth.salt) {
+    return res.praha_vault_auth;
+  }
+  // Migration path: check if legacy praha_vault_pin was stored
+  if (res.praha_vault_pin) {
+    if (res.praha_vault_salt) {
+      const auth = { hash: res.praha_vault_pin, salt: res.praha_vault_salt };
+      await browser.storage.local.set({ praha_vault_auth: auth });
+      return auth;
+    } else if (typeof res.praha_vault_pin === 'string' && /^\d{4,8}$/.test(res.praha_vault_pin.trim())) {
+      const migrated = await hashVaultPin(res.praha_vault_pin.trim());
+      await browser.storage.local.set({ praha_vault_auth: migrated });
+      await browser.storage.local.remove(['praha_vault_pin']).catch(() => {});
+      return migrated;
+    }
+  }
+  return null;
+}
+
+// Active Blob Downloads Management (Revocation on Download Completion)
+const activeBlobDownloads = new Map(); // downloadId -> { url, timer }
+const pendingCrxInstalls = new Map();  // pendingId -> { blob, name, timer }
+
+if (browser.downloads && browser.downloads.onChanged) {
+  browser.downloads.onChanged.addListener((delta) => {
+    if (activeBlobDownloads.has(delta.id)) {
+      if (delta.state && (delta.state.current === 'complete' || delta.state.current === 'interrupted')) {
+        const entry = activeBlobDownloads.get(delta.id);
+        activeBlobDownloads.delete(delta.id);
+        if (entry) {
+          clearTimeout(entry.timer);
+          try { URL.revokeObjectURL(entry.url); } catch (e) {}
+        }
+      }
+    }
+  });
+}
 
 function openVaultDB() {
   return new Promise((resolve, reject) => {
@@ -148,6 +303,17 @@ async function deleteVaultItem(id) {
   });
 }
 
+async function getVaultItemById(id) {
+  const db = await openVaultDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const store = tx.objectStore(DB_STORE);
+    const req = store.get(id);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
 // 3. Parallel Chunk Download Accelerator
 async function downloadParallel(url, filename, tabId) {
   try {
@@ -155,7 +321,8 @@ async function downloadParallel(url, filename, tabId) {
     const contentLength = parseInt(headRes.headers.get('content-length'), 10) || 0;
     const acceptRanges = headRes.headers.get('accept-ranges') || '';
 
-    if (contentLength > 2 * 1024 * 1024 && acceptRanges.includes('bytes')) {
+    // Enforce 2MB - 250MB boundaries for parallel chunk acceleration
+    if (contentLength > 2 * 1024 * 1024 && contentLength <= 250 * 1024 * 1024 && acceptRanges.includes('bytes')) {
       const numChunks = 4;
       const chunkSize = Math.floor(contentLength / numChunks);
       const chunkPromises = [];
@@ -165,45 +332,63 @@ async function downloadParallel(url, filename, tabId) {
         const end = i === numChunks - 1 ? contentLength - 1 : (start + chunkSize - 1);
         chunkPromises.push(
           fetch(url, { headers: { 'Range': `bytes=${start}-${end}` } })
-            .then(r => r.arrayBuffer())
+            .then(r => {
+              if (r.status !== 206) {
+                throw new Error(`Non-206 status received for range chunk (${r.status})`);
+              }
+              return r.arrayBuffer();
+            })
         );
       }
 
       const buffers = await Promise.all(chunkPromises);
       const combinedBlob = new Blob(buffers, { type: 'application/octet-stream' });
       const blobUrl = URL.createObjectURL(combinedBlob);
+      const fallbackTimer = setTimeout(() => {
+        try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+      }, 300000);
 
-      if (tabId) {
-        browser.tabs.executeScript(tabId, {
-          code: `(() => {
-            const a = document.createElement('a');
-            a.href = ${JSON.stringify(blobUrl)};
-            a.download = ${JSON.stringify(filename)};
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => { a.remove(); URL.revokeObjectURL(${JSON.stringify(blobUrl)}); }, 10000);
-          })()`
-        });
+      if (browser.downloads && browser.downloads.download) {
+        try {
+          const downloadId = await browser.downloads.download({
+            url: blobUrl,
+            filename: filename,
+            saveAs: false
+          });
+          if (downloadId) {
+            activeBlobDownloads.set(downloadId, { url: blobUrl, timer: fallbackTimer });
+          }
+          return;
+        } catch (downloadErr) {
+          clearTimeout(fallbackTimer);
+          try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+          throw downloadErr;
+        }
+      } else {
+        browser.tabs.create({ url: blobUrl });
+        return;
       }
-      return;
     }
-  } catch (e) {}
-
-  // Fallback to direct stream trigger
-  if (tabId) {
-    browser.tabs.executeScript(tabId, {
-      code: `(() => {
-        const a = document.createElement('a');
-        a.href = ${JSON.stringify(url)};
-        a.download = ${JSON.stringify(filename)};
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => a.remove(), 1000);
-      })()`
-    });
+  } catch (err) {
+    console.warn('Parallel download error, falling back to direct stream:', err.message || err);
   }
+
+  // Fallback to direct stream trigger via browser.downloads.download
+  if (browser.downloads && browser.downloads.download) {
+    try {
+      await browser.downloads.download({
+        url: url,
+        filename: filename,
+        saveAs: false
+      });
+      return;
+    } catch (e) {
+      console.warn('Direct browser download error:', e.message || e);
+    }
+  }
+
+  // Final fallback: open target URL in a tab without injecting anchor scripts into the page
+  browser.tabs.create({ url: url });
 }
 
 // 4. Media Format & Extension Filters
@@ -322,27 +507,42 @@ browser.webRequest.onBeforeRequest.addListener(
         return { redirectUrl: streamUrl };
       }
 
-      // Intercept direct .crx downloads
-      if (url.endsWith('.crx') && !url.includes('clients2.google.com/service/update2/crx')) {
+      // Intercept direct .crx downloads (handling query params, tokens, size cap and confirmation)
+      let pathname = '';
+      try { pathname = new URL(url).pathname.toLowerCase(); } catch (e) {}
+      if (pathname.endsWith('.crx') && !url.includes('clients2.google.com/service/update2/crx')) {
+        if (!details.tabId || details.tabId < 0) {
+          // Reject direct installation without a valid tab context
+          return { cancel: true };
+        }
+        const extSlug = pathname.split('/').pop().replace(/\.crx$/i, '') || 'sideloaded_ext';
         fetch(url)
-          .then(r => r.arrayBuffer())
-          .then(buf => convertCrxToXpi(buf, 'sideloaded_ext'))
+          .then(async (r) => {
+            if (!r.ok) throw new Error('Download request failed');
+            const cl = parseInt(r.headers.get('content-length') || '0', 10);
+            if (cl > 50 * 1024 * 1024) throw new Error('CRX file exceeds 50MB limit');
+            return r.arrayBuffer();
+          })
+          .then(buf => convertCrxToXpi(buf, extSlug))
           .then(({ blob, name }) => {
-            const xpiUrl = URL.createObjectURL(blob);
-            if (details.tabId && details.tabId >= 0) {
-              browser.tabs.executeScript(details.tabId, {
-                code: `(() => {
-                  const a = document.createElement('a');
-                  a.href = ${JSON.stringify(xpiUrl)};
-                  a.download = ${JSON.stringify(name)};
-                  a.target = '_blank';
-                  document.body.appendChild(a);
-                  a.click();
-                  setTimeout(() => a.remove(), 2000);
-                })()`
-              });
-            }
-          }).catch(() => {});
+            const pendingId = 'crx_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+            const timer = setTimeout(() => {
+              pendingCrxInstalls.delete(pendingId);
+            }, 300000);
+            pendingCrxInstalls.set(pendingId, { blob, name, timer, tabId: details.tabId });
+
+            browser.tabs.sendMessage(details.tabId, {
+              type: 'PROMPT_CRX_CONFIRM',
+              pendingId: pendingId,
+              name: name
+            }).catch(() => {
+              clearTimeout(timer);
+              pendingCrxInstalls.delete(pendingId);
+            });
+          }).catch((err) => {
+            console.warn('CRX download conversion aborted:', err.message || err);
+          });
+        return { cancel: true };
       }
 
       const u = new URL(url);
@@ -387,7 +587,7 @@ browser.webRequest.onBeforeSendHeaders.addListener(
   (details) => {
     let host = '';
     try { host = new URL(details.url).hostname; } catch (e) {}
-    const isPaywallDomain = PAYWALL_DOMAINS.some(d => host.endsWith(d));
+    const isPaywallDomain = PAYWALL_DOMAINS.some(d => host === d || host.endsWith('.' + d));
 
     if (isPaywallDomain) {
       let headers = details.requestHeaders || [];
@@ -473,6 +673,26 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  // 1. Strict extension ID requirement: sender.id MUST match runtime.id
+  if (!sender || sender.id !== browser.runtime.id) {
+    if (typeof sendResponse === 'function') sendResponse({ success: false, error: 'UNAUTHORIZED_SENDER' });
+    return true;
+  }
+
+  // 2. Privileged operations: require top-level frame (frameId === 0) or internal extension URL
+  const isExtensionUrl = typeof sender.url === 'string' && sender.url.startsWith(browser.runtime.getURL(''));
+  const isTopFrame = sender.frameId === 0;
+
+  const isPrivileged = [
+    'SET_VAULT_PIN', 'UNLOCK_VAULT', 'LOCK_VAULT', 'GET_VAULT',
+    'DELETE_VAULT_ITEM', 'EXPORT_VAULT_ITEM', 'SAVE_TO_VAULT',
+    'CHECK_VAULT_STATUS', 'INSTALL_CHROME_EXTENSION', 'CONFIRM_CRX_INSTALL'
+  ].includes(msg.type);
+
+  if (isPrivileged && !isTopFrame && !isExtensionUrl) {
+    if (typeof sendResponse === 'function') sendResponse({ success: false, error: 'PRIVILEGED_CALL_TOP_FRAME_ONLY' });
+    return true;
+  }
   const tabId = (sender.tab && sender.tab.id) || msg.tabId;
 
   if (msg.type === 'GET_MEDIA') {
@@ -497,7 +717,57 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
+  if (msg.type === 'CONFIRM_CRX_INSTALL') {
+    const entry = pendingCrxInstalls.get(msg.pendingId);
+    if (!entry) {
+      sendResponse({ success: false, error: 'EXPIRED_OR_NOT_FOUND' });
+      return true;
+    }
+    if (entry.tabId && (!sender.tab || sender.tab.id !== entry.tabId)) {
+      sendResponse({ success: false, error: 'TAB_MISMATCH' });
+      return true;
+    }
+    clearTimeout(entry.timer);
+    pendingCrxInstalls.delete(msg.pendingId);
+
+    if (!msg.confirmed) {
+      sendResponse({ success: true, cancelled: true });
+      return true;
+    }
+
+    const blobUrl = URL.createObjectURL(entry.blob);
+    const fallbackTimer = setTimeout(() => {
+      try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+    }, 300000);
+
+    const xpiFilename = cleanFilename(entry.name || 'sideloaded_extension', 'xpi');
+    if (browser.downloads && browser.downloads.download) {
+      browser.downloads.download({
+        url: blobUrl,
+        filename: xpiFilename,
+        saveAs: false
+      }).then((downloadId) => {
+        if (downloadId) {
+          activeBlobDownloads.set(downloadId, { url: blobUrl, timer: fallbackTimer });
+        }
+        sendResponse({ success: true, action: 'downloaded' });
+      }).catch((err) => {
+        clearTimeout(fallbackTimer);
+        try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+        sendResponse({ success: false, error: err.message });
+      });
+    } else {
+      browser.tabs.create({ url: blobUrl });
+      sendResponse({ success: true, action: 'opened' });
+    }
+    return true;
+  }
+
   if (msg.type === 'INSTALL_CHROME_EXTENSION') {
+    if (!msg.extensionId || !/^[a-z]{32}$/i.test(msg.extensionId)) {
+      sendResponse({ success: false, error: 'INVALID_EXTENSION_ID' });
+      return true;
+    }
     installChromeExtensionById(msg.extensionId, tabId)
       .then(() => sendResponse({ success: true }))
       .catch(err => sendResponse({ success: false, error: err.message }));
@@ -594,15 +864,17 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     };
 
     Promise.all(dnsEndpoints.map(measureEndpoint)).then(results => {
-      let fastest = results[0];
+      let fastest = null;
       for (const r of results) {
-        if (r.ok && (fastest.latency === 999 || r.latency < fastest.latency)) {
-          fastest = r;
+        if (r.ok) {
+          if (!fastest || r.latency < fastest.latency) {
+            fastest = r;
+          }
         }
       }
-      sendResponse({ results: results, fastest: fastest ? fastest.name : 'Cloudflare' });
+      sendResponse({ results: results, fastest: fastest ? fastest.name : null });
     }).catch(() => {
-      sendResponse({ results: [], fastest: 'Cloudflare' });
+      sendResponse({ results: [], fastest: null });
     });
     return true;
   }
@@ -619,36 +891,127 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const targetUrl = msg.url;
     const targetTitle = cleanFilename(msg.title, msg.format || 'mp4');
 
-    if (tabId) {
-      browser.tabs.executeScript(tabId, {
-        code: `(() => {
-          const a = document.createElement('a');
-          a.href = ${JSON.stringify(targetUrl)};
-          a.download = ${JSON.stringify(targetTitle)};
-          a.target = '_blank';
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(() => a.remove(), 1000);
-        })()`
-      }).catch(() => {
-        browser.tabs.create({ url: targetUrl });
-      });
+    if (browser.downloads && browser.downloads.download) {
+      browser.downloads.download({
+        url: targetUrl,
+        filename: targetTitle,
+        saveAs: false
+      }).then(() => sendResponse({ success: true }))
+        .catch(() => {
+          browser.tabs.create({ url: targetUrl });
+          sendResponse({ success: true });
+        });
     } else {
       browser.tabs.create({ url: targetUrl });
+      sendResponse({ success: true });
     }
-    sendResponse({ success: true });
     return true;
   }
 
   if (msg.type === 'SAVE_TO_VAULT') {
-    saveItemToVault({
-      id: 'vault_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
-      title: msg.title || 'Private Media',
-      format: msg.format || 'mp4',
-      size: msg.size || 'Saved',
-      blob: msg.blob,
-      timestamp: Date.now()
-    }).then(() => {
+    const handleSave = async () => {
+      let mediaBlob = msg.blob;
+      let calculatedSize = msg.size;
+      if (!mediaBlob && msg.url) {
+        try {
+          const resp = await fetch(msg.url);
+          if (resp.ok) {
+            mediaBlob = await resp.blob();
+            calculatedSize = formatBytes(mediaBlob.size);
+          }
+        } catch (fetchErr) {
+          // If binary fetch fails (e.g. streaming live playlist), preserve stream URL
+        }
+      }
+
+      await saveItemToVault({
+        id: 'vault_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+        title: msg.title || 'Private Media',
+        format: msg.format || 'mp4',
+        size: calculatedSize || 'Saved Stream',
+        url: msg.url,
+        blob: mediaBlob,
+        timestamp: Date.now()
+      });
+    };
+
+    handleSave()
+      .then(() => sendResponse({ success: true }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+    return true;
+  }
+
+  if (msg.type === 'CHECK_VAULT_STATUS') {
+    Promise.all([
+      getVaultAuth(),
+      getVaultLockoutState()
+    ]).then(([auth, lockout]) => {
+      const now = Date.now();
+      const isLockedOut = now < lockout.lockoutUntil;
+      const remainingSec = isLockedOut ? Math.ceil((lockout.lockoutUntil - now) / 1000) : 0;
+      sendResponse({
+        initialized: !!(auth && auth.hash),
+        unlocked: vaultUnlocked,
+        lockedOut: isLockedOut,
+        remainingSec: remainingSec
+      });
+    }).catch(() => {
+      sendResponse({ initialized: false, unlocked: false, lockedOut: false, remainingSec: 0 });
+    });
+    return true;
+  }
+
+  if (msg.type === 'SET_VAULT_PIN') {
+    const pin = (msg.pin || msg.newPin || '').trim();
+    if (!/^\d{4,8}$/.test(pin)) {
+      sendResponse({ success: false, error: 'PIN must be between 4 and 8 numeric digits' });
+      return true;
+    }
+
+    getVaultAuth().then(async (auth) => {
+      const lockout = await getVaultLockoutState();
+      const now = Date.now();
+      if (now < lockout.lockoutUntil) {
+        const remainingSec = Math.ceil((lockout.lockoutUntil - now) / 1000);
+        sendResponse({ success: false, error: 'LOCKED_OUT', lockedOut: true, remainingSec: remainingSec });
+        return;
+      }
+
+      if (auth && auth.hash) {
+        const oldPin = (msg.oldPin || '').trim();
+        if (!oldPin) {
+          sendResponse({ success: false, error: 'EXISTING_PIN_REQUIRED' });
+          return;
+        }
+        if (!/^\d{4,8}$/.test(oldPin)) {
+          sendResponse({ success: false, error: 'INVALID_OLD_PIN' });
+          return;
+        }
+        const { hash: oldHash } = await hashVaultPin(oldPin, auth.salt);
+        if (!timingSafeEqualHex(oldHash, auth.hash)) {
+          const attempts = (lockout.failedAttempts || 0) + 1;
+          if (attempts >= 5) {
+            const count = (lockout.lockoutCount || 0) + 1;
+            const backoffDuration = Math.min(3600000, 30000 * Math.pow(2, count - 1));
+            const until = Date.now() + backoffDuration;
+            await setVaultLockoutState({ failedAttempts: 0, lockoutUntil: until, lockoutCount: count });
+            sendResponse({ success: false, error: 'LOCKED_OUT', lockedOut: true, remainingSec: Math.ceil(backoffDuration / 1000) });
+          } else {
+            await setVaultLockoutState({ failedAttempts: attempts, lockoutUntil: 0, lockoutCount: lockout.lockoutCount || 0 });
+            sendResponse({ success: false, error: 'INVALID_OLD_PIN', attemptsLeft: 5 - attempts });
+          }
+          return;
+        }
+      }
+
+      const { hash, salt } = await hashVaultPin(pin);
+      await browser.storage.local.set({
+        praha_vault_auth: { hash, salt },
+        praha_vault_lockout: { failedAttempts: 0, lockoutUntil: 0, lockoutCount: 0 }
+      });
+      await browser.storage.local.remove(['praha_vault_pin', 'praha_vault_salt']).catch(() => {});
+      vaultUnlocked = true;
+      setVaultAutoLock();
       sendResponse({ success: true });
     }).catch(err => {
       sendResponse({ success: false, error: err.message });
@@ -656,18 +1019,151 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
+  if (msg.type === 'UNLOCK_VAULT') {
+    getVaultLockoutState().then(async (lockout) => {
+      const now = Date.now();
+      if (now < lockout.lockoutUntil) {
+        const remainingSec = Math.ceil((lockout.lockoutUntil - now) / 1000);
+        sendResponse({ success: false, error: 'LOCKED_OUT', lockedOut: true, remainingSec: remainingSec });
+        return;
+      }
+
+      const pin = (msg.pin || '').trim();
+      if (!/^\d{4,8}$/.test(pin)) {
+        sendResponse({ success: false, error: 'INVALID_PIN_FORMAT' });
+        return;
+      }
+
+      const auth = await getVaultAuth();
+      if (!auth || !auth.hash) {
+        sendResponse({ success: false, error: 'NO_PIN_CONFIGURED' });
+        return;
+      }
+
+      const { hash } = await hashVaultPin(pin, auth.salt);
+      if (timingSafeEqualHex(hash, auth.hash)) {
+        vaultUnlocked = true;
+        setVaultAutoLock();
+        await setVaultLockoutState({ failedAttempts: 0, lockoutUntil: 0, lockoutCount: 0 });
+        sendResponse({ success: true });
+      } else {
+        const attempts = (lockout.failedAttempts || 0) + 1;
+        if (attempts >= 5) {
+          const count = (lockout.lockoutCount || 0) + 1;
+          const backoffDuration = Math.min(3600000, 30000 * Math.pow(2, count - 1)); // 30s, 60s, 120s...
+          const until = Date.now() + backoffDuration;
+          await setVaultLockoutState({ failedAttempts: 0, lockoutUntil: until, lockoutCount: count });
+          sendResponse({ success: false, error: 'LOCKED_OUT', lockedOut: true, remainingSec: Math.ceil(backoffDuration / 1000) });
+        } else {
+          await setVaultLockoutState({ failedAttempts: attempts, lockoutUntil: 0, lockoutCount: lockout.lockoutCount || 0 });
+          sendResponse({ success: false, error: 'INVALID_PIN', attemptsLeft: 5 - attempts });
+        }
+      }
+    }).catch(err => {
+      sendResponse({ success: false, error: err.message });
+    });
+    return true;
+  }
+
+  if (msg.type === 'UNLOCK_VAULT_BIOMETRIC') {
+    sendResponse({
+      success: false,
+      error: 'BIOMETRIC_UNSUPPORTED',
+      message: 'Hardware biometric authentication is not available in WebExtension sandbox. Please authenticate using your PIN.'
+    });
+    return true;
+  }
+
+  if (msg.type === 'LOCK_VAULT') {
+    vaultUnlocked = false;
+    clearTimeout(vaultAutoLockTimer);
+    sendResponse({ success: true });
+    return true;
+  }
+
   if (msg.type === 'GET_VAULT') {
+    if (!vaultUnlocked) {
+      sendResponse({ success: false, error: 'VAULT_LOCKED', items: [] });
+      return true;
+    }
+    setVaultAutoLock();
     getVaultItems().then(items => {
-      sendResponse({ items: items });
+      sendResponse({ success: true, items: items });
     }).catch(() => {
-      sendResponse({ items: [] });
+      sendResponse({ success: false, items: [] });
     });
     return true;
   }
 
   if (msg.type === 'DELETE_VAULT_ITEM') {
+    if (!vaultUnlocked) {
+      sendResponse({ success: false, error: 'VAULT_LOCKED' });
+      return true;
+    }
+    setVaultAutoLock();
     deleteVaultItem(msg.id).then(() => {
       sendResponse({ success: true });
+    });
+    return true;
+  }
+
+  if (msg.type === 'EXPORT_VAULT_ITEM') {
+    if (!vaultUnlocked) {
+      sendResponse({ success: false, error: 'VAULT_LOCKED' });
+      return true;
+    }
+    setVaultAutoLock();
+    getVaultItemById(msg.id).then(item => {
+      if (!item) {
+        sendResponse({ success: false, error: 'Item not found in vault' });
+        return;
+      }
+      const filename = cleanFilename(item.title, item.format);
+      if (item.blob) {
+        const blobUrl = URL.createObjectURL(item.blob);
+        const fallbackTimer = setTimeout(() => {
+          try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+        }, 300000); // 5-minute fallback
+
+        if (browser.downloads && browser.downloads.download) {
+          browser.downloads.download({
+            url: blobUrl,
+            filename: filename,
+            saveAs: false
+          }).then((downloadId) => {
+            if (downloadId) {
+              activeBlobDownloads.set(downloadId, { url: blobUrl, timer: fallbackTimer });
+            }
+            sendResponse({ success: true });
+          }).catch((err) => {
+            clearTimeout(fallbackTimer);
+            try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+            sendResponse({ success: false, error: err.message });
+          });
+        } else {
+          browser.tabs.create({ url: blobUrl });
+          sendResponse({ success: true });
+        }
+      } else if (item.url) {
+        if (browser.downloads && browser.downloads.download) {
+          browser.downloads.download({
+            url: item.url,
+            filename: filename,
+            saveAs: false
+          }).then(() => sendResponse({ success: true }))
+            .catch(() => {
+              browser.tabs.create({ url: item.url });
+              sendResponse({ success: true });
+            });
+        } else {
+          browser.tabs.create({ url: item.url });
+          sendResponse({ success: true });
+        }
+      } else {
+        sendResponse({ success: false, error: 'No media content available to export' });
+      }
+    }).catch(err => {
+      sendResponse({ success: false, error: err.message });
     });
     return true;
   }
@@ -677,17 +1173,11 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     items.forEach((item, index) => {
       setTimeout(() => {
         const title = cleanFilename(item.title, item.format);
-        if (tabId) {
-          browser.tabs.executeScript(tabId, {
-            code: `(() => {
-              const a = document.createElement('a');
-              a.href = ${JSON.stringify(item.url)};
-              a.download = ${JSON.stringify(title)};
-              a.target = '_blank';
-              document.body.appendChild(a);
-              a.click();
-              setTimeout(() => a.remove(), 1000);
-            })()`
+        if (browser.downloads && browser.downloads.download) {
+          browser.downloads.download({
+            url: item.url,
+            filename: title,
+            saveAs: false
           }).catch(() => {
             browser.tabs.create({ url: item.url });
           });

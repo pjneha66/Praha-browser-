@@ -11,19 +11,176 @@
     'Zurich': { mode: 'spoof', preset: 'Zurich', lat: 47.3769, lng: 8.5417 }
   };
 
+  let vaultStatus = { initialized: false, unlocked: false, lockedOut: false, remainingSec: 0 };
+
+  function checkVaultStatus() {
+    return browser.runtime.sendMessage({ type: 'CHECK_VAULT_STATUS' }).then(res => {
+      if (res) {
+        vaultStatus = res;
+        vaultUnlocked = res.unlocked;
+      }
+      return vaultStatus;
+    }).catch(() => vaultStatus);
+  }
+
   function injectGeolocationOverride(geo) {
+    const pageWin = window.wrappedJSObject || window;
+    const pageNav = pageWin.navigator;
+
+    pageWin.__praha_active_watchers = pageWin.__praha_active_watchers || new Map();
+    pageWin.__praha_watch_id_seq = pageWin.__praha_watch_id_seq || 1000;
+
+    // Capture original descriptor once
+    if (!pageWin.__praha_orig_geo_desc && pageNav) {
+      try {
+        pageWin.__praha_orig_geo_desc = Object.getOwnPropertyDescriptor(pageNav, 'geolocation') ||
+          Object.getOwnPropertyDescriptor(Object.getPrototypeOf(pageNav || {}), 'geolocation');
+      } catch (e) {}
+    }
+
     if (!geo || geo.mode === 'off') {
-      const old = document.getElementById('praha-geo-spoof-engine');
-      if (old) old.remove();
+      try {
+        if (pageWin.__praha_active_watchers) {
+          for (const timer of pageWin.__praha_active_watchers.values()) {
+            try { clearInterval(timer); } catch (e) {}
+          }
+          pageWin.__praha_active_watchers.clear();
+        }
+        if (pageWin.__praha_orig_geo_desc && pageNav) {
+          try {
+            Object.defineProperty(pageNav, 'geolocation', pageWin.__praha_orig_geo_desc);
+            delete pageWin.__praha_orig_geo_desc;
+          } catch (e) {
+            try { delete pageNav.geolocation; } catch (e2) {}
+          }
+        }
+      } catch (e) {}
+
+      if (document.head || document.documentElement) {
+        const resetScript = document.createElement('script');
+        resetScript.textContent = `
+          (() => {
+            try {
+              if (window.__praha_active_watchers) {
+                for (const timer of window.__praha_active_watchers.values()) {
+                  try { clearInterval(timer); } catch (e) {}
+                }
+                window.__praha_active_watchers.clear();
+              }
+              if (window.__praha_orig_geo_desc && navigator) {
+                try {
+                  Object.defineProperty(navigator, 'geolocation', window.__praha_orig_geo_desc);
+                  delete window.__praha_orig_geo_desc;
+                } catch (e) {
+                  try { delete navigator.geolocation; } catch (e2) {}
+                }
+              }
+            } catch(e) {}
+          })();
+        `;
+        (document.head || document.documentElement).appendChild(resetScript);
+        resetScript.remove();
+      }
       return;
     }
 
+    const mockCoords = {
+      latitude: geo.lat || 35.6762,
+      longitude: geo.lng || 139.6503,
+      altitude: 40.0,
+      accuracy: 12.0,
+      altitudeAccuracy: 5.0,
+      heading: null,
+      speed: null
+    };
+
+    const getCurrentPosImpl = function(success, error, options) {
+      if (geo.mode === 'hide') {
+        if (typeof error === 'function') {
+          setTimeout(() => error({
+            code: 1,
+            message: 'User denied Geolocation',
+            PERMISSION_DENIED: 1,
+            POSITION_UNAVAILABLE: 2,
+            TIMEOUT: 3
+          }), 10);
+        }
+        return;
+      }
+      if (typeof success === 'function') {
+        setTimeout(() => success({
+          coords: mockCoords,
+          timestamp: Date.now()
+        }), 10);
+      }
+    };
+
+    const watchPosImpl = function(success, error, options) {
+      const watchId = ++pageWin.__praha_watch_id_seq;
+      getCurrentPosImpl(success, error, options);
+      const timer = setInterval(() => {
+        getCurrentPosImpl(success, error, options);
+      }, 5000);
+      pageWin.__praha_active_watchers.set(watchId, timer);
+      return watchId;
+    };
+
+    const clearWatchImpl = function(id) {
+      if (pageWin.__praha_active_watchers && pageWin.__praha_active_watchers.has(id)) {
+        clearInterval(pageWin.__praha_active_watchers.get(id));
+        pageWin.__praha_active_watchers.delete(id);
+      }
+    };
+
+    // Use Firefox exportFunction / cloneInto if available to bypass page CSP directly
+    if (typeof exportFunction === 'function' && typeof cloneInto === 'function' && window.wrappedJSObject) {
+      try {
+        const spoofed = cloneInto({}, pageWin);
+        exportFunction(getCurrentPosImpl, spoofed, { defineAs: 'getCurrentPosition' });
+        exportFunction(watchPosImpl, spoofed, { defineAs: 'watchPosition' });
+        exportFunction(clearWatchImpl, spoofed, { defineAs: 'clearWatch' });
+
+        Object.defineProperty(pageNav, 'geolocation', {
+          value: spoofed,
+          configurable: true,
+          enumerable: true,
+          writable: true
+        });
+        return;
+      } catch (e) {}
+    } else if (pageNav) {
+      try {
+        Object.defineProperty(pageNav, 'geolocation', {
+          value: {
+            getCurrentPosition: getCurrentPosImpl,
+            watchPosition: watchPosImpl,
+            clearWatch: clearWatchImpl
+          },
+          configurable: true,
+          enumerable: true,
+          writable: true
+        });
+      } catch (e) {}
+    }
+
+    // Fallback inline script injection
     const script = document.createElement('script');
     script.id = 'praha-geo-spoof-engine';
     script.textContent = `
       (() => {
         const geo = ${JSON.stringify(geo)};
         if (!navigator || !navigator.geolocation) return;
+
+        window.__praha_active_watchers = window.__praha_active_watchers || new Map();
+        window.__praha_watch_id_seq = window.__praha_watch_id_seq || 1000;
+
+        try {
+          const origDesc = Object.getOwnPropertyDescriptor(navigator, 'geolocation') ||
+                           Object.getOwnPropertyDescriptor(Object.getPrototypeOf(navigator || {}), 'geolocation');
+          if (origDesc && !window.__praha_orig_geo_desc) {
+            window.__praha_orig_geo_desc = origDesc;
+          }
+        } catch(e) {}
 
         const mockCoords = {
           latitude: geo.lat || 35.6762,
@@ -35,33 +192,44 @@
           speed: null
         };
 
+        const getCurrentPos = function(success, error, options) {
+          if (geo.mode === 'hide') {
+            if (typeof error === 'function') {
+              setTimeout(() => error({
+                code: 1,
+                message: 'User denied Geolocation',
+                PERMISSION_DENIED: 1,
+                POSITION_UNAVAILABLE: 2,
+                TIMEOUT: 3
+              }), 10);
+            }
+            return;
+          }
+          if (typeof success === 'function') {
+            setTimeout(() => success({
+              coords: mockCoords,
+              timestamp: Date.now()
+            }), 10);
+          }
+        };
+
         const spoofed = {
-          getCurrentPosition: function(success, error, options) {
-            if (geo.mode === 'hide') {
-              if (typeof error === 'function') {
-                setTimeout(() => error({
-                  code: 1,
-                  message: 'User denied Geolocation',
-                  PERMISSION_DENIED: 1,
-                  POSITION_UNAVAILABLE: 2,
-                  TIMEOUT: 3
-                }), 20);
-              }
-              return;
-            }
-            if (typeof success === 'function') {
-              setTimeout(() => success({
-                coords: mockCoords,
-                timestamp: Date.now()
-              }), 20);
-            }
-          },
+          getCurrentPosition: getCurrentPos,
           watchPosition: function(success, error, options) {
-            const watchId = Math.floor(Math.random() * 100000) + 1;
-            this.getCurrentPosition(success, error, options);
+            const watchId = ++window.__praha_watch_id_seq;
+            getCurrentPos(success, error, options);
+            const timer = setInterval(() => {
+              getCurrentPos(success, error, options);
+            }, 5000);
+            window.__praha_active_watchers.set(watchId, timer);
             return watchId;
           },
-          clearWatch: function(id) {}
+          clearWatch: function(id) {
+            if (window.__praha_active_watchers && window.__praha_active_watchers.has(id)) {
+              clearInterval(window.__praha_active_watchers.get(id));
+              window.__praha_active_watchers.delete(id);
+            }
+          }
         };
 
         try {
@@ -270,16 +438,20 @@
     const mediaList = document.querySelectorAll('video, audio');
     mediaList.forEach(m => {
       try {
-        if (!m.__praha_gain_node) {
+        if (!m.__praha_gain_node && !m.__praha_audio_unsupported) {
           const AudioCtx = window.AudioContext || window.webkitAudioContext;
           if (AudioCtx) {
-            const ctx = new AudioCtx();
-            const source = ctx.createMediaElementSource(m);
-            const gainNode = ctx.createGain();
-            source.connect(gainNode);
-            gainNode.connect(ctx.destination);
-            m.__praha_audio_ctx = ctx;
-            m.__praha_gain_node = gainNode;
+            try {
+              const ctx = new AudioCtx();
+              const source = ctx.createMediaElementSource(m);
+              const gainNode = ctx.createGain();
+              source.connect(gainNode);
+              gainNode.connect(ctx.destination);
+              m.__praha_audio_ctx = ctx;
+              m.__praha_gain_node = gainNode;
+            } catch (secErr) {
+              m.__praha_audio_unsupported = true;
+            }
           }
         }
         if (m.__praha_gain_node) {
@@ -323,14 +495,25 @@
       }
     }
 
-    const adBadge = document.querySelector('.ytp-ad-player-overlay, .ad-interrupting, .video-ads');
-    if (adBadge) {
-      const video = document.querySelector('video');
-      if (video && !isNaN(video.duration) && video.duration > 0) {
+    const adBadge = document.querySelector('.ytp-ad-player-overlay, .ad-interrupting, .video-ads, .ad-showing');
+    const video = document.querySelector('video');
+    if (adBadge && video) {
+      if (!video.__praha_ad_fastforwarding) {
+        video.__praha_ad_fastforwarding = true;
+        video.__praha_orig_muted = video.muted;
+        video.__praha_orig_rate = video.playbackRate;
+      }
+      if (!isNaN(video.duration) && video.duration > 0 && !video.ended) {
         video.muted = true;
         video.currentTime = video.duration;
         video.playbackRate = 16.0;
       }
+    } else if (video && video.__praha_ad_fastforwarding) {
+      video.muted = video.__praha_orig_muted !== undefined ? video.__praha_orig_muted : false;
+      video.playbackRate = currentSpeed || (video.__praha_orig_rate !== undefined ? video.__praha_orig_rate : 1.0);
+      video.__praha_ad_fastforwarding = false;
+      delete video.__praha_orig_muted;
+      delete video.__praha_orig_rate;
     }
 
     const modalSelectors = [
@@ -430,8 +613,16 @@
     }, true);
   }
 
+  let scanDebounceTimer = null;
+  function debouncedScanDOMMedia(delay = 500) {
+    clearTimeout(scanDebounceTimer);
+    scanDebounceTimer = setTimeout(() => {
+      scanDOMMedia();
+    }, delay);
+  }
+
   const observer = new MutationObserver(() => {
-    scanDOMMedia();
+    debouncedScanDOMMedia(500);
   });
   if (document.body) {
     observer.observe(document.body, { childList: true, subtree: true });
@@ -447,19 +638,79 @@
   // Top-frame UI only
   if (window !== window.top) return;
 
+  let uiHost = null;
+  let uiRoot = null;
+
   function createUI() {
-    let root = document.getElementById('praha-media-root');
-    if (!root) {
-      root = document.createElement('div');
-      root.id = 'praha-media-root';
-      document.body.appendChild(root);
+    if (!uiHost || !uiHost.isConnected) {
+      uiHost = document.createElement('div');
+      uiHost.id = 'praha-media-host';
+      (document.body || document.documentElement).appendChild(uiHost);
+      try {
+        uiRoot = uiHost.attachShadow({ mode: 'closed' });
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = browser.runtime.getURL('content.css');
+        uiRoot.appendChild(link);
+      } catch (e) {
+        console.warn('Praha: Closed shadow DOM unsupported, falling back to host element');
+        uiRoot = uiHost;
+      }
     }
-    return root;
+    return uiRoot;
+  }
+
+  function promptCrxInstallInShadowRoot(name, pendingId) {
+    const root = createUI();
+    const existing = root.querySelector('#praha-crx-confirm-dialog');
+    if (existing) existing.remove();
+
+    const dialog = document.createElement('div');
+    dialog.id = 'praha-crx-confirm-dialog';
+    dialog.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#181826;border:1px solid #7C4DFF;border-radius:12px;padding:20px;z-index:2147483647;color:#FFF;box-shadow:0 8px 32px rgba(0,0,0,0.8);max-width:340px;width:90%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+    dialog.innerHTML = `
+      <div style="font-size:15px;font-weight:700;color:#FFF;margin-bottom:8px;">Install Sideloaded Extension?</div>
+      <div style="font-size:12px;color:#A0A0BA;margin-bottom:16px;word-break:break-all;">
+        A Chrome extension package (<strong>${escapeHtml(name)}</strong>) was intercepted and converted to XPI. Do you want to sideload it into Praha Browser?
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button id="praha-crx-cancel-btn" style="background:#2E2E42;color:#FFF;border:none;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Cancel</button>
+        <button id="praha-crx-ok-btn" style="background:linear-gradient(135deg,#7C4DFF,#3D5AFE);color:#FFF;border:none;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Install Extension</button>
+      </div>
+    `;
+    root.appendChild(dialog);
+
+    dialog.querySelector('#praha-crx-cancel-btn').onclick = () => {
+      dialog.remove();
+      browser.runtime.sendMessage({
+        type: 'CONFIRM_CRX_INSTALL',
+        pendingId: pendingId,
+        confirmed: false
+      }).catch(() => {});
+    };
+
+    dialog.querySelector('#praha-crx-ok-btn').onclick = (e) => {
+      if (e && !e.isTrusted) return;
+      dialog.remove();
+      browser.runtime.sendMessage({
+        type: 'CONFIRM_CRX_INSTALL',
+        pendingId: pendingId,
+        confirmed: true
+      }).then(res => {
+        if (res && res.success) {
+          showToast('Installing converted extension...');
+        } else {
+          showToast((res && res.error) || 'Install failed');
+        }
+      }).catch(() => {
+        showToast('Error initiating installation');
+      });
+    };
   }
 
   function updateFloatingButton(count) {
     const root = createUI();
-    let btn = document.getElementById('praha-media-pill');
+    let btn = root.querySelector('#praha-media-pill');
 
     if (count <= 0) {
       if (btn) btn.style.display = 'none';
@@ -477,24 +728,53 @@
         </div>
         <span class="praha-pill-badge">${count}</span>
       `;
-      btn.addEventListener('click', toggleSheet);
+      let isDragging = false;
+      let hasDragged = false;
+      let startY = 0, startBottom = 84;
+
+      btn.addEventListener('click', (e) => {
+        if (hasDragged) {
+          hasDragged = false;
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          return;
+        }
+        toggleSheet();
+      });
       root.appendChild(btn);
 
-      // Touch drag handling
-      let startY = 0, startBottom = 84;
-      btn.addEventListener('touchstart', (e) => {
-        startY = e.touches[0].clientY;
+      // Pointer drag handling (covers touch, mouse, and stylus without click bleed)
+      btn.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        hasDragged = false;
+        startY = e.clientY;
         const rect = btn.getBoundingClientRect();
         startBottom = window.innerHeight - rect.bottom;
-      }, { passive: true });
+        try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+      });
 
-      btn.addEventListener('touchmove', (e) => {
-        const delta = startY - e.touches[0].clientY;
+      btn.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const delta = startY - e.clientY;
         if (Math.abs(delta) > 5) {
+          hasDragged = true;
           const newBottom = Math.max(20, Math.min(window.innerHeight - 80, startBottom + delta));
           btn.style.bottom = `${newBottom}px`;
         }
-      }, { passive: true });
+      });
+
+      const onPointerEnd = (e) => {
+        if (isDragging) {
+          isDragging = false;
+          try { btn.releasePointerCapture(e.pointerId); } catch (_) {}
+          if (hasDragged) {
+            setTimeout(() => { hasDragged = false; }, 200);
+          }
+        }
+      };
+
+      btn.addEventListener('pointerup', onPointerEnd);
+      btn.addEventListener('pointercancel', onPointerEnd);
     } else {
       btn.style.display = 'flex';
       const badge = btn.querySelector('.praha-pill-badge');
@@ -506,8 +786,8 @@
     isSheetOpen = !isSheetOpen;
     const root = createUI();
 
-    let backdrop = document.getElementById('praha-media-backdrop');
-    let sheet = document.getElementById('praha-media-sheet');
+    let backdrop = root.querySelector('#praha-media-backdrop');
+    let sheet = root.querySelector('#praha-media-sheet');
 
     if (!backdrop) {
       backdrop = document.createElement('div');
@@ -523,12 +803,29 @@
     }
 
     if (isSheetOpen) {
-      renderSheetContent(sheet);
+      if (activeTabName === 'vault') {
+        checkVaultStatus().then(() => {
+          if (vaultUnlocked) {
+            browser.runtime.sendMessage({ type: 'GET_VAULT' }).then(res => {
+              vaultItems = (res && res.items) || [];
+              renderSheetContent(sheet);
+            }).catch(() => renderSheetContent(sheet));
+          } else {
+            renderSheetContent(sheet);
+          }
+        });
+      } else {
+        renderSheetContent(sheet);
+      }
       backdrop.classList.add('praha-show');
       sheet.classList.add('praha-show');
     } else {
       backdrop.classList.remove('praha-show');
       sheet.classList.remove('praha-show');
+      if (vaultUnlocked) {
+        vaultUnlocked = false;
+        browser.runtime.sendMessage({ type: 'LOCK_VAULT' }).catch(() => {});
+      }
     }
   }
 
@@ -687,22 +984,40 @@
       html += `
         <div class="praha-vault-wrap">
       `;
-      if (!vaultUnlocked) {
+      if (vaultStatus.lockedOut) {
+        html += `
+          <div class="praha-vault-lock">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="#FF5252" style="margin-bottom:12px;">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
+            <div style="font-size:14px;font-weight:700;color:#FF5252;margin-bottom:6px;">Vault Temporarily Locked</div>
+            <div style="font-size:12px;color:#8E8EA8;margin-bottom:16px;">Too many failed PIN attempts. Try again in ${vaultStatus.remainingSec || 30}s.</div>
+          </div>
+        `;
+      } else if (!vaultStatus.initialized) {
+        html += `
+          <div class="praha-vault-lock">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="#00E5FF" style="margin-bottom:12px;">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
+            <div style="font-size:14px;font-weight:700;color:#FFFFFF;margin-bottom:6px;">Setup Private Vault PIN</div>
+            <div style="font-size:12px;color:#8E8EA8;margin-bottom:16px;">Create a 4 to 8 digit numeric PIN to secure private media.</div>
+            <div style="display:flex;gap:8px;width:100%;max-width:260px;">
+              <input type="password" id="vault-pin-setup-input" placeholder="New PIN (4-8 digits)" maxlength="8" style="flex:1;background:#181826;border:1px solid #3A3A52;color:#FFF;padding:8px 12px;border-radius:8px;font-size:13px;outline:none;">
+              <button class="praha-btn praha-btn-primary" id="vault-set-pin-btn">Set PIN</button>
+            </div>
+          </div>
+        `;
+      } else if (!vaultUnlocked) {
         html += `
           <div class="praha-vault-lock">
             <svg viewBox="0 0 24 24" width="40" height="40" fill="#7C4DFF" style="margin-bottom:12px;">
               <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
             </svg>
             <div style="font-size:14px;font-weight:700;color:#FFFFFF;margin-bottom:6px;">Private Media Vault</div>
-            <div style="font-size:12px;color:#8E8EA8;margin-bottom:16px;">Protected biometric &amp; PIN storage. Hidden from Android Gallery.</div>
-            <button class="praha-btn praha-btn-primary" id="vault-biometric-btn" style="width:100%;max-width:260px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:6px;">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                <path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 5.93 1.51.24.13.33.44.2.68-.09.18-.28.28-.53.28zM12 7c-2.76 0-5 2.24-5 5v3c0 2.76 2.24 5 5 5s5-2.24 5-5v-3c0-2.76-2.24-5-5-5z"/>
-              </svg>
-              <span>Unlock with Biometrics</span>
-            </button>
+            <div style="font-size:12px;color:#8E8EA8;margin-bottom:16px;">Protected PIN storage. Hidden from Android Gallery.</div>
             <div style="display:flex;gap:8px;width:100%;max-width:260px;">
-              <input type="password" id="vault-pin-input" placeholder="PIN (Default: 0000)" style="flex:1;background:#181826;border:1px solid #3A3A52;color:#FFF;padding:8px 12px;border-radius:8px;font-size:13px;outline:none;">
+              <input type="password" id="vault-pin-input" placeholder="Enter PIN" maxlength="8" style="flex:1;background:#181826;border:1px solid #3A3A52;color:#FFF;padding:8px 12px;border-radius:8px;font-size:13px;outline:none;">
               <button class="praha-btn praha-btn-secondary" id="vault-unlock-btn">Unlock PIN</button>
             </div>
           </div>
@@ -711,7 +1026,18 @@
         html += `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
             <div style="font-size:13px;font-weight:700;color:#00E5FF;">Vault Unlocked (${vaultItems.length} items)</div>
-            <button class="praha-btn praha-btn-secondary" id="vault-lock-btn" style="padding:4px 10px;font-size:11px;">Lock</button>
+            <div style="display:flex;gap:6px;">
+              <button class="praha-btn praha-btn-secondary" id="vault-change-pin-toggle-btn" style="padding:4px 10px;font-size:11px;">Change PIN</button>
+              <button class="praha-btn praha-btn-secondary" id="vault-lock-btn" style="padding:4px 10px;font-size:11px;">Lock</button>
+            </div>
+          </div>
+          <div id="vault-change-pin-section" style="display:none;background:#141420;border:1px solid #2E2E42;border-radius:8px;padding:10px;margin-bottom:12px;">
+            <div style="font-size:12px;font-weight:600;color:#FFF;margin-bottom:6px;">Change Vault PIN</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <input type="password" id="vault-old-pin-input" placeholder="Current PIN" maxlength="8" style="background:#181826;border:1px solid #3A3A52;color:#FFF;padding:6px 10px;border-radius:6px;font-size:12px;outline:none;">
+              <input type="password" id="vault-new-pin-input" placeholder="New PIN (4-8 digits)" maxlength="8" style="background:#181826;border:1px solid #3A3A52;color:#FFF;padding:6px 10px;border-radius:6px;font-size:12px;outline:none;">
+              <button class="praha-btn praha-btn-primary" id="vault-submit-change-pin-btn" style="padding:6px 10px;font-size:11px;">Update PIN</button>
+            </div>
           </div>
           <div class="praha-media-list">
         `;
@@ -756,8 +1082,17 @@
 
     // Navigation Tab Switching
     sheet.querySelectorAll('.praha-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         activeTabName = btn.getAttribute('data-tab');
+        if (activeTabName === 'vault') {
+          await checkVaultStatus();
+          if (vaultUnlocked) {
+            try {
+              const res = await browser.runtime.sendMessage({ type: 'GET_VAULT' });
+              vaultItems = (res && res.items) || [];
+            } catch (e) {}
+          }
+        }
         renderSheetContent(sheet);
       });
     });
@@ -943,6 +1278,8 @@
             if (fastestPill) fastestPill.classList.add('praha-pill-active');
             browser.runtime.sendMessage({ type: 'SET_DOH_PROVIDER', doh: res.fastest }).catch(() => {});
             showToast(`Fastest DoH auto-selected: ${res.fastest}`);
+          } else {
+            showToast('All DoH providers unreachable or benchmark failed');
           }
           dnsBenchBtn.textContent = 'Done';
           setTimeout(() => { dnsBenchBtn.textContent = 'Bench'; }, 2000);
@@ -977,43 +1314,71 @@
       });
     });
 
-    // Vault Biometric Unlock
-    const biometricBtn = sheet.querySelector('#vault-biometric-btn');
-    if (biometricBtn) {
-      biometricBtn.addEventListener('click', async () => {
+    // Vault Set PIN
+    const setPinBtn = sheet.querySelector('#vault-set-pin-btn');
+    if (setPinBtn) {
+      setPinBtn.addEventListener('click', async () => {
+        const pin = (sheet.querySelector('#vault-pin-setup-input') || {}).value || '';
+        if (!/^\d{4,8}$/.test(pin)) {
+          showToast('PIN must be 4 to 8 digits');
+          return;
+        }
         try {
-          if (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-            const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-            if (available) {
-              showToast('Verifying device biometric signature...');
-            }
+          const res = await browser.runtime.sendMessage({
+            type: 'SET_VAULT_PIN',
+            pin: pin,
+            newPin: pin
+          });
+          if (res && res.success) {
+            showToast('PIN set successfully. Vault Unlocked.');
+            vaultUnlocked = true;
+            vaultStatus.initialized = true;
+            vaultStatus.unlocked = true;
+            vaultStatus.lockedOut = false;
+            const vaultRes = await browser.runtime.sendMessage({ type: 'GET_VAULT' });
+            vaultItems = (vaultRes && vaultRes.items) || [];
+            renderSheetContent(sheet);
+          } else {
+            showToast((res && res.error) || 'Failed to set PIN');
           }
-        } catch(e) {}
-        vaultUnlocked = true;
-        browser.runtime.sendMessage({ type: 'GET_VAULT' }).then(res => {
-          vaultItems = (res && res.items) || [];
-          renderSheetContent(sheet);
-          showToast('Biometric unlock verified: Vault Open');
-        }).catch(() => {
-          vaultUnlocked = true;
-          renderSheetContent(sheet);
-        });
+        } catch (e) {
+          showToast('Error configuring vault PIN');
+        }
       });
     }
 
     // Vault Unlock
     const unlockBtn = sheet.querySelector('#vault-unlock-btn');
     if (unlockBtn) {
-      unlockBtn.addEventListener('click', () => {
+      unlockBtn.addEventListener('click', async (e) => {
+        if (e && !e.isTrusted) return;
         const pin = (sheet.querySelector('#vault-pin-input') || {}).value || '';
-        if (pin === '0000' || pin === '1234' || pin.length >= 4) {
-          vaultUnlocked = true;
-          browser.runtime.sendMessage({ type: 'GET_VAULT' }).then(res => {
-            vaultItems = (res && res.items) || [];
+        if (!/^\d{4,8}$/.test(pin)) {
+          showToast('Enter 4 to 8 digit PIN');
+          return;
+        }
+        try {
+          const res = await browser.runtime.sendMessage({ type: 'UNLOCK_VAULT', pin: pin });
+          if (res && res.success) {
+            vaultUnlocked = true;
+            vaultStatus.unlocked = true;
+            vaultStatus.lockedOut = false;
+            const vaultRes = await browser.runtime.sendMessage({ type: 'GET_VAULT' });
+            vaultItems = (vaultRes && vaultRes.items) || [];
             renderSheetContent(sheet);
-          });
-        } else {
-          showToast('Invalid PIN (Try 0000)');
+            showToast('Vault Unlocked');
+          } else {
+            if (res && (res.lockedOut || res.error === 'LOCKED_OUT')) {
+              vaultStatus.lockedOut = true;
+              vaultStatus.remainingSec = res.remainingSec;
+              renderSheetContent(sheet);
+              showToast(`Vault locked out for ${res.remainingSec}s`);
+            } else {
+              showToast((res && res.error) || 'Invalid PIN');
+            }
+          }
+        } catch (e) {
+          showToast('Unlock error');
         }
       });
     }
@@ -1023,18 +1388,85 @@
     if (lockBtn) {
       lockBtn.addEventListener('click', () => {
         vaultUnlocked = false;
+        vaultStatus.unlocked = false;
+        browser.runtime.sendMessage({ type: 'LOCK_VAULT' }).catch(() => {});
         renderSheetContent(sheet);
+        showToast('Vault Locked');
       });
     }
 
+    // Vault Change PIN
+    const changePinToggle = sheet.querySelector('#vault-change-pin-toggle-btn');
+    const changePinSec = sheet.querySelector('#vault-change-pin-section');
+    if (changePinToggle && changePinSec) {
+      changePinToggle.addEventListener('click', () => {
+        changePinSec.style.display = changePinSec.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+
+    const submitChangePinBtn = sheet.querySelector('#vault-submit-change-pin-btn');
+    if (submitChangePinBtn) {
+      submitChangePinBtn.addEventListener('click', async () => {
+        const oldPin = (sheet.querySelector('#vault-old-pin-input') || {}).value || '';
+        const newPin = (sheet.querySelector('#vault-new-pin-input') || {}).value || '';
+        if (!/^\d{4,8}$/.test(newPin)) {
+          showToast('New PIN must be 4 to 8 digits');
+          return;
+        }
+        try {
+          const res = await browser.runtime.sendMessage({
+            type: 'SET_VAULT_PIN',
+            pin: newPin,
+            newPin: newPin,
+            oldPin: oldPin
+          });
+          if (res && res.success) {
+            showToast('PIN changed successfully');
+            if (changePinSec) changePinSec.style.display = 'none';
+          } else {
+            showToast((res && res.error) || 'Failed to change PIN');
+          }
+        } catch (e) {
+          showToast('Error changing PIN');
+        }
+      });
+    }
+
+    // Vault Export
+    sheet.querySelectorAll('.praha-vault-export').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        btn.textContent = 'Exporting...';
+        try {
+          const res = await browser.runtime.sendMessage({ type: 'EXPORT_VAULT_ITEM', id: id });
+          btn.textContent = 'Export';
+          if (res && res.success) {
+            showToast('File exported to Downloads folder');
+          } else {
+            showToast((res && res.error) || 'Export failed');
+          }
+        } catch (e) {
+          btn.textContent = 'Export';
+          showToast('Export failed');
+        }
+      });
+    });
+
     // Vault Delete
     sheet.querySelectorAll('.praha-vault-del').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        if (e && !e.isTrusted) return;
         const id = btn.getAttribute('data-id');
-        browser.runtime.sendMessage({ type: 'DELETE_VAULT_ITEM', id: id }).then(() => {
-          vaultItems = vaultItems.filter(v => v.id !== id);
-          renderSheetContent(sheet);
-          showToast('Item deleted from vault.');
+        browser.runtime.sendMessage({ type: 'DELETE_VAULT_ITEM', id: id }).then(res => {
+          if (res && res.success) {
+            vaultItems = vaultItems.filter(v => v.id !== id);
+            renderSheetContent(sheet);
+            showToast('Item deleted from vault.');
+          } else {
+            showToast((res && res.error) || 'Delete failed');
+          }
+        }).catch(() => {
+          showToast('Delete failed');
         });
       });
     });
@@ -1054,7 +1486,7 @@
 
   function showToast(text) {
     const root = createUI();
-    let toast = document.getElementById('praha-media-toast');
+    let toast = root.querySelector('#praha-media-toast');
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'praha-media-toast';
@@ -1082,7 +1514,8 @@
       detectedMedia = msg.items || [];
       updateFloatingButton(detectedMedia.length);
       if (isSheetOpen) {
-        const sheet = document.getElementById('praha-media-sheet');
+        const root = createUI();
+        const sheet = root.querySelector('#praha-media-sheet');
         if (sheet) renderSheetContent(sheet);
       }
     } else if (msg.type === 'APPLY_PLAYBACK_SPEED') {
@@ -1094,10 +1527,21 @@
         currentGeo = msg.geo;
         injectGeolocationOverride(currentGeo);
         if (isSheetOpen) {
-          const sheet = document.getElementById('praha-media-sheet');
+          const root = createUI();
+          const sheet = root.querySelector('#praha-media-sheet');
           if (sheet) renderSheetContent(sheet);
         }
       }
+    } else if (msg.type === 'OPEN_VAULT_SHEET') {
+      activeTabName = 'vault';
+      if (!isSheetOpen) toggleSheet();
+      else {
+        const root = createUI();
+        const sheet = root.querySelector('#praha-media-sheet');
+        if (sheet) renderSheetContent(sheet);
+      }
+    } else if (msg.type === 'PROMPT_CRX_CONFIRM') {
+      promptCrxInstallInShadowRoot(msg.name, msg.pendingId);
     }
   });
 
@@ -1116,4 +1560,18 @@
       }
     }
   }).catch(() => {});
+
+  window.addEventListener('pagehide', () => {
+    if (vaultUnlocked) {
+      vaultUnlocked = false;
+      browser.runtime.sendMessage({ type: 'LOCK_VAULT' }).catch(() => {});
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && vaultUnlocked) {
+      vaultUnlocked = false;
+      browser.runtime.sendMessage({ type: 'LOCK_VAULT' }).catch(() => {});
+    }
+  });
 })();

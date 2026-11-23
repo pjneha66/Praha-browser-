@@ -191,7 +191,14 @@
 
   <script src="webtorrent.min.js"></script>
   <script>
-    const client = new WebTorrent();
+    let client = new WebTorrent();
+
+    client.on('error', (err) => {
+      console.error('WebTorrent client error:', err);
+      statusBadge.textContent = 'Torrent Error: ' + (err.message || err);
+      statusBadge.style.color = '#ef4444';
+    });
+
     const input = document.getElementById('magnet-input');
     const streamBtn = document.getElementById('stream-btn');
     const infoBox = document.getElementById('torrent-info');
@@ -220,73 +227,112 @@
     function startStream(torrentId) {
       if (!torrentId) return;
       infoBox.style.display = 'block';
+      statusBadge.style.color = '';
       statusBadge.textContent = 'Contacting WebTorrent swarm...';
 
-      client.add(torrentId, (torrent) => {
-        statusBadge.textContent = 'Peers connected - streaming ready';
-        
-        // Find main video or media file
-        const file = torrent.files.find(f => {
-          const n = f.name.toLowerCase();
-          return n.endsWith('.mp4') || n.endsWith('.mkv') || n.endsWith('.webm') || n.endsWith('.avi');
-        }) || torrent.files[0];
-
-        currentFile = file;
-        fileTitle.textContent = file.name;
-
-        // Stream directly into HTML5 video player
-        file.renderTo(player, (err) => {
-          if (!err) playerWrap.style.display = 'block';
+      // Destroy previous swarms to eliminate memory and network leaks
+      if (client.torrents && client.torrents.length > 0) {
+        client.torrents.slice().forEach(t => {
+          try { t.destroy(); } catch (e) {}
         });
+      }
+      if (player) {
+        player.pause();
+        player.removeAttribute('src');
+        player.load();
+      }
+      playerWrap.style.display = 'none';
 
-        torrent.on('download', () => {
-          const progress = (torrent.progress * 100).toFixed(1);
-          progressBar.style.width = progress + '%';
-          statProgress.textContent = progress + '%';
-          statSpeed.textContent = formatBytes(torrent.downloadSpeed) + '/s';
-          statPeers.textContent = torrent.numPeers;
-          statSize.textContent = formatBytes(torrent.downloaded) + ' / ' + formatBytes(torrent.length);
-        });
+      try {
+        client.add(torrentId, (torrent) => {
+          torrent.on('error', (err) => {
+            console.error('Torrent error:', err);
+            statusBadge.textContent = 'Swarm Error: ' + (err.message || err);
+            statusBadge.style.color = '#ef4444';
+          });
 
-        torrent.on('done', () => {
-          statusBadge.textContent = 'Download Complete (100%)';
-          progressBar.style.width = '100%';
-        });
+          statusBadge.textContent = 'Peers connected - streaming ready';
+          
+          // Find main video or media file
+          const file = torrent.files.find(f => {
+            const n = f.name.toLowerCase();
+            return n.endsWith('.mp4') || n.endsWith('.mkv') || n.endsWith('.webm') || n.endsWith('.avi');
+          }) || torrent.files[0];
 
-        saveBtn.onclick = () => {
-          file.getBlobURL((err, url) => {
-            if (!err && url) {
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = file.name;
-              document.body.appendChild(a);
-              a.click();
-              setTimeout(() => a.remove(), 1000);
+          if (!file) {
+            statusBadge.textContent = 'No playable files found in torrent.';
+            return;
+          }
+
+          currentFile = file;
+          fileTitle.textContent = file.name;
+
+          // Stream directly into HTML5 video player
+          file.renderTo(player, (err) => {
+            if (!err) {
+              playerWrap.style.display = 'block';
+            } else {
+              console.warn('Render error:', err);
+              statusBadge.textContent = 'Codec playback warning. You can still save the file below.';
             }
           });
-        };
 
-        saveVaultBtn.onclick = () => {
-          file.getBlob((err, blob) => {
-            if (!err && blob) {
-              browser.runtime.sendMessage({
-                type: 'SAVE_TO_VAULT',
-                title: file.name,
-                format: file.name.split('.').pop() || 'mp4',
-                blob: blob
-              }).then(() => {
-                alert('Saved to Private Vault!');
-              }).catch(() => {
-                alert('Saved locally in vault storage.');
-              });
-            }
+          torrent.on('download', () => {
+            const progress = (torrent.progress * 100).toFixed(1);
+            progressBar.style.width = progress + '%';
+            statProgress.textContent = progress + '%';
+            statSpeed.textContent = formatBytes(torrent.downloadSpeed) + '/s';
+            statPeers.textContent = torrent.numPeers;
+            statSize.textContent = formatBytes(torrent.downloaded) + ' / ' + formatBytes(torrent.length);
           });
-        };
-      });
+
+          torrent.on('done', () => {
+            statusBadge.textContent = 'Download Complete (100%)';
+            progressBar.style.width = '100%';
+          });
+
+          saveBtn.onclick = () => {
+            file.getBlobURL((err, url) => {
+              if (!err && url) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => a.remove(), 1000);
+              }
+            });
+          };
+
+          saveVaultBtn.onclick = () => {
+            file.getBlob((err, blob) => {
+              if (!err && blob) {
+                browser.runtime.sendMessage({
+                  type: 'SAVE_TO_VAULT',
+                  title: file.name,
+                  format: file.name.split('.').pop() || 'mp4',
+                  blob: blob
+                }).then(() => {
+                  alert('Saved to Private Vault!');
+                }).catch(() => {
+                  alert('Saved locally in vault storage.');
+                });
+              }
+            });
+          };
+        });
+      } catch (err) {
+        statusBadge.textContent = 'Invalid torrent or magnet link: ' + (err.message || err);
+        statusBadge.style.color = '#ef4444';
+      }
     }
 
     streamBtn.addEventListener('click', () => {
       startStream(input.value.trim());
+    });
+
+    window.addEventListener('beforeunload', () => {
+      try { client.destroy(); } catch (e) {}
     });
 
     // Check URL query param
