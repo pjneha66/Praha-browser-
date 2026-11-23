@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Praha Power Suite v2.0.16</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-header">
+    <div class="logo-box">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="#7C4DFF">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+      </svg>
+    </div>
+    <div class="title-wrap">
+      <div class="app-name">Praha Power Suite v2.0.16</div>
+      <div class="app-sub" id="media-status">Scanning media...</div>
+    </div>
+    <button class="icon-btn" id="btn-refresh" title="Rescan Page">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+    </button>
+  </div>
+
+  <!-- Quick Power Controls -->
+  <div class="power-bar">
+    <div class="power-row">
+      <span class="power-label">Speed:</span>
+      <div class="power-pills" id="speed-pills">
+        <button class="pill" data-speed="0.5">0.5x</button>
+        <button class="pill pill-active" data-speed="1.0">1.0x</button>
+        <button class="pill" data-speed="1.25">1.25x</button>
+        <button class="pill" data-speed="1.5">1.5x</button>
+        <button class="pill" data-speed="2.0">2.0x</button>
+        <button class="pill" data-speed="3.0">3.0x</button>
+        <button class="pill" data-speed="4.0">4.0x</button>
+      </div>
+    </div>
+    <div class="power-row">
+      <span class="power-label">Audio:</span>
+      <div class="power-pills" id="boost-pills">
+        <button class="pill pill-active" data-boost="1.0">100%</button>
+        <button class="pill" data-boost="1.5">150%</button>
+        <button class="pill" data-boost="2.0">200%</button>
+        <button class="pill" data-boost="3.0">300%</button>
+      </div>
+    </div>
+    <div class="power-row">
+      <span class="power-label">DoH:</span>
+      <div class="power-pills" id="doh-pills">
+        <button class="pill pill-active" data-doh="Cloudflare">Cloudflare</button>
+        <button class="pill" data-doh="AdGuard">AdGuard</button>
+        <button class="pill" data-doh="NextDNS">NextDNS</button>
+        <button class="pill" data-doh="Mullvad">Mullvad</button>
+        <button class="pill" data-doh="Quad9">Quad9</button>
+      </div>
+    </div>
+    <div class="power-row">
+      <span class="power-label">Geo:</span>
+      <div class="power-pills" id="geo-pills">
+        <button class="pill pill-active" data-geo="Passthrough">Passthrough</button>
+        <button class="pill" data-geo="Hide">Hide / Block</button>
+        <button class="pill" data-geo="Tokyo">Tokyo</button>
+        <button class="pill" data-geo="London">London</button>
+        <button class="pill" data-geo="New York">New York</button>
+        <button class="pill" data-geo="Zurich">Zurich</button>
+      </div>
+    </div>
+    <div class="power-tags">
+      <button class="tag-link" id="btn-bench-dns">Bench DNS</button>
+      <button class="tag-link" id="btn-open-vault">Biometric Vault</button>
+      <button class="tag-link" id="btn-open-torrent">Magnet Streamer</button>
+      <span class="tag">Auto-PiP</span>
+      <span class="tag">Bkgnd Play</span>
+      <span class="tag">GPS Spoof</span>
+    </div>
+  </div>
+
+  <div class="media-container" id="media-container">
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" width="36" height="36" fill="#5A5A72">
+        <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
+      </svg>
+      <div class="empty-title">No Media Detected</div>
+      <div class="empty-desc">Play video/audio on this page to capture its stream.</div>
+    </div>
+  </div>
+
+  <div class="popup-footer" id="popup-footer" style="display:none;">
+    <button class="action-btn-accent" id="btn-download-all">
+      Download All Files
+    </button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

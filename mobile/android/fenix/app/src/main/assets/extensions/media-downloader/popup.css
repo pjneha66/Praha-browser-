@@ -1,0 +1,276 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 320px;
+  max-height: 520px;
+  background: #14141E;
+  color: #FFFFFF;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #181826;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(124, 77, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-wrap {
+  flex: 1;
+}
+
+.app-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.app-sub {
+  font-size: 11px;
+  color: #9C9CB2;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  color: #B0B0C0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-btn:active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.power-bar {
+  padding: 8px 12px;
+  background: #161622;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.power-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.power-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8C8CA4;
+  width: 38px;
+}
+
+.power-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.power-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #C0C0D4;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pill.pill-active {
+  background: #7C4DFF;
+  border-color: #7C4DFF;
+  color: #FFFFFF;
+}
+
+.power-tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.tag-link {
+  background: rgba(124, 77, 255, 0.15);
+  color: #9E7BFF;
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tag-link:active {
+  filter: brightness(1.2);
+}
+
+.tag {
+  background: rgba(0, 229, 255, 0.08);
+  color: #00E5FF;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.media-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  color: #787890;
+}
+
+.empty-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #B0B0C4;
+  margin-top: 8px;
+}
+
+.empty-desc {
+  font-size: 11px;
+  color: #6C6C82;
+  margin-top: 4px;
+}
+
+.media-card {
+  background: #1C1C2A;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-format {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.badge-size {
+  font-size: 10px;
+  color: #8C8CA2;
+  margin-left: auto;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #EDEDF5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-turbo {
+  background: linear-gradient(135deg, #FF6D00, #FFAB00);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.btn-primary {
+  background: #7C4DFF;
+  color: #FFFFFF;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #D0D0E2;
+}
+
+.popup-footer {
+  padding: 8px 10px 10px 10px;
+  background: #181826;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.action-btn-accent {
+  width: 100%;
+  padding: 8px;
+  background: linear-gradient(135deg, #7C4DFF, #3D5AFE);
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}

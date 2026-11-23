@@ -1,0 +1,426 @@
+/* Praha Media & Power Suite - Floating UI & Bottom Sheet */
+#praha-media-root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #FFFFFF;
+}
+
+#praha-media-pill {
+  position: fixed;
+  right: 18px;
+  bottom: 84px;
+  z-index: 2147483645;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(18, 18, 26, 0.92);
+  border: 1px solid rgba(124, 77, 255, 0.5);
+  border-radius: 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(124, 77, 255, 0.35);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  user-select: none;
+  animation: prahaPillIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes prahaPillIn {
+  from { opacity: 0; transform: scale(0.6) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.praha-pill-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7C4DFF;
+}
+
+.praha-pill-badge {
+  background: #7C4DFF;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 12px;
+  min-width: 16px;
+  text-align: center;
+}
+
+#praha-media-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 2147483646;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+#praha-media-backdrop.praha-show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#praha-media-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 84vh;
+  background: #14141E;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.8);
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  overflow: hidden;
+}
+
+#praha-media-sheet.praha-show {
+  transform: translateY(0);
+}
+
+.praha-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.praha-sheet-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.praha-sheet-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(124, 77, 255, 0.15);
+}
+
+.praha-sheet-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.praha-sheet-subtitle {
+  font-size: 11px;
+  color: #A0A0B2;
+}
+
+.praha-sheet-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.praha-icon-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #C0C0D0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.praha-icon-btn:active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Tab Navigation */
+.praha-tab-nav {
+  display: flex;
+  background: #181826;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 14px;
+}
+
+.praha-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #8C8CA8;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 4px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.praha-tab-btn.praha-tab-active {
+  color: #FFFFFF;
+}
+
+.praha-tab-btn.praha-tab-active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #7C4DFF;
+  box-shadow: 0 0 8px #7C4DFF;
+  border-radius: 2px;
+}
+
+.praha-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Power Controls Toolbar */
+.praha-power-controls {
+  padding: 14px 18px;
+  background: #14141E;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.praha-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.praha-control-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9C9CB2;
+  width: 75px;
+  white-space: nowrap;
+}
+
+.praha-pill-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0;
+  scrollbar-width: none;
+}
+
+.praha-pill-group::-webkit-scrollbar {
+  display: none;
+}
+
+.praha-speed-pill, .praha-boost-pill, .praha-doh-pill, .praha-geo-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #C8C8DC;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.praha-speed-pill.praha-pill-active, .praha-boost-pill.praha-pill-active, .praha-doh-pill.praha-pill-active, .praha-geo-pill.praha-pill-active {
+  background: #7C4DFF;
+  border-color: #7C4DFF;
+  color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
+}
+
+.praha-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.praha-status-chip {
+  background: rgba(0, 229, 255, 0.08);
+  color: #00E5FF;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.praha-media-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.praha-media-card {
+  background: #1C1C2A;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.praha-media-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.praha-format-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.praha-quality-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #E0E0FF;
+}
+
+.praha-size-badge {
+  font-size: 11px;
+  color: #8E8EA8;
+  margin-left: auto;
+}
+
+.praha-media-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #EDEDF5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.praha-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.praha-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.praha-btn:active {
+  filter: brightness(1.2);
+}
+
+.praha-btn-turbo {
+  background: linear-gradient(135deg, #FF6D00, #FFAB00);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.praha-btn-primary {
+  background: #7C4DFF;
+  color: #FFFFFF;
+}
+
+.praha-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #D8D8E8;
+}
+
+.praha-btn-accent {
+  background: linear-gradient(135deg, #7C4DFF, #3D5AFE);
+  color: #FFFFFF;
+  width: 100%;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.praha-sheet-footer {
+  padding: 12px 18px 18px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Vault Styles */
+.praha-vault-wrap {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.praha-vault-lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.praha-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 14px;
+}
+
+#praha-media-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(18, 18, 24, 0.94);
+  border: 1px solid rgba(124, 77, 255, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  color: #FFFFFF;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 2147483648;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+#praha-media-toast.praha-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
