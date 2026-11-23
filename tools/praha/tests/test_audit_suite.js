@@ -117,11 +117,26 @@ assert(typeof onBeforeSendHeadersListener === 'function', 'background.js must re
 assert(typeof onBeforeRequestListener === 'function', 'background.js must register onBeforeRequest listener');
 
 function sendMessage(msg, sender = { id: 'media-downloader@prahabrowser.org', frameId: 0 }) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const timeoutId = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        reject(new Error('Handler never called sendResponse for ' + (msg && msg.type)));
+      }
+    }, 5000);
     const res = onMessageListener(msg, sender, (response) => {
-      resolve(response);
+      if (!settled) {
+        settled = true;
+        clearTimeout(timeoutId);
+        resolve(response);
+      }
     });
-    if (!res) resolve(undefined);
+    if (!res && !settled) {
+      settled = true;
+      clearTimeout(timeoutId);
+      resolve(undefined);
+    }
   });
 }
 
@@ -223,6 +238,8 @@ function sendMessage(msg, sender = { id: 'media-downloader@prahabrowser.org', fr
   assert(authRecord && authRecord.hash && authRecord.salt, 'Salt and verifier must be stored in storage.local');
   assert.strictEqual(typeof authRecord.hash, 'string');
   assert.strictEqual(authRecord.hash.length, 64, 'SHA-256 verifier must be 64 hex chars');
+  assert.strictEqual(authRecord.salt.length, 32, 'Salt must be 16 bytes (32 hex chars)');
+  assert(/^[0-9a-f]{32}$/.test(authRecord.salt), 'Salt must be hex-encoded');
 
   // Attempt overwrite without oldPin
   const overwriteNoOld = await sendMessage({ type: 'SET_VAULT_PIN', pin: '1234' });

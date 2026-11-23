@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     benchBtn.addEventListener('click', () => {
       benchBtn.textContent = 'Pinging...';
       browser.runtime.sendMessage({ type: 'BENCHMARK_DNS' }).then(res => {
-        benchBtn.textContent = 'Fastest: ' + res.fastest;
+        benchBtn.textContent = res.fastest ? 'Fastest: ' + res.fastest : 'All providers unreachable';
         if (res.results && Array.isArray(res.results)) {
           res.results.forEach(r => {
             const pill = document.querySelector(`#doh-pills .pill[data-doh="${r.name}"]`);
@@ -170,24 +170,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Biometric & PIN Vault trigger
+  // PIN Vault trigger
   const vaultBtn = document.getElementById('btn-open-vault');
   if (vaultBtn) {
     vaultBtn.addEventListener('click', async () => {
       if (currentTabId) {
         browser.tabs.sendMessage(currentTabId, { type: 'OPEN_VAULT_SHEET' })
-          .catch(() => {
-            browser.tabs.executeScript(currentTabId, {
-              code: `(() => {
-                const btn = document.getElementById('praha-media-pill');
-                if (btn) btn.click();
-                setTimeout(() => {
-                  const vaultTab = document.querySelector('.praha-tab-btn[data-tab="vault"]');
-                  if (vaultTab) vaultTab.click();
-                }, 300);
-              })()`
-            }).catch(() => {});
-          })
+          .catch(() =>
+            browser.tabs.executeScript(currentTabId, { file: 'content.js' })
+              .then(() => new Promise(resolve => setTimeout(resolve, 400)))
+              .then(() => browser.tabs.sendMessage(currentTabId, { type: 'OPEN_VAULT_SHEET' }))
+              .catch(() => {})
+          )
           .finally(() => window.close());
       }
     });

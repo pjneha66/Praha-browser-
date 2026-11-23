@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Praha Media & Power Suite",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "description": "Built-in media detector, multi-threaded downloader, background playback, Chrome extension CRX converter, comic webtoon reader, DNS benchmarker, GPS spoofer, biometric vault, and WebTorrent streamer for Praha Browser",
   "browser_specific_settings": {
     "gecko": {
@@ -41,6 +41,7 @@
     "128": "icon_128.png"
   },
   "web_accessible_resources": [
+    "content.css",
     "webtorrent.html",
     "webtorrent.min.js",
     "jszip.min.js"

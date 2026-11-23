@@ -1,4 +1,4 @@
-// Praha Media & Power Suite - Content Script (v2.0.16)
+// Praha Media & Power Suite - Content Script (v2.0.17)
 (() => {
   // 1. Geolocation Spoof & Hide Engine (runs at document_start)
   let currentGeo = { mode: 'off', preset: 'Tokyo', lat: 35.6762, lng: 139.6503 };
@@ -29,6 +29,14 @@
 
     pageWin.__praha_active_watchers = pageWin.__praha_active_watchers || new Map();
     pageWin.__praha_watch_id_seq = pageWin.__praha_watch_id_seq || 1000;
+
+    // Stop watchers from a previous preset so they keep reporting stale coordinates
+    if (pageWin.__praha_active_watchers.size) {
+      for (const timer of pageWin.__praha_active_watchers.values()) {
+        try { clearInterval(timer); } catch (e) {}
+      }
+      pageWin.__praha_active_watchers.clear();
+    }
 
     // Capture original descriptor once
     if (!pageWin.__praha_orig_geo_desc && pageNav) {
@@ -247,17 +255,26 @@
   }
 
   // 2. Background Playback Keep-Alive (runs at document_start)
+  let prahaNativeHiddenGet = null;
+  try {
+    prahaNativeHiddenGet = (Object.getOwnPropertyDescriptor(Document.prototype, 'hidden') || {}).get || null;
+  } catch (e) {}
   try {
     Object.defineProperty(document, 'hidden', { get: () => false, configurable: true });
     Object.defineProperty(document, 'visibilityState', { get: () => 'visible', configurable: true });
     Object.defineProperty(document, 'webkitVisibilityState', { get: () => 'visible', configurable: true });
   } catch (e) {}
 
+  // These swallowers run before any later-registered listener, so route
+  // visibility/pagehide signals through a hook instead of a plain listener
+  let prahaVisibilityHook = null;
   ['visibilitychange', 'webkitvisibilitychange', 'pagehide'].forEach(evt => {
     window.addEventListener(evt, (e) => {
+      if (prahaVisibilityHook) { try { prahaVisibilityHook(evt); } catch (err) {} }
       e.stopImmediatePropagation();
     }, true);
     document.addEventListener(evt, (e) => {
+      if (prahaVisibilityHook) { try { prahaVisibilityHook(evt); } catch (err) {} }
       e.stopImmediatePropagation();
     }, true);
   });
@@ -427,6 +444,7 @@
   let isSheetOpen = false;
   let activeTabName = 'media';
   let currentSpeed = 1.0;
+  let userSetSpeed = false;
   let currentBoost = 1.0;
   let currentDoH = 'Cloudflare';
   let vaultUnlocked = false;
@@ -467,6 +485,7 @@
   // 5. Playback Speed Overdrive (0.25x to 4.0x)
   function applyPlaybackSpeed(rate) {
     currentSpeed = rate;
+    userSetSpeed = true;
     const mediaList = document.querySelectorAll('video, audio');
     mediaList.forEach(m => {
       try {
@@ -510,7 +529,7 @@
       }
     } else if (video && video.__praha_ad_fastforwarding) {
       video.muted = video.__praha_orig_muted !== undefined ? video.__praha_orig_muted : false;
-      video.playbackRate = currentSpeed || (video.__praha_orig_rate !== undefined ? video.__praha_orig_rate : 1.0);
+      video.playbackRate = userSetSpeed ? currentSpeed : (video.__praha_orig_rate !== undefined ? video.__praha_orig_rate : 1.0);
       video.__praha_ad_fastforwarding = false;
       delete video.__praha_orig_muted;
       delete video.__praha_orig_rate;
@@ -1126,8 +1145,11 @@
             if (res && res.success) {
               showToast('Chrome extension converted and install initiated!');
             } else {
-              showToast('Error converting extension package.');
+              showToast((res && res.error) || 'Error converting extension package.');
             }
+          }).catch(() => {
+            crxInstallBtn.textContent = 'Sideload';
+            showToast('Error starting extension install');
           });
         } else {
           showToast('Please enter a valid 32-char extension ID or URL');
@@ -1538,7 +1560,18 @@
       else {
         const root = createUI();
         const sheet = root.querySelector('#praha-media-sheet');
-        if (sheet) renderSheetContent(sheet);
+        if (sheet) {
+          checkVaultStatus().then(() => {
+            if (vaultUnlocked) {
+              browser.runtime.sendMessage({ type: 'GET_VAULT' }).then(res => {
+                vaultItems = (res && res.items) || [];
+                renderSheetContent(sheet);
+              }).catch(() => renderSheetContent(sheet));
+            } else {
+              renderSheetContent(sheet);
+            }
+          });
+        }
       }
     } else if (msg.type === 'PROMPT_CRX_CONFIRM') {
       promptCrxInstallInShadowRoot(msg.name, msg.pendingId);
@@ -1561,17 +1594,16 @@
     }
   }).catch(() => {});
 
-  window.addEventListener('pagehide', () => {
-    if (vaultUnlocked) {
+  prahaVisibilityHook = (evt) => {
+    if (!vaultUnlocked) return;
+    let reallyHidden = true;
+    try {
+      reallyHidden = prahaNativeHiddenGet ? !!prahaNativeHiddenGet.call(document) : true;
+    } catch (e) {}
+    if (evt === 'pagehide' || reallyHidden) {
       vaultUnlocked = false;
+      vaultStatus.unlocked = false;
       browser.runtime.sendMessage({ type: 'LOCK_VAULT' }).catch(() => {});
     }
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && vaultUnlocked) {
-      vaultUnlocked = false;
-      browser.runtime.sendMessage({ type: 'LOCK_VAULT' }).catch(() => {});
-    }
-  });
+  };
 })();

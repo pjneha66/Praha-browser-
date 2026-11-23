@@ -1,5 +1,7 @@
 /* Praha Media & Power Suite - Floating UI & Bottom Sheet */
-#praha-media-root {
+:host,
+#praha-media-root,
+#praha-media-host {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.4;

@@ -1,4 +1,4 @@
-// Praha Media & Power Suite - Background Service (v2.0.16)
+// Praha Media & Power Suite - Background Service (v2.0.17)
 const tabMediaMap = new Map();
 const tabPowerStateMap = new Map();
 
@@ -48,8 +48,9 @@ async function convertCrxToXpi(crxArrayBuffer, extensionId) {
   // Fallback to scanning for ZIP magic PK\x03\x04 if zipOffset not determined or not aligned
   if (zipOffset < 0 || zipOffset > uint8.length - 4 ||
       !(uint8[zipOffset] === 0x50 && uint8[zipOffset+1] === 0x4B && uint8[zipOffset+2] === 0x03 && uint8[zipOffset+3] === 0x04)) {
+    const scanStart = zipOffset >= 0 ? zipOffset : 0;
     zipOffset = -1;
-    for (let i = 0; i < Math.min(uint8.length - 4, 150000); i++) {
+    for (let i = scanStart; i < Math.min(uint8.length - 4, 150000); i++) {
       if (uint8[i] === 0x50 && uint8[i+1] === 0x4B && uint8[i+2] === 0x03 && uint8[i+3] === 0x04) {
         zipOffset = i;
         break;
@@ -208,24 +209,27 @@ async function hashVaultPin(pin, saltHex) {
 }
 
 async function getVaultAuth() {
-  const res = await browser.storage.local.get(['praha_vault_auth', 'praha_vault_pin', 'praha_vault_salt']).catch(() => ({}));
+  const res = await browser.storage.local.get(['praha_vault_auth', 'praha_vault_pin', 'praha_vault_salt']);
   if (res.praha_vault_auth && res.praha_vault_auth.hash && res.praha_vault_auth.salt) {
     return res.praha_vault_auth;
   }
-  // Migration path: check if legacy praha_vault_pin was stored
-  if (res.praha_vault_pin) {
-    if (res.praha_vault_salt) {
-      const auth = { hash: res.praha_vault_pin, salt: res.praha_vault_salt };
-      await browser.storage.local.set({ praha_vault_auth: auth });
-      return auth;
-    } else if (typeof res.praha_vault_pin === 'string' && /^\d{4,8}$/.test(res.praha_vault_pin.trim())) {
-      const migrated = await hashVaultPin(res.praha_vault_pin.trim());
-      await browser.storage.local.set({ praha_vault_auth: migrated });
-      await browser.storage.local.remove(['praha_vault_pin']).catch(() => {});
-      return migrated;
-    }
+  // Migration path: legacy builds stored the raw PIN; re-derive a proper verifier from it
+  if (typeof res.praha_vault_pin === 'string' && /^\d{4,8}$/.test(res.praha_vault_pin.trim())) {
+    const migrated = await hashVaultPin(res.praha_vault_pin.trim());
+    await browser.storage.local.set({ praha_vault_auth: migrated });
+    await browser.storage.local.remove(['praha_vault_pin', 'praha_vault_salt']).catch(() => {});
+    return migrated;
   }
   return null;
+}
+
+// Serializes vault auth state transitions so concurrent messages cannot
+// interleave the read-modify-write of the lockout counter
+let vaultAuthQueue = Promise.resolve();
+function withVaultAuthLock(task) {
+  const result = vaultAuthQueue.then(task, task);
+  vaultAuthQueue = result.then(() => {}, () => {});
+  return result;
 }
 
 // Active Blob Downloads Management (Revocation on Download Completion)
@@ -538,6 +542,13 @@ browser.webRequest.onBeforeRequest.addListener(
             }).catch(() => {
               clearTimeout(timer);
               pendingCrxInstalls.delete(pendingId);
+              if (browser.downloads && browser.downloads.download) {
+                browser.downloads.download({ url: url, saveAs: true }).catch(() => {
+                  browser.tabs.create({ url: url });
+                });
+              } else {
+                browser.tabs.create({ url: url });
+              }
             });
           }).catch((err) => {
             console.warn('CRX download conversion aborted:', err.message || err);
@@ -723,7 +734,7 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ success: false, error: 'EXPIRED_OR_NOT_FOUND' });
       return true;
     }
-    if (entry.tabId && (!sender.tab || sender.tab.id !== entry.tabId)) {
+    if (entry.tabId != null && (!sender.tab || sender.tab.id !== entry.tabId)) {
       sendResponse({ success: false, error: 'TAB_MISMATCH' });
       return true;
     }
@@ -968,7 +979,7 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
     }
 
-    getVaultAuth().then(async (auth) => {
+    withVaultAuthLock(() => getVaultAuth().then(async (auth) => {
       const lockout = await getVaultLockoutState();
       const now = Date.now();
       if (now < lockout.lockoutUntil) {
@@ -1015,12 +1026,12 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ success: true });
     }).catch(err => {
       sendResponse({ success: false, error: err.message });
-    });
+    }));
     return true;
   }
 
   if (msg.type === 'UNLOCK_VAULT') {
-    getVaultLockoutState().then(async (lockout) => {
+    withVaultAuthLock(() => getVaultLockoutState().then(async (lockout) => {
       const now = Date.now();
       if (now < lockout.lockoutUntil) {
         const remainingSec = Math.ceil((lockout.lockoutUntil - now) / 1000);
@@ -1061,7 +1072,7 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
     }).catch(err => {
       sendResponse({ success: false, error: err.message });
-    });
+    }));
     return true;
   }
 
@@ -1103,6 +1114,8 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     setVaultAutoLock();
     deleteVaultItem(msg.id).then(() => {
       sendResponse({ success: true });
+    }).catch(err => {
+      sendResponse({ success: false, error: err.message || 'Delete failed' });
     });
     return true;
   }
