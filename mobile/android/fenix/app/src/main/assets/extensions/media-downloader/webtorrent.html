@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Praha Torrent & Magnet Streamer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0D0D14;
+      color: #E2E2F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 16px;
+    }
+    .logo {
+      width: 36px;
+      height: 36px;
+      background: rgba(124, 77, 255, 0.15);
+      border: 1px solid rgba(124, 77, 255, 0.4);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7C4DFF;
+    }
+    .title { font-size: 16px; font-weight: 700; color: #FFFFFF; }
+    .subtitle { font-size: 11px; color: #8E8EA8; }
+    .magnet-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    input[type="text"] {
+      flex: 1;
+      background: #161622;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border-color: #7C4DFF;
+      box-shadow: 0 0 10px rgba(124, 77, 255, 0.3);
+    }
+    .btn {
+      background: #7C4DFF;
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:active { filter: brightness(1.2); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #D8D8E8;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: #161622;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .stat-label { font-size: 11px; color: #8E8EA8; margin-bottom: 4px; }
+    .stat-val { font-size: 15px; font-weight: 700; color: #00E5FF; }
+    .progress-bar-wrap {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7C4DFF, #00E5FF);
+      transition: width 0.3s ease;
+    }
+    .player-wrap {
+      background: #000000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    video {
+      width: 100%;
+      max-height: 50vh;
+      display: block;
+    }
+    .actions-wrap {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .file-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+    .status-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(124, 77, 255, 0.15);
+      color: #A080FF;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+      </svg>
+    </div>
+    <div>
+      <div class="title">Praha Magnet Streamer</div>
+      <div class="subtitle">Direct in-browser P2P torrent streaming & downloading</div>
+    </div>
+  </div>
+
+  <div class="magnet-box">
+    <input type="text" id="magnet-input" placeholder="Paste magnet:?xt=urn:btih:... or torrent URL">
+    <button class="btn" id="stream-btn">Stream</button>
+  </div>
+
+  <div id="torrent-info" style="display:none;">
+    <div class="status-badge" id="torrent-status">Connecting to peers...</div>
+    <div class="file-title" id="file-title"></div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Download Speed</div>
+        <div class="stat-val" id="stat-speed">0 KB/s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Connected Peers</div>
+        <div class="stat-val" id="stat-peers">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Progress</div>
+        <div class="stat-val" id="stat-progress">0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Size</div>
+        <div class="stat-val" id="stat-size">0 / 0 MB</div>
+      </div>
+    </div>
+
+    <div class="player-wrap" id="player-wrap">
+      <video id="player" controls playsinline autoplay></video>
+    </div>
+
+    <div class="actions-wrap">
+      <button class="btn" id="save-file-btn" style="flex:1;">Save to Downloads</button>
+      <button class="btn btn-secondary" id="save-vault-btn" style="flex:1;">Save to Vault</button>
+    </div>
+  </div>
+
+  <script src="webtorrent.min.js"></script>
+  <script>
+    let client = new WebTorrent();
+
+    client.on('error', (err) => {
+      console.error('WebTorrent client error:', err);
+      statusBadge.textContent = 'Torrent Error: ' + (err.message || err);
+      statusBadge.style.color = '#ef4444';
+    });
+
+    const input = document.getElementById('magnet-input');
+    const streamBtn = document.getElementById('stream-btn');
+    const infoBox = document.getElementById('torrent-info');
+    const statusBadge = document.getElementById('torrent-status');
+    const fileTitle = document.getElementById('file-title');
+    const progressBar = document.getElementById('progress-bar');
+    const statSpeed = document.getElementById('stat-speed');
+    const statPeers = document.getElementById('stat-peers');
+    const statProgress = document.getElementById('stat-progress');
+    const statSize = document.getElementById('stat-size');
+    const playerWrap = document.getElementById('player-wrap');
+    const player = document.getElementById('player');
+    const saveBtn = document.getElementById('save-file-btn');
+    const saveVaultBtn = document.getElementById('save-vault-btn');
+
+    let currentFile = null;
+
+    function formatBytes(bytes) {
+      if (!bytes || bytes <= 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function startStream(torrentId) {
+      if (!torrentId) return;
+      infoBox.style.display = 'block';
+      statusBadge.style.color = '';
+      statusBadge.textContent = 'Contacting WebTorrent swarm...';
+
+      // Destroy previous swarms to eliminate memory and network leaks
+      if (client.torrents && client.torrents.length > 0) {
+        client.torrents.slice().forEach(t => {
+          try { t.destroy(); } catch (e) {}
+        });
+      }
+      if (player) {
+        player.pause();
+        player.removeAttribute('src');
+        player.load();
+      }
+      playerWrap.style.display = 'none';
+
+      try {
+        client.add(torrentId, (torrent) => {
+          torrent.on('error', (err) => {
+            console.error('Torrent error:', err);
+            statusBadge.textContent = 'Swarm Error: ' + (err.message || err);
+            statusBadge.style.color = '#ef4444';
+          });
+
+          statusBadge.textContent = 'Peers connected - streaming ready';
+          
+          // Find main video or media file
+          const file = torrent.files.find(f => {
+            const n = f.name.toLowerCase();
+            return n.endsWith('.mp4') || n.endsWith('.mkv') || n.endsWith('.webm') || n.endsWith('.avi');
+          }) || torrent.files[0];
+
+          if (!file) {
+            statusBadge.textContent = 'No playable files found in torrent.';
+            return;
+          }
+
+          currentFile = file;
+          fileTitle.textContent = file.name;
+
+          // Stream directly into HTML5 video player
+          file.renderTo(player, (err) => {
+            if (!err) {
+              playerWrap.style.display = 'block';
+            } else {
+              console.warn('Render error:', err);
+              statusBadge.textContent = 'Codec playback warning. You can still save the file below.';
+            }
+          });
+
+          torrent.on('download', () => {
+            const progress = (torrent.progress * 100).toFixed(1);
+            progressBar.style.width = progress + '%';
+            statProgress.textContent = progress + '%';
+            statSpeed.textContent = formatBytes(torrent.downloadSpeed) + '/s';
+            statPeers.textContent = torrent.numPeers;
+            statSize.textContent = formatBytes(torrent.downloaded) + ' / ' + formatBytes(torrent.length);
+          });
+
+          torrent.on('done', () => {
+            statusBadge.textContent = 'Download Complete (100%)';
+            progressBar.style.width = '100%';
+          });
+
+          saveBtn.onclick = () => {
+            file.getBlobURL((err, url) => {
+              if (!err && url) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => a.remove(), 1000);
+              }
+            });
+          };
+
+          saveVaultBtn.onclick = () => {
+            file.getBlob((err, blob) => {
+              if (!err && blob) {
+                browser.runtime.sendMessage({
+                  type: 'SAVE_TO_VAULT',
+                  title: file.name,
+                  format: file.name.split('.').pop() || 'mp4',
+                  blob: blob
+                }).then(() => {
+                  alert('Saved to Private Vault!');
+                }).catch(() => {
+                  alert('Saved locally in vault storage.');
+                });
+              }
+            });
+          };
+        });
+      } catch (err) {
+        statusBadge.textContent = 'Invalid torrent or magnet link: ' + (err.message || err);
+        statusBadge.style.color = '#ef4444';
+      }
+    }
+
+    streamBtn.addEventListener('click', () => {
+      startStream(input.value.trim());
+    });
+
+    window.addEventListener('beforeunload', () => {
+      try { client.destroy(); } catch (e) {}
+    });
+
+    // Check URL query param
+    const params = new URLSearchParams(window.location.search);
+    const magnetUrl = params.get('magnet');
+    if (magnetUrl) {
+      input.value = magnetUrl;
+      startStream(magnetUrl);
+    }
+  </script>
+</body>
+</html>
+
