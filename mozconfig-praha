@@ -4,3 +4,7 @@ ac_add_options --with-distribution-id=org.praha
 ac_add_options --with-branding=browser/branding/praha
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
+# Make xpinstall.signatures.required authoritative so the CRX-to-XPI sideload
+# feature can install converted packages (the empty value disables
+# MOZ_REQUIRE_SIGNING; "0" would abort configure).
+export MOZ_REQUIRE_SIGNING=

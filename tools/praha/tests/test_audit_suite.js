@@ -208,6 +208,10 @@ function sendMessage(msg, sender = { id: 'media-downloader@prahabrowser.org', fr
   const lockedExport = await sendMessage({ type: 'EXPORT_VAULT_ITEM', id: '123' });
   assert.strictEqual(lockedExport.success, false);
   assert.strictEqual(lockedExport.error, 'VAULT_LOCKED');
+
+  const lockedSave = await sendMessage({ type: 'SAVE_TO_VAULT', title: 'x', url: 'https://example.com/v.mp4' });
+  assert.strictEqual(lockedSave.success, false);
+  assert.strictEqual(lockedSave.error, 'VAULT_LOCKED');
   console.log('PASS: 3. Vault endpoints securely gated behind locked state.');
 
   // ==========================================================================

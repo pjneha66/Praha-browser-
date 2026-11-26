@@ -305,18 +305,27 @@
           };
 
           saveVaultBtn.onclick = () => {
-            file.getBlob((err, blob) => {
-              if (!err && blob) {
-                browser.runtime.sendMessage({
+            file.getBlob(async (err, blob) => {
+              if (err || !blob) {
+                alert('Could not read the file — nothing was saved.');
+                return;
+              }
+              try {
+                const res = await browser.runtime.sendMessage({
                   type: 'SAVE_TO_VAULT',
                   title: file.name,
                   format: file.name.split('.').pop() || 'mp4',
                   blob: blob
-                }).then(() => {
-                  alert('Saved to Private Vault!');
-                }).catch(() => {
-                  alert('Saved locally in vault storage.');
                 });
+                if (res && res.success) {
+                  alert('Saved to Private Vault!');
+                } else if (res && res.error === 'VAULT_LOCKED') {
+                  alert('Vault is locked — unlock it in the media sheet first.');
+                } else {
+                  alert((res && res.error) || 'Save failed.');
+                }
+              } catch (e) {
+                alert('Save failed — could not reach the vault.');
               }
             });
           };

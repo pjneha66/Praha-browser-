@@ -435,3 +435,8 @@ CLAUDE.local.md
 /*.json.gz
 
 /browser/app/distribution/ublock.xpi
+
+# Praha: signing keys and release artifacts must stay out of the repo
+/tools/praha/*.keystore
+/dist/
+/.signing/

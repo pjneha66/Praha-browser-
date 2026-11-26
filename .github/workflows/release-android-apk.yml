@@ -1,0 +1,86 @@
+name: Release Android APK
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: "Version name for the APK (e.g. 2.0.17.2)"
+        required: true
+        default: "2.0.17.2"
+      version_code:
+        description: "Android versionCode (must increase for upgrade installs; blank = run number)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version_name }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          CODE="${{ github.event.inputs.version_code }}"
+          if [ -z "$CODE" ]; then
+            CODE="${{ github.run_number }}"
+          fi
+          echo "name=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+
+      - name: Install Android build packages
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Restore signing keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.PRAHA_ANDROID_KEYSTORE_B64 }}
+        run: |
+          mkdir -p .signing
+          if [ -n "$KEYSTORE_B64" ]; then
+            printf '%s' "$KEYSTORE_B64" | base64 -d > .signing/praha_release.keystore
+            chmod 600 .signing/praha_release.keystore
+            echo "Restored signing keystore from repository secret"
+          else
+            echo "::warning::PRAHA_ANDROID_KEYSTORE_B64 is not set - an ephemeral keystore will be used, so this APK cannot update earlier releases. Create the secret from your local key: base64 -i ~/.praha/praha_release.keystore"
+          fi
+
+      - name: Build signed APK
+        run: >
+          python3 tools/praha/release_praha_android.py
+          --version-name "${{ steps.version.outputs.name }}"
+          --version-code "${{ steps.version.outputs.code }}"
+          --keystore .signing/praha_release.keystore
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          tag_name: v${{ steps.version.outputs.name }}
+          name: Praha Browser v${{ steps.version.outputs.name }} (Android)
+          generate_release_notes: true
+          files: |
+            dist/releases/*.apk
+            dist/releases/SHA256SUMS.txt
+            dist/releases/release-manifest.json

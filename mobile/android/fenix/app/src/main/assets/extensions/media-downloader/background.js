@@ -220,6 +220,10 @@ async function getVaultAuth() {
     await browser.storage.local.remove(['praha_vault_pin', 'praha_vault_salt']).catch(() => {});
     return migrated;
   }
+  // A present-but-malformed auth record must fail closed: never treat it as "no PIN set"
+  if (res.praha_vault_auth) {
+    throw new Error('Vault auth data is corrupted');
+  }
   return null;
 }
 
@@ -552,6 +556,13 @@ browser.webRequest.onBeforeRequest.addListener(
             });
           }).catch((err) => {
             console.warn('CRX download conversion aborted:', err.message || err);
+            if (browser.downloads && browser.downloads.download) {
+              browser.downloads.download({ url: url, saveAs: true }).catch(() => {
+                browser.tabs.create({ url: url });
+              });
+            } else {
+              browser.tabs.create({ url: url });
+            }
           });
         return { cancel: true };
       }
@@ -851,7 +862,7 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const dnsEndpoints = [
       { name: 'Cloudflare', url: 'https://cloudflare-dns.com/dns-query?name=cloudflare.com&type=A' },
       { name: 'AdGuard', url: 'https://dns.adguard-dns.com/resolve?name=adguard-dns.io&type=A' },
-      { name: 'Google', url: 'https://dns.google/resolve?name=google.com&type=A' },
+      { name: 'NextDNS', url: 'https://dns.nextdns.io/dns-query?name=nextdns.io&type=A' },
       { name: 'Mullvad', url: 'https://doh.mullvad.net/dns-query?name=mullvad.net&type=A' },
       { name: 'Quad9', url: 'https://dns.quad9.net:5053/dns-query?name=quad9.net&type=A' }
     ];
@@ -920,12 +931,16 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.type === 'SAVE_TO_VAULT') {
+    if (!vaultUnlocked) {
+      sendResponse({ success: false, error: 'VAULT_LOCKED' });
+      return true;
+    }
     const handleSave = async () => {
       let mediaBlob = msg.blob;
       let calculatedSize = msg.size;
       if (!mediaBlob && msg.url) {
         try {
-          const resp = await fetch(msg.url);
+          const resp = await fetch(msg.url, { credentials: 'include' });
           if (resp.ok) {
             mediaBlob = await resp.blob();
             calculatedSize = formatBytes(mediaBlob.size);

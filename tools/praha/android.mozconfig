@@ -2,3 +2,5 @@ ac_add_options --enable-project=mobile/android
 ac_add_options --target=aarch64-linux-android
 ac_add_options --with-branding=mobile/android/branding/praha
 ac_add_options --disable-crashreporter
+# Keep xpinstall.signatures.required authoritative (see mozconfig-praha).
+export MOZ_REQUIRE_SIGNING=

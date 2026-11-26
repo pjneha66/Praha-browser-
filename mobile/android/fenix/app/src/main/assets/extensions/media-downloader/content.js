@@ -301,7 +301,7 @@
   // 2. Comic & Manga Webtoon Reader Mode
   let isWebtoonActive = false;
   const COMIC_DOMAINS = ['batcave.biz', 'getcomics.org', 'mangadot.net', 'atsu.moe', 'comix.to', 'mkissa.to', 'kagane.moe'];
-  const isComicSite = COMIC_DOMAINS.some(d => location.hostname.endsWith(d));
+  const isComicSite = COMIC_DOMAINS.some(d => location.hostname === d || location.hostname.endsWith('.' + d));
 
   function setWebtoonMode(enabled) {
     isWebtoonActive = enabled;
@@ -382,7 +382,10 @@
 
   // 3. Chrome Web Store 1-Tap Installer Banner
   function checkChromeWebStore() {
-    if (!location.hostname.includes('chromewebstore.google.com') && !location.hostname.includes('chrome.google.com')) {
+    const host = location.hostname;
+    const isStoreHost = host === 'chromewebstore.google.com' || host.endsWith('.chromewebstore.google.com') ||
+      host === 'chrome.google.com' || host.endsWith('.chrome.google.com');
+    if (!isStoreHost) {
       return;
     }
 
@@ -421,7 +424,7 @@
           } else {
             btn.textContent = 'Install in Praha';
             btn.style.opacity = '1';
-            showToast('Download initiated for CRX package.');
+            showToast((res && res.error) || 'Install failed. Please try again.');
           }
         }).catch(() => {
           btn.textContent = 'Install in Praha';
@@ -483,9 +486,9 @@
   }
 
   // 5. Playback Speed Overdrive (0.25x to 4.0x)
-  function applyPlaybackSpeed(rate) {
+  function applyPlaybackSpeed(rate, userInitiated = true) {
     currentSpeed = rate;
-    userSetSpeed = true;
+    if (userInitiated) userSetSpeed = true;
     const mediaList = document.querySelectorAll('video, audio');
     mediaList.forEach(m => {
       try {
@@ -860,7 +863,7 @@
             </svg>
           </div>
           <div>
-            <div class="praha-sheet-title">Praha Power Suite v2.0.15</div>
+            <div class="praha-sheet-title">Praha Power Suite v2.0.17</div>
             <div class="praha-sheet-subtitle">${count} media items • Webtoon Reader &amp; CRX Active</div>
           </div>
         </div>
@@ -1197,21 +1200,24 @@
         const idx = parseInt(btn.getAttribute('data-index'), 10);
         const item = detectedMedia[idx];
         if (item) {
-          showToast('Fetching media for private vault...');
+          showToast('Saving to private vault...');
           try {
-            const resp = await fetch(item.url);
-            const blob = await resp.blob();
-            browser.runtime.sendMessage({
+            const res = await browser.runtime.sendMessage({
               type: 'SAVE_TO_VAULT',
               title: item.title,
               format: item.format,
               size: item.size,
-              blob: blob
-            }).then(() => {
-              showToast('Saved to Private Vault!');
+              url: item.url
             });
+            if (res && res.success) {
+              showToast('Saved to Private Vault!');
+            } else if (res && res.error === 'VAULT_LOCKED') {
+              showToast('Vault is locked — unlock it in the Vault tab first.');
+            } else {
+              showToast((res && res.error) || 'Save failed.');
+            }
           } catch (e) {
-            showToast('Direct stream saved metadata to vault.');
+            showToast('Save failed — could not reach the vault.');
           }
         }
       });
@@ -1584,7 +1590,7 @@
       updateFloatingButton(detectedMedia.length);
     }
     if (res && res.power) {
-      if (res.power.speed) applyPlaybackSpeed(res.power.speed);
+      if (res.power.speed) applyPlaybackSpeed(res.power.speed, false);
       if (res.power.boost) applyAudioBoost(res.power.boost);
       if (res.power.doh) currentDoH = res.power.doh;
       if (res.power.geo) {

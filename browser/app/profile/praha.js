@@ -119,3 +119,8 @@ pref("privacy.canvasBlockingEnabled", true);
 
 // === Disable audio fingerprinting ===
 pref("privacy.audioBlockingEnabled", true);
+
+// === Add-on sideloading (CRX-to-XPI feature) ===
+// Converted CRX packages are unsigned; set to true in about:config to
+// re-enforce Mozilla-style signing (only honored when MOZ_REQUIRE_SIGNING is off).
+pref("xpinstall.signatures.required", false);

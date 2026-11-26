@@ -15,6 +15,33 @@ ChromeUtils.defineESModuleGetters(this, {
 var { ExtensionError } = ExtensionUtils;
 var { ignoreEvent } = ExtensionCommon;
 
+// Praha: mirror the media-downloader extension's DoH provider choice into
+// network.trr.* prefs, since WebExtensions cannot write prefs directly.
+const PRAHA_DOH_EXTENSION_ID = "media-downloader@prahabrowser.org";
+const PRAHA_DOH_STORAGE_KEY = "praha_doh_provider";
+const PRAHA_DOH_PROVIDERS = {
+  adguard: { uri: "https://dns.adguard-dns.com/dns-query", bootstrap: "94.140.14.14" },
+  cloudflare: { uri: "https://cloudflare-dns.com/dns-query", bootstrap: "1.1.1.1" },
+  mullvad: { uri: "https://doh.mullvad.net/dns-query", bootstrap: "194.242.2.2" },
+  nextdns: { uri: "https://dns.nextdns.io/dns-query" },
+  quad9: { uri: "https://dns.quad9.net/dns-query", bootstrap: "9.9.9.9" },
+};
+
+function applyPrahaDohProvider(extensionId, value) {
+  if (extensionId !== PRAHA_DOH_EXTENSION_ID || typeof value !== "string") {
+    return;
+  }
+  const provider = PRAHA_DOH_PROVIDERS[value.toLowerCase()];
+  if (!provider) {
+    return;
+  }
+  Services.prefs.setStringPref("network.trr.uri", provider.uri);
+  Services.prefs.setIntPref("network.trr.mode", 2);
+  if (provider.bootstrap) {
+    Services.prefs.setStringPref("network.trr.bootstrapAddress", provider.bootstrap);
+  }
+}
+
 ChromeUtils.defineLazyGetter(this, "extensionStorageSync", () => {
   // TODO bug 1637465: Remove Kinto-based implementation.
   if (Services.prefs.getBoolPref("webextensions.storage.sync.kinto")) {
@@ -263,6 +290,7 @@ this.storage = class extends ExtensionAPIPersistent {
       return;
     }
 
+    applyPrahaDohProvider(this.extension.id, data?.[PRAHA_DOH_STORAGE_KEY]?.newValue);
     ExtensionStorageIDB.notifyListeners(this.extension.id, data);
   }
 
@@ -273,6 +301,9 @@ this.storage = class extends ExtensionAPIPersistent {
       storage: {
         local: {
           async callMethodInParentProcess(method, args) {
+            if (method === "set") {
+              applyPrahaDohProvider(extension.id, args[0]?.[PRAHA_DOH_STORAGE_KEY]);
+            }
             const res = await ExtensionStorageIDB.selectBackend({ extension });
             if (!res.backendEnabled) {
               return ExtensionStorage[method](extension.id, ...args);
@@ -315,6 +346,7 @@ this.storage = class extends ExtensionAPIPersistent {
               return ExtensionStorage.getKeys(extension.id);
             },
             set(items) {
+              applyPrahaDohProvider(extension.id, items?.[PRAHA_DOH_STORAGE_KEY]);
               return ExtensionStorage.set(extension.id, items);
             },
             remove(keys) {
