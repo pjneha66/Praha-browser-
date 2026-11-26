@@ -299,10 +299,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   refreshBtn.addEventListener('click', () => {
     browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
       if (tabs[0]) {
-        browser.tabs.executeScript(tabs[0].id, {
+        return browser.tabs.executeScript(tabs[0].id, {
           code: 'window.__praha_media_injected = false; location.reload();'
         });
       }
+    }).catch(() => {
+      status.textContent = 'Rescan unavailable on this page';
     });
   });
 
