@@ -1,85 +1,100 @@
 name: Release Android APK
 
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
     inputs:
       version_name:
-        description: "Version name for the APK (e.g. 2.0.17.2)"
+        description: "New release version (for example, 2.0.17.3)"
         required: true
-        default: "2.0.17.2"
+        type: string
       version_code:
-        description: "Android versionCode (must increase for upgrade installs; blank = run number)"
-        required: false
-        default: ""
+        description: "Android versionCode, greater than every shipped browser APK"
+        required: true
+        type: string
 
 permissions:
   contents: write
 
+concurrency: praha-android-release
+
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
     steps:
-      - name: Checkout
+      - name: Free space for the Gecko build
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h "$GITHUB_WORKSPACE"
+
+      - name: Checkout full Praha source
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-
-      - name: Resolve version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ github.event.inputs.version_name }}"
-          else
-            VERSION="${GITHUB_REF_NAME#v}"
-          fi
-          CODE="${{ github.event.inputs.version_code }}"
-          if [ -z "$CODE" ]; then
-            CODE="${{ github.run_number }}"
-          fi
-          echo "name=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "code=$CODE" >> "$GITHUB_OUTPUT"
-
-      - name: Set up Java
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
-          distribution: temurin
-          java-version: "17"
+          persist-credentials: false
 
-      - name: Install Android SDK packages
-        run: |
-          SDKMANAGER=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | sort -V | tail -1)
-          echo "Using sdkmanager at $SDKMANAGER"
-          yes | "$SDKMANAGER" --licenses > /dev/null || true
-          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+      - name: Bootstrap Gecko Android
+        run: ./mach --no-interactive bootstrap --application-choice mobile_android --no-agentic-tools
 
-      - name: Restore signing keystore
+      - name: Build and sign the GeckoView release
         env:
           KEYSTORE_B64: ${{ secrets.PRAHA_ANDROID_KEYSTORE_B64 }}
+          PRAHA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.PRAHA_ANDROID_KEYSTORE_PASSWORD }}
+          PRAHA_ANDROID_KEY_PASSWORD: ${{ secrets.PRAHA_ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ vars.PRAHA_ANDROID_KEY_ALIAS || 'prahabrowser' }}
+          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_CODE: ${{ inputs.version_code }}
         run: |
-          mkdir -p .signing
-          if [ -n "$KEYSTORE_B64" ]; then
-            printf '%s' "$KEYSTORE_B64" | base64 -d > .signing/praha_release.keystore
-            chmod 600 .signing/praha_release.keystore
-            echo "Restored signing keystore from repository secret"
-          else
-            echo "::warning::PRAHA_ANDROID_KEYSTORE_B64 is not set - an ephemeral keystore will be used, so this APK cannot update earlier releases. Create the secret from your local key: base64 -i ~/.praha/praha_release.keystore"
-          fi
+          : "${KEYSTORE_B64:?The original v2.0.17 signing keystore is required}"
+          umask 077
+          KEYSTORE="$RUNNER_TEMP/praha-release.keystore"
+          trap 'rm -f "$KEYSTORE"' EXIT
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$KEYSTORE"
+          unset KEYSTORE_B64
+          python3 tools/praha/release_praha_android.py \
+            --version-name="$VERSION_NAME" --version-code="$VERSION_CODE" \
+            --keystore="$KEYSTORE" --key-alias="$KEY_ALIAS" \
+            --output-dir="$RUNNER_TEMP/praha-release"
 
-      - name: Build signed APK
-        run: >
-          python3 tools/praha/release_praha_android.py
-          --version-name "${{ steps.version.outputs.name }}"
-          --version-code "${{ steps.version.outputs.code }}"
-          --keystore .signing/praha_release.keystore
+      - name: Verify upgrade from v2.0.17 on Android
+        env:
+          VERSION_CODE: ${{ inputs.version_code }}
+          VERSION_NAME: ${{ inputs.version_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP/praha-release"
+          BASELINE=praha-browser-android-v2.0.17-release.apk
+          gh release download v2.0.17 --repo "$GITHUB_REPOSITORY" --pattern "$BASELINE"
+          printf '%s  %s\n' 7855d6d33fc2f25eb127cf62ecefefd3cc828454829e0327ed8501713184cdfc "$BASELINE" | sha256sum --check
+          sdk="$ANDROID_HOME"
+          sdkmanager=$(find "$sdk/cmdline-tools" -path '*/bin/sdkmanager' | sort -V | tail -1)
+          "$sdkmanager" "emulator" "system-images;android-30;google_apis;x86_64"
+          printf 'no\n' | "${sdkmanager%/*}/avdmanager" create avd -n praha-upgrade -k "system-images;android-30;google_apis;x86_64"
+          sudo chmod a+rw /dev/kvm
+          "$sdk/emulator/emulator" -avd praha-upgrade -no-window -no-audio -no-snapshot -gpu swiftshader_indirect > "$RUNNER_TEMP/praha-emulator.log" 2>&1 &
+          trap 'adb emu kill || true' EXIT
+          timeout 180 adb wait-for-device
+          timeout 180 bash -c 'until [ "$(adb shell getprop sys.boot_completed | tr -d "\r")" = 1 ]; do sleep 2; done'
+          adb shell getprop ro.product.cpu.abilist | grep -q arm64-v8a
+          adb install --no-incremental "$BASELINE"
+          BEFORE=$(adb shell dumpsys package org.praha.browser)
+          grep -q 'versionCode=2026201700 ' <<< "$BEFORE"
+          adb install --no-incremental -r "praha-browser-android-v${VERSION_NAME}-release.apk"
+          AFTER=$(adb shell dumpsys package org.praha.browser)
+          grep -q "versionCode=${VERSION_CODE} " <<< "$AFTER"
+          FIRST_INSTALL=$(grep 'firstInstallTime=' <<< "$BEFORE")
+          test "$FIRST_INSTALL" = "$(grep 'firstInstallTime=' <<< "$AFTER")"
+          rm "$BASELINE"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
-          tag_name: v${{ steps.version.outputs.name }}
-          name: Praha Browser v${{ steps.version.outputs.name }} (Android)
+          tag_name: v${{ inputs.version_name }}
+          target_commitish: ${{ github.sha }}
+          name: Praha Browser v${{ inputs.version_name }} (Android)
           generate_release_notes: true
+          fail_on_unmatched_files: true
+          overwrite_files: false
           files: |
-            dist/releases/*.apk
-            dist/releases/SHA256SUMS.txt
-            dist/releases/release-manifest.json
+            ${{ runner.temp }}/praha-release/praha-browser-android-v${{ inputs.version_name }}-release.apk
+            ${{ runner.temp }}/praha-release/SHA256SUMS.txt
+            ${{ runner.temp }}/praha-release/release-manifest.json

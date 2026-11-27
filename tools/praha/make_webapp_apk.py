@@ -39,6 +39,8 @@ class AndroidSDKLocator:
         "/opt/android-sdk",
         os.path.expanduser("~/Android/Sdk"),
         "/usr/lib/android-sdk",
+        Path(os.environ.get("MOZBUILD_STATE_PATH") or Path.home() / ".mozbuild")
+        / ("android-sdk-macosx" if sys.platform == "darwin" else "android-sdk-linux"),
     ]
 
     def __init__(self):

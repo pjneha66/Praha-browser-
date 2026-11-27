@@ -437,6 +437,9 @@ CLAUDE.local.md
 /browser/app/distribution/ublock.xpi
 
 # Praha: signing keys and release artifacts must stay out of the repo
-/tools/praha/*.keystore
+*.keystore
+*.jks
+/*.apk
+/*.apk.idsig
 /dist/
 /.signing/
