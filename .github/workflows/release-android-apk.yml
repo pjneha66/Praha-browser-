@@ -67,7 +67,8 @@ jobs:
           printf '%s  %s\n' 7855d6d33fc2f25eb127cf62ecefefd3cc828454829e0327ed8501713184cdfc "$BASELINE" | sha256sum --check
           sdk="$ANDROID_HOME"
           sdkmanager=$(find "$sdk/cmdline-tools" -path '*/bin/sdkmanager' | sort -V | tail -1)
-          "$sdkmanager" "emulator" "system-images;android-30;google_apis;x86_64"
+          "$sdkmanager" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          export PATH="$sdk/platform-tools:$PATH"
           printf 'no\n' | "${sdkmanager%/*}/avdmanager" create avd -n praha-upgrade -k "system-images;android-30;google_apis;x86_64"
           sudo chmod a+rw /dev/kvm
           "$sdk/emulator/emulator" -avd praha-upgrade -no-window -no-audio -no-snapshot -gpu swiftshader_indirect > "$RUNNER_TEMP/praha-emulator.log" 2>&1 &
