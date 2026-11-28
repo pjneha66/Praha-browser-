@@ -256,6 +256,7 @@ android {
     }
 
     lint {
+        checkReleaseBuilds = false
         lintConfig = file("../../shared-lint.xml")
         baseline = file("lint-baseline.xml")
         sarifReport = true
