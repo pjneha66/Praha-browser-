@@ -44,7 +44,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">ಡೆಸ್ಕ್ಟಾಪ್ ಸೈಟ್</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">ಮುಖಪುಟ ಪರದೆಗೆ ಸೇರಿಸಿ</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu button that opens the find in page menu -->
   <string name="browser_menu_find_in_page">ಪುಟದಲ್ಲಿ ಹುಡುಕು</string>
   <!-- Browser menu button that saves the current tab to a collection -->

@@ -63,9 +63,9 @@
   <!-- In the browser menu: Message under an extension name, displayed when the update requires approving changes to extension settings. -->
   <string name="browser_menu_extension_review_update_description">Izskatīt iestatījumus, lai atjauninātu</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Pievienot sākuma ekrānam</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu toggle that adds a PWA of the site on the device home screen. -->
-  <string name="browser_menu_add_app_to_homescreen">Pievienot lietotni sākuma ekrānam</string>
+  <string name="browser_menu_add_app_to_homescreen">Make Web App (Install)</string>
   <!-- Browser menu button that goes to the homepage screen -->
   <string name="browser_menu_homepage">Sākumlapa</string>
   <!-- Browser menu label to sign in to sync on the device using Mozilla accounts -->
@@ -512,7 +512,7 @@
   <!-- Text displayed when sync is offline and cannot be accessed -->
   <string name="sync_offline">Bezsaistē</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Lai nosūtītu cilni, jāpiesakās Firefox vismaz vienā citā ierīcē.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Lai nosūtītu cilni, jāpiesakās Praha vismaz vienā citā ierīcē.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">Sapratu</string>
   <!-- Send tab to synced devices: Authentication error title - Message asking the user to re-authenticate -->
@@ -524,7 +524,7 @@
   <!-- Send tab to synced devices: Empty state title - Displayed when the user has no synced devices -->
   <string name="sync_send_tab_empty_state_title">Nav savienota neviena ierīce</string>
   <!-- Send tab to synced devices: Empty state message - Displayed when the user has no synced devices -->
-  <string name="sync_send_tab_empty_state_description" tools:ignore="BrandUsage">Lai nosūtītu cilni, jāpiesakās Firefox vismaz vienā citā ierīcē.</string>
+  <string name="sync_send_tab_empty_state_description" tools:ignore="BrandUsage">Lai nosūtītu cilni, jāpiesakās Praha vismaz vienā citā ierīcē.</string>
   <!-- Send tab to synced devices: Empty state link - Displayed when the user has no synced devices -->
   <string name="sync_send_tab_empty_state_link">Uzzini, kā pievienot ierīci</string>
   <!-- Send tab to synced devices: Connectivity Error title -->
@@ -537,7 +537,7 @@
     Text shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">Padarīt Firefox par noklusējuma pārlūku</string>
+  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">Padarīt Praha par noklusējuma pārlūku</string>
   <!--
     Privacy report notification
 

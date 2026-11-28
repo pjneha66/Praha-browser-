@@ -222,9 +222,9 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">Masaüstü saytı</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Ana ekrana əlavə et</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu toggle that adds a PWA of the site on the device home screen. -->
-  <string name="browser_menu_add_app_to_homescreen">Tətbiqi ana ekrana əlavə et</string>
+  <string name="browser_menu_add_app_to_homescreen">Make Web App (Install)</string>
   <!-- Text for notifying users that Xiaomi devices require additional permissions to add to home screen -->
   <string name="browser_menu_add_to_homescreen_xiaomi">Xiaomi cihazlarında qısayolları ana ekrana əlavə etmək üçün əlavə icazələr tələb oluna bilər. Tənzimləmələrinizi yoxlayın.</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
@@ -483,7 +483,7 @@
   -->
   <string name="fxa_received_tab_channel_name">Alınan vərəqlər</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Digər Firefox cihazlarından alınan vərəqlər üçün bildirişlər.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Digər Praha cihazlarından alınan vərəqlər üçün bildirişlər.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">Vərəq alındı</string>
   <!-- %s is the device name -->
@@ -595,7 +595,7 @@
   <!-- Title of the active section on the studies list -->
   <string name="studies_active">Aktiv</string>
   <!-- Description for studies. Note: The word "Firefox" should NOT be translated -->
-  <string name="studies_description_4" tools:ignore="BrandUsage">Firefox özəllikləri sınamaq üçün istifadəçiləri təsadüfi seçir və bu, keyfiyyəti hamı üçün yaxşılaşdırır.</string>
+  <string name="studies_description_4" tools:ignore="BrandUsage">Praha özəllikləri sınamaq üçün istifadəçiləri təsadüfi seçir və bu, keyfiyyəti hamı üçün yaxşılaşdırır.</string>
   <!-- Learn more link for studies, links to an article for more information about studies. -->
   <string name="studies_learn_more">Ətraflı öyrən</string>
   <!--

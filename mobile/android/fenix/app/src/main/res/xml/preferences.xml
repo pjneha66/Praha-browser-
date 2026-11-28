@@ -190,7 +190,7 @@
         <androidx.preference.Preference
             android:key="@string/pref_key_install_local_addon"
             app:iconSpaceReserved="false"
-            app:isPreferenceVisible="false"
+            app:isPreferenceVisible="true"
             android:title="@string/preferences_install_local_extension" />
 
         <androidx.preference.Preference

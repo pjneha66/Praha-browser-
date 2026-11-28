@@ -226,9 +226,9 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">نسخة سطح مكتب</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">أضِف إلى شاشة البداية</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu toggle that adds a PWA of the site on the device home screen. -->
-  <string name="browser_menu_add_app_to_homescreen">إضافة التطبيق إلى الشاشة الرئيسية</string>
+  <string name="browser_menu_add_app_to_homescreen">Make Web App (Install)</string>
   <!-- Text for notifying users that Xiaomi devices require additional permissions to add to home screen -->
   <string name="browser_menu_add_to_homescreen_xiaomi">قد تحتاج أجهزة Xiaomi إلى أذونات إضافية لإضافة اختصارات إلى الشاشة الرئيسية. يرجى التحقق من إعداداتك.</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
@@ -447,7 +447,7 @@
   -->
   <string name="onboarding_home_content_description_close_button">إغلاق</string>
   <!-- Title for the privacy preferences dialog shown during onboarding. Note: The word "Firefox" should NOT be translated. -->
-  <string name="onboarding_preferences_dialog_title" tools:ignore="BrandUsage">ساعدنا في جعل Firefox أفضل</string>
+  <string name="onboarding_preferences_dialog_title" tools:ignore="BrandUsage">ساعدنا في جعل Praha أفضل</string>
   <!-- Title for the crash reporting option in the privacy preferences dialog shown during onboarding. -->
   <string name="onboarding_preferences_dialog_crash_reporting_title">إرسال تقارير الأعطال تلقائيا</string>
   <!-- Description for the crash reporting option in the privacy preferences dialog shown during onboarding. -->
@@ -466,12 +466,12 @@
   <string name="startup_crash_restart">إعادة فتح %s</string>
   <!-- Title for the usage data option in the privacy preferences dialog shown during onboarding. Note: The word "Mozilla" should NOT be translated. -->
   <string name="onboarding_preferences_dialog_usage_data_title" tools:ignore="BrandUsage">إرسال البيانات التقنية والتفاعلية إلى Mozilla</string>
-  <string name="onboarding_preferences_dialog_usage_data_description_2" tools:ignore="BrandUsage">تساعد البيانات المتعلقة بجهازك وتكوينات الأجهزة وكيفية استخدامك لـ Firefox في تطوير الميزات ورفع كفاءة الأداء والاستقرار لكل المستخدمين.</string>
+  <string name="onboarding_preferences_dialog_usage_data_description_2" tools:ignore="BrandUsage">تساعد البيانات المتعلقة بجهازك وتكوينات الأجهزة وكيفية استخدامك لـ Praha في تطوير الميزات ورفع كفاءة الأداء والاستقرار لكل المستخدمين.</string>
   <string name="onboarding_preferences_dialog_usage_data_learn_more_2">اطلع على المزيد</string>
   <!-- Positive button label for the privacy preferences dialog shown during onboarding. -->
   <string name="onboarding_preferences_dialog_positive_button">تم</string>
   <!-- Terms of service onboarding title card label. 'Firefox' intentionally hardcoded here -->
-  <string name="onboarding_welcome_to_firefox" tools:ignore="BrandUsage">مرحبا بكم في Firefox</string>
+  <string name="onboarding_welcome_to_firefox" tools:ignore="BrandUsage">مرحبا بكم في Praha</string>
   <!-- Terms of use (ToU) onboarding redesign title. -->
   <string name="onboarding_redesign_tou_title" tools:ignore="UnusedResources">ابدأ رحلتك مع المتصفح الأمثل لأندرويد</string>
   <!-- Terms of use (ToU) first subheader. -->
@@ -486,19 +486,19 @@
   -->
   <string name="onboarding_redesign_tou_body_one" tools:ignore="UnusedResources">بالاستمرار فإنك توافق على %1$s.</string>
   <!-- Used as text for the link in onboarding_redesign_tou_body_one. -->
-  <string name="onboarding_redesign_tou_body_one_link_text" tools:ignore="BrandUsage,UnusedResources">شروط استخدام Firefox</string>
+  <string name="onboarding_redesign_tou_body_one_link_text" tools:ignore="BrandUsage,UnusedResources">شروط استخدام Praha</string>
   <!--
     Terms of use (ToU) second body text. 'Firefox' is intentionally hardcoded.
     %1$s is replaced by an active link, using onboarding_redesign_tou_body_two_link_text as text (“Privacy Notice”).
   -->
-  <string name="onboarding_redesign_tou_body_two" tools:ignore="BrandUsage,UnusedResources">يهتم Firefox بخصوصيتك. اكتشف المزيد في %1$s.</string>
+  <string name="onboarding_redesign_tou_body_two" tools:ignore="BrandUsage,UnusedResources">يهتم Praha بخصوصيتك. اكتشف المزيد في %1$s.</string>
   <!-- Used as text for the link in onboarding_redesign_tou_body_two. -->
   <string name="onboarding_redesign_tou_body_two_link_text" tools:ignore="UnusedResources">تنويه الخصوصية</string>
   <!--
     Terms of use (ToU) third body text. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     %1$s is replaced by an active link using onboarding_redesign_tou_body_three_link_text as text (“Manage Settings”).
   -->
-  <string name="onboarding_redesign_tou_body_three" tools:ignore="BrandUsage,UnusedResources">للمساعدة في تحسين المتصفح، يرسل Firefox بيانات التشخيص والتفاعل إلى Mozilla. %1$s</string>
+  <string name="onboarding_redesign_tou_body_three" tools:ignore="BrandUsage,UnusedResources">للمساعدة في تحسين المتصفح، يرسل Praha بيانات التشخيص والتفاعل إلى Mozilla. %1$s</string>
   <!-- Used as text for the link in onboarding_redesign_tou_body_three. -->
   <string name="onboarding_redesign_tou_body_three_link_text" tools:ignore="UnusedResources">إدارة الإعدادات</string>
   <!-- Terms of use (ToU) onboarding page continue button label. -->
@@ -508,9 +508,9 @@
   <!-- Onboarding label for 'Continue' button. -->
   <string name="onboarding_redesign_continue_button" tools:ignore="UnusedResources">متابعة</string>
   <!-- Marketing onboarding page title. 'Firefox' is intentionally hardcoded. -->
-  <string name="onboarding_marketing_redesign_title" tools:ignore="BrandUsage">ساعدنا في تطوير Firefox</string>
+  <string name="onboarding_marketing_redesign_title" tools:ignore="BrandUsage">ساعدنا في تطوير Praha</string>
   <!-- Marketing onboarding page opt-out checkbox. Unchecking the box does not increase data collection. Our data practices remain the same. 'Mozilla' is intentionally hardcoded. -->
-  <string name="onboarding_marketing_redesign_opt_out_checkbox" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Firefox مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبداً.</string>
+  <string name="onboarding_marketing_redesign_opt_out_checkbox" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Praha مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبداً.</string>
   <!-- Marketing onboarding page clickable link text to "learn more" on how data is used. -->
   <string name="onboarding_marketing_redesign_learn_more" tools:ignore="UnusedResources">كيفية استخدامنا للبيانات</string>
   <!-- Marketing onboarding page button label. Button to confirm choice and start browsing. -->
@@ -520,7 +520,7 @@
   <!-- Set to default browser onboarding redesign body. -->
   <string name="onboarding_redesign_set_default_browser_body" tools:ignore="UnusedResources">نقرة واحدة كفيلة بمنع الشركات من التجسس على تحركاتك.</string>
   <!-- Sync onboarding redesign title. 'Firefox' is intentionally hardcoded. -->
-  <string name="onboarding_redesign_sync_title" tools:ignore="BrandUsage,UnusedResources">زامن بياناتك أينما استخدمت Firefox</string>
+  <string name="onboarding_redesign_sync_title" tools:ignore="BrandUsage,UnusedResources">زامن بياناتك أينما استخدمت Praha</string>
   <!-- Sync onboarding redesign body. -->
   <string name="onboarding_redesign_sync_body" tools:ignore="UnusedResources">احصل على علاماتك المرجعية وتبويباتك وكلمات مرورك على أي جهاز. بياناتك مشفرة ومحمية بالكامل.</string>
   <!-- Sync onboarding redesign positive button text. -->
@@ -530,7 +530,7 @@
   <!-- Marketing onboarding page title variant. “One last thing” refers to the final step or action in the onboarding process that we’re asking users to take before they can start using the browser. -->
   <string name="onboarding_marketing_title_1" tools:ignore="UnusedResources">بقي أمر واحد فقط</string>
   <!-- Marketing onboarding page body variant. 'Firefox' is intentionally hardcoded. -->
-  <string name="onboarding_marketing_body_1" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Firefox مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبداً.</string>
+  <string name="onboarding_marketing_body_1" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Praha مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبداً.</string>
   <!-- Marketing onboarding page button label variant. Button to confirm choice and start browsing. -->
   <string name="onboarding_marketing_positive_button_1" tools:ignore="UnusedResources">الموافقة وبدء التصفح</string>
   <!-- "Continue" onboarding button. -->
@@ -551,19 +551,19 @@
   -->
   <string name="nova_onboarding_tou_body_line_1">بالاستمرار فإنك توافق على %1$s.</string>
   <!-- Terms of use (ToU) onboarding body line one link text for nova_onboarding_tou_body_line_1. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_tou_body_line_1_link_text" tools:ignore="BrandUsage">شروط استخدام Firefox</string>
+  <string name="nova_onboarding_tou_body_line_1_link_text" tools:ignore="BrandUsage">شروط استخدام Praha</string>
   <!--
     Terms of use (ToU) onboarding body line two. 'Firefox' is intentionally hardcoded.
     %1$s is replaced by an active link, using nova_onboarding_tou_body_line_2_link_text as text (“Privacy Notice”).
   -->
-  <string name="nova_onboarding_tou_body_line_2" tools:ignore="BrandUsage">يهتم Firefox بخصوصيتك. اعرف المزيد في %1$s.</string>
+  <string name="nova_onboarding_tou_body_line_2" tools:ignore="BrandUsage">يهتم Praha بخصوصيتك. اعرف المزيد في %1$s.</string>
   <!-- Terms of use (ToU) onboarding body line two link text for nova_onboarding_tou_body_line_2. -->
   <string name="nova_onboarding_tou_body_line_2_link_text">تنويه الخصوصية</string>
   <!--
     Terms of use (ToU) onboarding body line three. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     %1$s is replaced by an active link, using nova_onboarding_tou_body_line_3_link_text as text (“Manage Settings”).
   -->
-  <string name="nova_onboarding_tou_body_line_3" tools:ignore="BrandUsage">للمساعدة في تحسين المتصفح، يرسل Firefox بيانات التشخيص والتفاعل إلى Mozilla. %1$s</string>
+  <string name="nova_onboarding_tou_body_line_3" tools:ignore="BrandUsage">للمساعدة في تحسين المتصفح، يرسل Praha بيانات التشخيص والتفاعل إلى Mozilla. %1$s</string>
   <!-- Terms of use (ToU) onboarding body line three link text for nova_onboarding_tou_body_line_3. -->
   <string name="nova_onboarding_tou_body_line_3_link_text">إدارة الإعدادات</string>
   <!-- "Set to default" onboarding title. -->
@@ -592,41 +592,41 @@
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     %1$s is replaced by an active link, using nova_onboarding_marketing_body_link_text as text (“How we use the data”).
   -->
-  <string name="nova_onboarding_marketing_body" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Firefox مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبداً. %1$s</string>
+  <string name="nova_onboarding_marketing_body" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Praha مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبداً. %1$s</string>
   <!-- Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded. -->
-  <string name="nova_onboarding_marketing_body_2" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Firefox مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبدًا.</string>
+  <string name="nova_onboarding_marketing_body_2" tools:ignore="BrandUsage,UnusedResources">شارك معلومات حول كيفية اكتشافك واستخدامك لـ Praha مع شركاء Mozilla التسويقيين. نحن لا نبيع هذه البيانات أبدًا.</string>
   <!-- Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded. -->
-  <string name="nova_onboarding_marketing_body_3" tools:ignore="BrandUsage,UnusedResources">يمكنك مساعدتنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ القنوات التي نروج فيها لمتصفح Firefox بأنك مستخدم لمتصفح Firefox.</string>
+  <string name="nova_onboarding_marketing_body_3" tools:ignore="BrandUsage,UnusedResources">يمكنك مساعدتنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ القنوات التي نروج فيها لمتصفح Praha بأنك مستخدم لمتصفح Praha.</string>
   <!--
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
   -->
-  <string name="nova_onboarding_marketing_body_4" tools:ignore="BrandUsage,UnusedResources">يمكنك مساعدتنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Firefox.</string>
+  <string name="nova_onboarding_marketing_body_4" tools:ignore="BrandUsage,UnusedResources">يمكنك مساعدتنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Praha.</string>
   <!--
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
   -->
-  <string name="nova_onboarding_marketing_body_5" tools:ignore="BrandUsage,UnusedResources">ساعدنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Firefox.</string>
+  <string name="nova_onboarding_marketing_body_5" tools:ignore="BrandUsage,UnusedResources">ساعدنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Praha.</string>
   <!--
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
     %1$s is replaced by an active link, using nova_onboarding_marketing_body_link_text as text (“How we use the data”).
   -->
-  <string name="nova_onboarding_marketing_body_6" tools:ignore="BrandUsage,UnusedResources">ساعدنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Firefox. %1$s</string>
+  <string name="nova_onboarding_marketing_body_6" tools:ignore="BrandUsage,UnusedResources">ساعدنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـ Mozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Praha. %1$s</string>
   <!--
     Marketing onboarding body. 'Firefox' and 'Mozilla' are intentionally hardcoded.
     “Platform you came from” refers to the external app, website, store, campaign, or other source that directed the user to Firefox.
     %1$s is replaced by an active link, using nova_onboarding_marketing_body_link_text_1 as text (“Learn More”).
   -->
-  <string name="nova_onboarding_marketing_body_7" tools:ignore="BrandUsage">يمكنك مساعدتنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـMozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Firefox. %1$s</string>
+  <string name="nova_onboarding_marketing_body_7" tools:ignore="BrandUsage">يمكنك مساعدتنا في الوصول إلى المزيد من الأشخاص من خلال السماح لـMozilla بإبلاغ المنصة التي أتيت منها بأنك تستخدم Praha. %1$s</string>
   <!-- Marketing onboarding additional body text. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_marketing_body_line_two" tools:ignore="BrandUsage">يفخر Firefox باستقلاليته وتفانيه في الدفاع عن الإنترنت المفتوح ضد احتكارات التقنية.</string>
+  <string name="nova_onboarding_marketing_body_line_two" tools:ignore="BrandUsage">يفخر Praha باستقلاليته وتفانيه في الدفاع عن الإنترنت المفتوح ضد احتكارات التقنية.</string>
   <!-- Marketing onboarding body link text. -->
   <string name="nova_onboarding_marketing_body_link_text">كيفية استخدامنا للبيانات</string>
   <!-- Marketing onboarding body link text. -->
   <string name="nova_onboarding_marketing_body_link_text_1">اطّلع على المزيد</string>
   <!-- Marketing onboarding primary button text. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_marketing_primary_button_text" tools:ignore="BrandUsage,UnusedResources">ساعد Firefox</string>
+  <string name="nova_onboarding_marketing_primary_button_text" tools:ignore="BrandUsage,UnusedResources">ساعد Praha</string>
   <!-- Marketing onboarding primary button text. -->
   <string name="nova_onboarding_marketing_primary_button_text_3">نعم</string>
   <!-- Marketing onboarding secondary button text. -->
@@ -634,9 +634,9 @@
   <!-- Marketing onboarding secondary button text. -->
   <string name="nova_onboarding_marketing_secondary_button_text_2">لا</string>
   <!-- Notifications onboarding title. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_notifications_title" tools:ignore="BrandUsage,UnusedResources">تساعدك الإشعارات على البقاء أكثر أماناً مع Firefox</string>
+  <string name="nova_onboarding_notifications_title" tools:ignore="BrandUsage,UnusedResources">تساعدك الإشعارات على البقاء أكثر أماناً مع Praha</string>
   <!-- Notifications onboarding subtitle. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_notifications_subtitle" tools:ignore="BrandUsage,UnusedResources">اكتشف أحدث ميزات الخصوصية في Firefox لتبقى محميًا دائمًا.</string>
+  <string name="nova_onboarding_notifications_subtitle" tools:ignore="BrandUsage,UnusedResources">اكتشف أحدث ميزات الخصوصية في Praha لتبقى محميًا دائمًا.</string>
   <!-- Notifications onboarding button. -->
   <string name="nova_onboarding_notifications_button">فعّل التنبيهات</string>
   <!-- Customize prompt onboarding title. -->
@@ -713,9 +713,9 @@
   <!-- Preference Category for settings related to Search address bar -->
   <string name="preferences_settings_address_bar">تفضيلات شريط العناوين</string>
   <!-- Preference Category for settings to Firefox Suggest -->
-  <string name="preference_search_address_bar_fx_suggest" tools:ignore="BrandUsage">شريط العناوين - اقتراح Firefox</string>
+  <string name="preference_search_address_bar_fx_suggest" tools:ignore="BrandUsage">شريط العناوين - اقتراح Praha</string>
   <!-- Preference link to Learn more about Firefox Suggest -->
-  <string name="preference_search_learn_about_fx_suggest" tools:ignore="BrandUsage">تعرف على المزيد حول اقتراحات Firefox</string>
+  <string name="preference_search_learn_about_fx_suggest" tools:ignore="BrandUsage">تعرف على المزيد حول اقتراحات Praha</string>
   <!-- Preference link to rating Fenix on the Play Store -->
   <string name="preferences_rate">قيّمه في متجر غوغل</string>
   <!--
@@ -1071,7 +1071,7 @@
   -->
   <string name="addon_ga_message_title_2" tools:ignore="UnusedResources">تتوفر امتدادات جديدة الآن</string>
   <!-- Body of the Nimbus message for add-ons general availability. 'Firefox' intentionally hardcoded here -->
-  <string name="addon_ga_message_body" tools:ignore="BrandUsage,UnusedResources">تعرف على أكثر من 100 امتداد جديد يتيح لك تخصيص Firefox كما تشاء.</string>
+  <string name="addon_ga_message_body" tools:ignore="BrandUsage,UnusedResources">تعرف على أكثر من 100 امتداد جديد يتيح لك تخصيص Praha كما تشاء.</string>
   <!-- Button text of the Nimbus message for extensions general availability. -->
   <string name="addon_ga_message_button_2" tools:ignore="UnusedResources">استكشف الامتدادات</string>
   <!--
@@ -1143,7 +1143,7 @@
   -->
   <string name="fxa_received_tab_channel_name">التبويبات المستلمة</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">تنبيهات التبويبات المستلمة من أجهزة Firefox الأخرى.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">تنبيهات التبويبات المستلمة من أجهزة Praha الأخرى.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">تم استلام تبويب</string>
   <!-- %s is the device name -->
@@ -1175,7 +1175,7 @@
   <!-- Preference switch for usage and technical learn more link in new compose -->
   <string name="preference_usage_data_learn_more_2">اعرف المزيد عن البيانات الفنية</string>
   <!-- Preference description for marketing data collection. Note: The words "Firefox" should NOT be translated -->
-  <string name="preferences_usage_data_description_1" tools:ignore="BrandUsage">تساعدنا البيانات المتعلقة بجهازك وتكوينات الأجهزة وكيفية الاستخدام في تطوير ميزات Firefox ورفع كفاءة الأداء والاستقرار.</string>
+  <string name="preferences_usage_data_description_1" tools:ignore="BrandUsage">تساعدنا البيانات المتعلقة بجهازك وتكوينات الأجهزة وكيفية الاستخدام في تطوير ميزات Praha ورفع كفاءة الأداء والاستقرار.</string>
   <!-- Preference switch for daily usage ping data collection -->
   <string name="preferences_daily_usage_ping_title">تنبيه الاستخدام اليومي</string>
   <string name="preferences_daily_usage_ping_description" tools:ignore="BrandUsage">يساعد هذا Mozilla على تقدير عدد المستخدمين النشطين.</string>
@@ -1198,7 +1198,7 @@
     Preference description for marketing data collection.
     Note: The words "Firefox" and "Mozilla" should NOT be translated. “That you use it” is to mean that the user is opting in to sharing that they are continuing to use Firefox after installing it; not that Firefox is tracking their “usage” or what they’re using it for.
   -->
-  <string name="preferences_marketing_data_description_4" tools:ignore="BrandUsage">شارك معلومات حول كيفية اكتشافك لـ Firefox وأنك تستخدمه مع شركاء Mozilla في مجال تكنولوجيا التسويق.</string>
+  <string name="preferences_marketing_data_description_4" tools:ignore="BrandUsage">شارك معلومات حول كيفية اكتشافك لـ Praha وأنك تستخدمه مع شركاء Mozilla في مجال تكنولوجيا التسويق.</string>
   <!-- Learn more link for marketing data preference -->
   <string name="preferences_marketing_data_learn_more">اعرف المزيد عن بيانات التسويق</string>
   <!-- Title for studies preferences -->
@@ -1424,7 +1424,7 @@
   <!-- Title of the active section on the studies list -->
   <string name="studies_active">نشطة</string>
   <!-- Description for studies. Note: The word "Firefox" should NOT be translated -->
-  <string name="studies_description_4" tools:ignore="BrandUsage">يختار Firefox مستخدمين عشوائيًا لاختبار الميزات، مما يحسن الجودة للجميع.</string>
+  <string name="studies_description_4" tools:ignore="BrandUsage">يختار Praha مستخدمين عشوائيًا لاختبار الميزات، مما يحسن الجودة للجميع.</string>
   <!-- Title of the Studies data preference -->
   <string name="studies_title_2">السماح بدراسات الميزات</string>
   <!-- Learn more link for studies, links to an article for more information about studies. -->
@@ -1436,7 +1436,7 @@
   -->
   <string name="remote_improvements_title">السماح بإجراء تحسينات عن بُعد</string>
   <!-- Description for remote improvements. Note: The word "Firefox" should NOT be translated -->
-  <string name="remote_improvements_description" tools:ignore="BrandUsage">سيقوم Firefox بتحسين الميزات والأداء والثبات بين التحديثات. تُطبّق التغييرات عن بُعد.</string>
+  <string name="remote_improvements_description" tools:ignore="BrandUsage">سيقوم Praha بتحسين الميزات والأداء والثبات بين التحديثات. تُطبّق التغييرات عن بُعد.</string>
   <!-- Learn more link for remote improvements, links to an article for more information about rollouts. -->
   <string name="remote_improvements_learn_more">اطّلع على المزيد</string>
   <!-- Title for remote improvements preference in Advanced settings -->
@@ -2328,7 +2328,7 @@
   <!-- An option to connect additional devices -->
   <string name="sync_connect_device">صِلْ جهازًا آخر</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">سجّل الدخول إلى Firefox على جهاز واحد آخر على الأقل لإرسال تبويب إليه.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">سجّل الدخول إلى Praha على جهاز واحد آخر على الأقل لإرسال تبويب إليه.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">فهمت</string>
   <!-- Share error message -->
@@ -2360,19 +2360,19 @@
     Title shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_title" tools:ignore="BrandUsage,UnusedResources">‏Firefox سريع وخاص</string>
+  <string name="nimbus_notification_default_browser_title" tools:ignore="BrandUsage,UnusedResources">‏Praha سريع وخاص</string>
   <!--
     Text shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">اجعل Firefox متصفّحك المبدئي</string>
+  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">اجعل Praha متصفّحك المبدئي</string>
   <!--
     Survey
 
     Text shown in the fullscreen message that pops up to ask user to take a short survey.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_survey_message_text" tools:ignore="BrandUsage">ساعدنا على تحسين متصفح Firefox من خلال المشاركة في استطلاع رأي قصير.</string>
+  <string name="nimbus_survey_message_text" tools:ignore="BrandUsage">ساعدنا على تحسين متصفح Praha من خلال المشاركة في استطلاع رأي قصير.</string>
   <!-- Preference for taking the short survey. -->
   <string name="preferences_take_survey">شارك في الاستطلاع</string>
   <!-- Preference for not taking the short survey. -->
@@ -2512,7 +2512,7 @@
   <!-- Text shown for settings option for sign with email -->
   <string name="sign_in_with_email">استعمل البريد بدل المسح</string>
   <!-- Text shown for settings option for create new account text.'Firefox' intentionally hardcoded here. -->
-  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[ليس لديك حساب؟ <u>أنشِئ واحدًا</u> لمزامنة Firefox بين الأجهزة.]]></string>
+  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[ليس لديك حساب؟ <u>أنشِئ واحدًا</u> لمزامنة Praha بين الأجهزة.]]></string>
   <!-- Text shown in confirmation dialog to sign out of account. %s is the name of the app (for example "Firefox"). -->
   <string name="sign_out_confirmation_message_2">سيتوقف %s عن مزامنة حسابك، لكن لن يحذف أيًا من بيانات تصفحك على هذا الجهاز.</string>
   <!-- Option to continue signing out of account shown in confirmation dialog to sign out of account -->
@@ -3263,7 +3263,7 @@
   <!-- Text displayed when user has disabled tab syncing in Firefox Sync Account -->
   <string name="synced_tabs_enable_tab_syncing">يُرجى تفعيل مزامنة التبويبات.</string>
   <!-- Text displayed when user has no tabs that have been synced -->
-  <string name="synced_tabs_no_tabs" tools:ignore="BrandUsage">لا تبويبات مفتوحة في Firefox على أجهزتك الأخرى.</string>
+  <string name="synced_tabs_no_tabs" tools:ignore="BrandUsage">لا تبويبات مفتوحة في Praha على أجهزتك الأخرى.</string>
   <!-- Text displayed in the synced tabs screen when a user is not signed in to Firefox Sync describing Synced Tabs -->
   <string name="synced_tabs_sign_in_message">اعرض قائمة بالتبويبات من أجهزتك الأخرى.</string>
   <!-- Text displayed on a button in the synced tabs screen to link users to sign in when a user is not signed in to Firefox Sync -->
@@ -3357,7 +3357,7 @@
   -->
   <string name="inactive_tabs_auto_close_message_header" tools:ignore="UnusedResources">أتريد إغلاقها تلقائيًا بعد شهر؟</string>
   <!-- A description below the header to notify the user what the inactive tabs auto-close feature is. -->
-  <string name="inactive_tabs_auto_close_message_description" tools:ignore="BrandUsage,UnusedResources">سيُغلق Firefox التبويبات التي لم تعرضها منذ شهر تلقائيًا.</string>
+  <string name="inactive_tabs_auto_close_message_description" tools:ignore="BrandUsage,UnusedResources">سيُغلق Praha التبويبات التي لم تعرضها منذ شهر تلقائيًا.</string>
   <!-- A call to action below the description to allow the user to turn on the auto closing of inactive tabs. -->
   <string name="inactive_tabs_auto_close_message_action" tools:ignore="UnusedResources">فعّل الإغلاق التلقائي</string>
   <!-- Text for the snackbar to confirm auto-close is enabled for inactive tabs -->
@@ -3367,7 +3367,7 @@
 
     Search suggestions title for Firefox Suggest.
   -->
-  <string name="firefox_suggest_header" tools:ignore="BrandUsage">يقترح Firefox</string>
+  <string name="firefox_suggest_header" tools:ignore="BrandUsage">يقترح Praha</string>
   <!--
     Search suggestions title for trending search suggestions.
     %s is a placeholder for the name of the search engine providing the trending search suggestions.
@@ -3386,7 +3386,7 @@
   -->
   <string name="default_browser_experiment_card_title">تغيير متصفحك الافتراضي</string>
   <!-- Default browser card text -->
-  <string name="default_browser_experiment_card_text" tools:ignore="BrandUsage">اضبط روابط المواقع والبريد الإلكتروني والرسائل لتفتح تلقائيًا في Firefox.</string>
+  <string name="default_browser_experiment_card_text" tools:ignore="BrandUsage">اضبط روابط المواقع والبريد الإلكتروني والرسائل لتفتح تلقائيًا في Praha.</string>
   <!-- Content description radio buttons with a link to more information -->
   <string name="radio_preference_info_content_description">انقر لتفاصيل أكثر</string>
   <!-- Content description for the action bar "up" button -->
@@ -3790,7 +3790,7 @@
 
     The microsurvey prompt title. Note: The word "Firefox" should NOT be translated
   -->
-  <string name="micro_survey_prompt_title" tools:ignore="BrandUsage,UnusedResources">ساعدنا في تحسين Firefox. لن يستغرق الأمر سوى دقيقة.</string>
+  <string name="micro_survey_prompt_title" tools:ignore="BrandUsage,UnusedResources">ساعدنا في تحسين Praha. لن يستغرق الأمر سوى دقيقة.</string>
   <!-- The continue button label -->
   <string name="micro_survey_continue_button_label" tools:ignore="UnusedResources">مواصلة</string>
   <!--
@@ -3820,7 +3820,7 @@
   <!-- Option for likert scale -->
   <string name="likert_scale_option_6" tools:ignore="UnusedResources">أنا لا أستخدمه</string>
   <!-- Option for likert scale. Note: The word "Firefox" should NOT be translated. -->
-  <string name="likert_scale_option_7" tools:ignore="BrandUsage,UnusedResources">لا أستخدم خاصية البحث على Firefox</string>
+  <string name="likert_scale_option_7" tools:ignore="BrandUsage,UnusedResources">لا أستخدم خاصية البحث على Praha</string>
   <!-- Option for likert scale -->
   <string name="likert_scale_option_8" tools:ignore="UnusedResources">أنا لا أستخدم المزامنة</string>
   <!-- Option for likert scale -->
@@ -3832,23 +3832,23 @@
   <!-- Option for likert scale -->
   <string name="likert_scale_option_its_okay" tools:ignore="UnusedResources">جيد، لكنه ليس أفضل من المتصفّحات الأخرى</string>
   <!-- Option for likert scale. Note: The word "Firefox" should NOT be translated. -->
-  <string name="likert_scale_option_i_plan_to_keep_using" tools:ignore="BrandUsage,UnusedResources">أُخطط للاستمرار في استخدام Firefox</string>
+  <string name="likert_scale_option_i_plan_to_keep_using" tools:ignore="BrandUsage,UnusedResources">أُخطط للاستمرار في استخدام Praha</string>
   <!-- Text shown in prompt for printing microsurvey. "sec" It's an abbreviation for "second". Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_prompt_printing_title" tools:ignore="BrandUsage,UnusedResources">ساعد في تحسين الطباعة في Firefox. لن يستغرق الأمر سوى ثواني</string>
+  <string name="microsurvey_prompt_printing_title" tools:ignore="BrandUsage,UnusedResources">ساعد في تحسين الطباعة في Praha. لن يستغرق الأمر سوى ثواني</string>
   <!-- Text shown in prompt for search microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_prompt_search_title" tools:ignore="BrandUsage,UnusedResources">ساعدنا في تحسين البحث في Firefox. لن يستغرق الأمر سوى دقيقة واحدة</string>
+  <string name="microsurvey_prompt_search_title" tools:ignore="BrandUsage,UnusedResources">ساعدنا في تحسين البحث في Praha. لن يستغرق الأمر سوى دقيقة واحدة</string>
   <!-- Text shown in prompt for sync microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_prompt_sync_title" tools:ignore="BrandUsage,UnusedResources">ساعد في تحسين مزامنة البيانات في Firefox. لن يستغرق الأمر دقيقة واحدة</string>
+  <string name="microsurvey_prompt_sync_title" tools:ignore="BrandUsage,UnusedResources">ساعد في تحسين مزامنة البيانات في Praha. لن يستغرق الأمر دقيقة واحدة</string>
   <!-- Text shown in the survey title for printing microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_survey_printing_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن الطباعة في متصفح Firefox؟</string>
+  <string name="microsurvey_survey_printing_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن الطباعة في متصفح Praha؟</string>
   <!-- Text shown in the survey title for homepage microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_homepage_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن صفحتك الرئيسية في Firefox؟</string>
+  <string name="microsurvey_homepage_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن صفحتك الرئيسية في Praha؟</string>
   <!-- Text shown in the survey title for search experience microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_search_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن تجربة البحث في Firefox؟</string>
+  <string name="microsurvey_search_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن تجربة البحث في Praha؟</string>
   <!-- Text shown in the survey title for sync experience microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_sync_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن تجربة مزامنة البيانات في Firefox؟</string>
+  <string name="microsurvey_sync_title" tools:ignore="BrandUsage,UnusedResources">ما مدى رضاك عن تجربة مزامنة البيانات في Praha؟</string>
   <!-- Text shown in the survey title for 'describe your experience so far' microsurvey. Note: The word "Firefox" should NOT be translated. -->
-  <string name="microsurvey_describe_your_experience_title" tools:ignore="BrandUsage,UnusedResources">ساعدنا في تحسين Firefox. ما الذي يوصف تجربتك حتى الآن؟</string>
+  <string name="microsurvey_describe_your_experience_title" tools:ignore="BrandUsage,UnusedResources">ساعدنا في تحسين Praha. ما الذي يوصف تجربتك حتى الآن؟</string>
   <!--
     Uninstall Survey
 
@@ -3874,7 +3874,7 @@
 
     Content description for the survey application icon. Note: The word "Firefox" should NOT be translated.
   -->
-  <string name="microsurvey_app_icon_content_description" tools:ignore="BrandUsage">شعار Firefox</string>
+  <string name="microsurvey_app_icon_content_description" tools:ignore="BrandUsage">شعار Praha</string>
   <!-- Content description for the survey feature icon. -->
   <string name="microsurvey_feature_icon_content_description">أيقونة ميزة الاستطلاع</string>
   <!-- Content description (not visible, for screen readers etc.) for closing microsurvey bottom sheet. -->
@@ -3992,27 +3992,27 @@
   -->
   <string name="certificate_warning_homepage_card_update_now_button" tools:ignore="UnusedResources">التحديث الآن</string>
   <!-- Homepage card title about old Firefox version. "Update" is a verb. Note: The word "Firefox" should NOT be translated. -->
-  <string name="certificate_warning_homepage_card_hca1_title" tools:ignore="BrandUsage,UnusedResources">تحديث متصفّح Firefox الخاص بك</string>
+  <string name="certificate_warning_homepage_card_hca1_title" tools:ignore="BrandUsage,UnusedResources">تحديث متصفّح Praha الخاص بك</string>
   <!-- Homepage card message about old Firefox version -->
   <string name="certificate_warning_homepage_card_hca1_message" tools:ignore="UnusedResources">ستنتهي صلاحية شهادة الجذر، مما سيؤدي إلى توقف بعض الميزات عن العمل في 14 مارس.</string>
   <!-- Homepage card title about old Firefox version. "Update" is a verb. -->
   <string name="certificate_warning_homepage_card_hcr1_title" tools:ignore="UnusedResources">قم بالتحديث قبل 14 مارس</string>
   <!-- Homepage card message about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
-  <string name="certificate_warning_homepage_card_hcr1_message" tools:ignore="BrandUsage,UnusedResources">ستنتهي صلاحية شهادة الجذر، مما سيؤدي إلى توقف نسخة Firefox الخاصة بك عن العمل بشكل صحيح.</string>
+  <string name="certificate_warning_homepage_card_hcr1_message" tools:ignore="BrandUsage,UnusedResources">ستنتهي صلاحية شهادة الجذر، مما سيؤدي إلى توقف نسخة Praha الخاصة بك عن العمل بشكل صحيح.</string>
   <!-- Homepage card title about old Firefox version -->
   <string name="certificate_warning_homepage_card_hcw2_title" tools:ignore="UnusedResources">لم يتبق سوى أقل من 7 أيام للتحديث</string>
   <!-- Homepage card message about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
-  <string name="certificate_warning_homepage_card_hcw2_message" tools:ignore="BrandUsage,UnusedResources">في 14 مارس، ستتوقف الإضافات وميزات Firefox الأخرى عن العمل بسبب انتهاء صلاحية شهادة الجذر.</string>
+  <string name="certificate_warning_homepage_card_hcw2_message" tools:ignore="BrandUsage,UnusedResources">في 14 مارس، ستتوقف الإضافات وميزات Praha الأخرى عن العمل بسبب انتهاء صلاحية شهادة الجذر.</string>
   <!-- Homepage card title about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
-  <string name="certificate_warning_homepage_card_hcw3_title" tools:ignore="BrandUsage,UnusedResources">فرصتك الأخيرة للحفاظ على Firefox الخاص بك</string>
+  <string name="certificate_warning_homepage_card_hcw3_title" tools:ignore="BrandUsage,UnusedResources">فرصتك الأخيرة للحفاظ على Praha الخاص بك</string>
   <!-- Homepage card message about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
-  <string name="certificate_warning_homepage_card_hcw3_message" tools:ignore="BrandUsage,UnusedResources">ستتوقف نسخة Firefox الخاصة بك عن العمل بشكل صحيح في 14 مارس بسبب انتهاء صلاحية شهادة الجذر.</string>
+  <string name="certificate_warning_homepage_card_hcw3_message" tools:ignore="BrandUsage,UnusedResources">ستتوقف نسخة Praha الخاصة بك عن العمل بشكل صحيح في 14 مارس بسبب انتهاء صلاحية شهادة الجذر.</string>
   <!-- Push notification title about old Firefox version. "Update" is a noun. -->
   <string name="certificate_warning_push_notification_update_recommended_title" tools:ignore="UnusedResources">يُنصح بالتحديث</string>
   <!-- Push notification message about old Firefox version -->
   <string name="certificate_warning_push_notification_pnr1_message" tools:ignore="UnusedResources">ستتوقف الإضافات وبعض الميزات عن العمل في 14 مارس.</string>
   <!-- Push notification title about old Firefox version. Note: The word "Firefox" should NOT be translated. -->
-  <string name="certificate_warning_push_notification_pnw2_title" tools:ignore="BrandUsage,UnusedResources">أنت تستخدم نسخة أقدم من Firefox</string>
+  <string name="certificate_warning_push_notification_pnw2_title" tools:ignore="BrandUsage,UnusedResources">أنت تستخدم نسخة أقدم من Praha</string>
   <!-- Push notification message about old Firefox version. "Update" is a verb. -->
   <string name="certificate_warning_push_notification_pnw2_message" tools:ignore="UnusedResources">يُرجى التحديث قبل 14 مارس للاستمرار في استخدام الإضافات والميزات الأخرى.</string>
   <!-- Push notification message about old Firefox version -->
@@ -4220,7 +4220,7 @@
     %1$s is replaced by an active link using privacy_notice_updated_homepage_message_privacy_notice as text (Privacy Notice)
     %2$s is replaced by an active link using privacy_notice_updated_homepage_message_learn_more as text (Learn more)
   -->
-  <string name="privacy_notice_updated_homepage_message" tools:ignore="BrandUsage,UnusedResources">لقد قمنا بتحديث %1$s لعكس أحدث الميزات في Firefox. %2$s</string>
+  <string name="privacy_notice_updated_homepage_message" tools:ignore="BrandUsage,UnusedResources">لقد قمنا بتحديث %1$s لعكس أحدث الميزات في Praha. %2$s</string>
   <!-- The first active link used in privacy_notice_updated_homepage_message -->
   <string name="privacy_notice_updated_homepage_message_privacy_notice" tools:ignore="UnusedResources">تنويه الخصوصية</string>
   <!-- The second active link used in privacy_notice_updated_homepage_message -->

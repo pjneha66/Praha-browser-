@@ -62,11 +62,11 @@ android {
         // Blank in debug builds so that tests are deterministic.
         buildConfigField "String", "VCS_HASH", "\"\""
         // This should be the "public" base URL of AMO.
-        buildConfigField "String", "AMO_BASE_URL", "\"https://addons.praha-browser.org\""
+        buildConfigField "String", "AMO_BASE_URL", "\"https://addons.mozilla.org\""
         buildConfigField "String", "AMO_COLLECTION_NAME", "\"Extensions-for-Android\""
-        buildConfigField "String", "AMO_COLLECTION_USER", "\"praha\""
+        buildConfigField "String", "AMO_COLLECTION_USER", "\"mozilla\""
         // This should be the base URL used to call the AMO API.
-        buildConfigField "String", "AMO_SERVER_URL", "\"https://services.addons.praha-browser.org\""
+        buildConfigField "String", "AMO_SERVER_URL", "\"https://services.addons.mozilla.org\""
 
         def deepLinkSchemeValue = "praha-dev"
         buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
@@ -449,7 +449,7 @@ android.buildTypes.debug.with {
 ext {
     // Enable expiration by major version.
     gleanExpireByVersion = Config.majorVersion(project)
-    gleanNamespace = "praha.telemetry.glean"
+    gleanNamespace = "mozilla.telemetry.glean"
     gleanYamlFiles = GleanIndex.getGleanYamlFiles(project)
 }
 apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"

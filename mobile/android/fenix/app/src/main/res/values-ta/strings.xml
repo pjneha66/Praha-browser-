@@ -70,7 +70,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">மேசைக்கணினி தளம்</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">முகப்பு திரையில் சேர்</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu button that opens the find in page menu -->
   <string name="browser_menu_find_in_page">பக்கத்தில் தேடு</string>
   <!-- Browser menu button that saves the current tab to a collection -->

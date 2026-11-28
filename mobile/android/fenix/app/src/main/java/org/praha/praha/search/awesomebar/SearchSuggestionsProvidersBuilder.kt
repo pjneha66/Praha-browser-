@@ -224,7 +224,7 @@ class SearchSuggestionsProvidersBuilder(
                 if (components.settings.boostAmpWikiSuggestions) {
                     FxSuggestSuggestionProvider(
                         loadUrlUseCase = loadUrlUseCase,
-                        includeSponsoredSuggestions = state.showSponsoredSuggestions,
+                        includeSponsoredSuggestions = false,
                         includeNonSponsoredSuggestions = state.showNonSponsoredSuggestions,
                         suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
                         sponsoredSuggestionDescription = suggestionsStringsProvider.getSponsoredSuggestionDescription(),
@@ -234,7 +234,7 @@ class SearchSuggestionsProvidersBuilder(
                 } else {
                     FxSuggestSuggestionProvider(
                         loadUrlUseCase = loadUrlUseCase,
-                        includeSponsoredSuggestions = state.showSponsoredSuggestions,
+                        includeSponsoredSuggestions = false,
                         includeNonSponsoredSuggestions = state.showNonSponsoredSuggestions,
                         suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
                         sponsoredSuggestionDescription = suggestionsStringsProvider.getSponsoredSuggestionDescription(),

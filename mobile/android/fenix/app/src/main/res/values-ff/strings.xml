@@ -89,7 +89,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">Lowre ordinateer</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Ɓeydu to hello jaɓɓorgo</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu button that opens the find in page menu -->
   <string name="browser_menu_find_in_page">Yiytu e Hello</string>
   <!-- Browser menu button that saves the current tab to a collection -->
@@ -288,7 +288,7 @@
   -->
   <string name="fxa_received_tab_channel_name">Heɓii tabbe</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Tintine ngam tabbe keɓaaɗe e kaɓirɗe Firefox goɗɗe.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Tintine ngam tabbe keɓaaɗe e kaɓirɗe Praha goɗɗe.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">Tabbere heɓaama</string>
   <!-- %s is the device name -->
@@ -632,7 +632,7 @@
   <!-- An option to connect additional devices -->
   <string name="sync_connect_device">Seŋ kaɓirgol goɗngol</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Ngam neldude tabbere, seŋo e Firefox ko famɗi fof e kaɓirgal gootal goɗngal.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Ngam neldude tabbere, seŋo e Praha ko famɗi fof e kaɓirgal gootal goɗngal.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">Mi faamii</string>
   <!-- Share error message -->
@@ -730,7 +730,7 @@
   <!-- Text shown for settings option for sign with email -->
   <string name="sign_in_with_email">Huutoro ɗoo iimeel</string>
   <!-- Text shown for settings option for create new account text.'Firefox' intentionally hardcoded here. -->
-  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[A alaa konte? <u>Sos konte</u> ngam sanngoɗinde Firefox hakkunde kaɓirɗi.]]></string>
+  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[A alaa konte? <u>Sos konte</u> ngam sanngoɗinde Praha hakkunde kaɓirɗi.]]></string>
   <!-- Text shown in confirmation dialog to sign out of account. %s is the name of the app (for example "Firefox"). -->
   <string name="sign_out_confirmation_message_2">Maa %s dartin jahdingol e konte maa, kono momtataa hay wootere e keɓe banngogol maa e ngal kaɓirgal gal.</string>
   <!-- Option to continue signing out of account shown in confirmation dialog to sign out of account -->
@@ -928,7 +928,7 @@
   -->
   <string name="inactive_tabs_auto_close_message_header" tools:ignore="UnusedResources">Uddu e jaajol caggal lewru?</string>
   <!-- A description below the header to notify the user what the inactive tabs auto-close feature is. -->
-  <string name="inactive_tabs_auto_close_message_description" tools:ignore="BrandUsage,UnusedResources">Firefox ena waawi uddude tabbe ɗe a yillaaki e lewru ɓennundu nduu.</string>
+  <string name="inactive_tabs_auto_close_message_description" tools:ignore="BrandUsage,UnusedResources">Praha ena waawi uddude tabbe ɗe a yillaaki e lewru ɓennundu nduu.</string>
   <!-- Text indicating that the Pocket story that also displays this text is a sponsored story by other 3rd party entity. -->
   <string name="pocket_stories_sponsor_indication">Barjinaaɗi</string>
 </resources>

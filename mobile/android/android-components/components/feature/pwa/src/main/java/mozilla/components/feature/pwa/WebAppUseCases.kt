@@ -19,8 +19,8 @@ class WebAppUseCases(
     /** Checks if the launcher supports adding shortcuts. */
     fun isPinningSupported() = ShortcutManagerCompat.isRequestPinShortcutSupported(applicationContext)
 
-    /** Checks to see if the current session can be installed as a Progressive Web App. */
-    fun isInstallable() = store.state.selectedTab?.installableManifest() != null && shortcutManager.supportWebApps
+    /** Checks to see if the current session can be installed as a Progressive Web App or Web App. */
+    fun isInstallable() = shortcutManager.supportWebApps && store.state.selectedTab != null
 
     /**
      * Let the user add the selected session to the homescreen.

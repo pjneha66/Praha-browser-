@@ -4,5 +4,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <resources>
     <!-- Name of the application -->
-    <string name="app_name" translatable="false">Praha Nightly</string>
+    <string name="app_name" translatable="false">Praha Browser Nightly</string>
+    <string name="firefox" translatable="false">Praha Browser</string>
+    <string name="app_name_firefox">Praha Browser</string>
 </resources>

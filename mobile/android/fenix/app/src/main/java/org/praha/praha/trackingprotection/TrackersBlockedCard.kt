@@ -167,7 +167,7 @@ fun TrackersBlockedCard(
 
         if (isPlayingAnimation && foxOffsetY.value < 1f) {
             TypewriterText(
-                text = stringResource(org.praha.praha.longfox.R.string.tap_to_play),
+                text = stringResource(org.mozilla.fenix.longfox.R.string.tap_to_play),
                 isReversing = isReversing,
             )
         }

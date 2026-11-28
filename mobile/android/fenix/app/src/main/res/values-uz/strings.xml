@@ -126,7 +126,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">Saytning kompyuter versiyasi</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Bosh ekranga qoʻshish</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
   <string name="resync_button_content_description">Qayta sinxronlash</string>
   <!-- Browser menu button that opens the find in page menu -->
@@ -380,7 +380,7 @@
   -->
   <string name="fxa_received_tab_channel_name">Qabul qilingan varaqlar</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Boshqa Firefox qurilmalaridan olingan varaqlar uchun bildirishnomalar.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Boshqa Praha qurilmalaridan olingan varaqlar uchun bildirishnomalar.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">Olingan varaq</string>
   <!-- %s is the device name -->
@@ -813,7 +813,7 @@
   <!-- An option to connect additional devices -->
   <string name="sync_connect_device">Boshqa qurilmani ulash</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Varaqni yuborish uchun kamida bitta boshqa qurilmada Firefox hisobiga kirishingiz kerak.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Varaqni yuborish uchun kamida bitta boshqa qurilmada Praha hisobiga kirishingiz kerak.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">Tushundim!</string>
   <!-- Share error message -->
@@ -943,7 +943,7 @@
   <!-- Text shown for settings option for sign with email -->
   <string name="sign_in_with_email">Buning oʻrniga e-pochtadan foydalaning</string>
   <!-- Text shown for settings option for create new account text.'Firefox' intentionally hardcoded here. -->
-  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[Hisobingiz yoʻqmi? <u>Unda yangisini yarating</u> va Firefoxni qurilmalararo sinxronlang.]]></string>
+  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[Hisobingiz yoʻqmi? <u>Unda yangisini yarating</u> va Prahani qurilmalararo sinxronlang.]]></string>
   <!-- Text shown in confirmation dialog to sign out of account. %s is the name of the app (for example "Firefox"). -->
   <string name="sign_out_confirmation_message_2">%s hisobingiz bilan sinxronlashni toʻxtatadi, ammo qurilmangizdagi brauzer tarixini oʻchirmaydi.</string>
   <!-- Option to continue signing out of account shown in confirmation dialog to sign out of account -->
@@ -1281,7 +1281,7 @@
   <!-- Text displayed when user has disabled tab syncing in Firefox Sync Account -->
   <string name="synced_tabs_enable_tab_syncing">Varaq sinxronizatsiyasini yoqing</string>
   <!-- Text displayed when user has no tabs that have been synced -->
-  <string name="synced_tabs_no_tabs" tools:ignore="BrandUsage">Boshqa qurilmlaringizdagi Firefoxda hech qanday varaq ochiq emas.</string>
+  <string name="synced_tabs_no_tabs" tools:ignore="BrandUsage">Boshqa qurilmlaringizdagi Prahada hech qanday varaq ochiq emas.</string>
   <!-- Text displayed in the synced tabs screen when a user is not signed in to Firefox Sync describing Synced Tabs -->
   <string name="synced_tabs_sign_in_message">Boshqa qurilmalaringizdagi varaqlar roʻyxatini koʻrish.</string>
   <!-- Text displayed on a button in the synced tabs screen to link users to sign in when a user is not signed in to Firefox Sync -->
@@ -1331,7 +1331,7 @@
   -->
   <string name="inactive_tabs_auto_close_message_header" tools:ignore="UnusedResources">Bir oydan keyin avtomatik yopilsinmi?</string>
   <!-- A description below the header to notify the user what the inactive tabs auto-close feature is. -->
-  <string name="inactive_tabs_auto_close_message_description" tools:ignore="BrandUsage,UnusedResources">Oʻtgan oy ochilmagan varaqlarni Firefox yopishi mumkin.</string>
+  <string name="inactive_tabs_auto_close_message_description" tools:ignore="BrandUsage,UnusedResources">Oʻtgan oy ochilmagan varaqlarni Praha yopishi mumkin.</string>
   <!-- A call to action below the description to allow the user to turn on the auto closing of inactive tabs. -->
   <string name="inactive_tabs_auto_close_message_action" tools:ignore="UnusedResources">AVTOMATIK YOPISHNI YOQISH</string>
   <!-- Text for the snackbar to confirm auto-close is enabled for inactive tabs -->
@@ -1341,9 +1341,9 @@
 
     Search suggestions title for Firefox Suggest.
   -->
-  <string name="firefox_suggest_header" tools:ignore="BrandUsage">Firefox Suggest</string>
+  <string name="firefox_suggest_header" tools:ignore="BrandUsage">Praha Suggest</string>
   <!-- Default browser card text -->
-  <string name="default_browser_experiment_card_text" tools:ignore="BrandUsage">Saytlar, elektron pochta va xabarlar havolalarini Firefoxda avtomatik ravishda ochiladigan qilib sozlang.</string>
+  <string name="default_browser_experiment_card_text" tools:ignore="BrandUsage">Saytlar, elektron pochta va xabarlar havolalarini Prahada avtomatik ravishda ochiladigan qilib sozlang.</string>
   <!-- Content description radio buttons with a link to more information -->
   <string name="radio_preference_info_content_description">Batafsil axborot uchun bosing</string>
   <!-- Content description for the action bar "up" button -->

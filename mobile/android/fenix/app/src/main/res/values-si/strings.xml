@@ -171,9 +171,9 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">වැඩතල අඩවිය</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">මුල් තිරයට දමන්න</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu toggle that adds a PWA of the site on the device home screen. -->
-  <string name="browser_menu_add_app_to_homescreen">මුල් තිරයට යෙදුම දමන්න</string>
+  <string name="browser_menu_add_app_to_homescreen">Make Web App (Install)</string>
   <!-- Text for notifying users that Xiaomi devices require additional permissions to add to home screen -->
   <string name="browser_menu_add_to_homescreen_xiaomi">මුල් තිරයට කෙටිමං එක් කිරීමට සියෝමි උපාංග වලට අමතර අවසර වුවමනා විය හැකිය. කරුණාකර ඔබගේ සැකසුම් පරීක්‍ෂා කරන්න.</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->

@@ -248,6 +248,43 @@ internal fun Homepage(
                                 }
                             }
 
+                            PrahaWebAppsHub(
+                                onOsintClick = {
+                                    interactor.onSelectTopSite(
+                                        TopSite.Default(
+                                            id = 1001L,
+                                            title = "OSINT4ALL",
+                                            url = "https://start.me/p/L1rEYQ/osint4all",
+                                            createdAt = null,
+                                        ),
+                                        0,
+                                    )
+                                },
+                                onBeckyFindsClick = {
+                                    interactor.onSelectTopSite(
+                                        TopSite.Default(
+                                            id = 1002L,
+                                            title = "BeckyFinds",
+                                            url = "https://pjneha66.github.io/beckyfinds/",
+                                            createdAt = null,
+                                        ),
+                                        1,
+                                    )
+                                },
+                                onFmhyClick = {
+                                    interactor.onSelectTopSite(
+                                        TopSite.Default(
+                                            id = 1003L,
+                                            title = "FMHY",
+                                            url = "https://fmhy.net/",
+                                            createdAt = null,
+                                        ),
+                                        2,
+                                    )
+                                },
+                                modifier = Modifier.padding(horizontal = horizontalMargin).padding(bottom = 16.dp),
+                            )
+
                             if (topSiteState != null) {
                                 TopSitesSection(
                                     state = topSiteState,

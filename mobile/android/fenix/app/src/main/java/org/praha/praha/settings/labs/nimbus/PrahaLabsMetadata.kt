@@ -8,14 +8,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import mozilla.components.support.base.log.logger.Logger
-import org.mozilla.experiments.nimbus.internal.PrahaLabsMetadata
+import org.mozilla.experiments.nimbus.internal.FirefoxLabsMetadata
 import org.praha.praha.Config
 import org.praha.praha.settings.labs.LabsItem
 
 private val logger = Logger("PrahaLabsMetadata")
 
 /**
- * Converts a [PrahaLabsMetadata] from Nimbus into a [LabsItem] by resolving its title and description resource names.
+ * Converts a [FirefoxLabsMetadata] from Nimbus into a [LabsItem] by resolving its title and description resource names.
  *
  * @param context The [Context] used to resolve string resources.
  * @param allowRawIdFallback Determines how to handle missing resource names.
@@ -28,7 +28,7 @@ private val logger = Logger("PrahaLabsMetadata")
  * If [allowRawIdFallback] is false, and no string is found for that resource name, then the [LabsItem] is returned as
  * null and will not be rendered.
  */
-internal fun PrahaLabsMetadata.toLabsItem(
+internal fun FirefoxLabsMetadata.toLabsItem(
     context: Context,
     allowRawIdFallback: Boolean = Config.channel.isNightlyOrDebug,
 ): LabsItem? {

@@ -6,7 +6,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "org.mozilla.fenix.datastore";
+option java_package = "org.praha.praha.datastore";
 option java_multiple_files = true;
 
 // List of currently selected Pocket recommended stories categories.

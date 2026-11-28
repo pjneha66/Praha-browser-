@@ -160,7 +160,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">ڈیسک‌ٹاپ سائٹ</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">مکھ سکرین تے جوڑو</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
   <string name="resync_button_content_description">مڑ جوڑ کرو</string>
   <!-- Browser menu button that opens the find in page menu -->

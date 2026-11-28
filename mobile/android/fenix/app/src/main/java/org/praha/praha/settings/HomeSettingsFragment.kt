@@ -76,7 +76,8 @@ class HomeSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
         }
 
         requirePreference<CheckBoxPreference>(R.string.pref_key_enable_contile).apply {
-            isChecked = fenixSettings.showContileFeature
+            isVisible = false
+            isChecked = false
             onPreferenceChangeListener = createMetricPreferenceChangeListener("contile")
         }
 

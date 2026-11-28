@@ -44,7 +44,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">Scito desktop</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Azonzi a-a Pagina Prinçipâ</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu button that opens the find in page menu -->
   <string name="browser_menu_find_in_page">Treuva in pagina</string>
   <!-- Browser menu button that saves the current tab to a collection -->
@@ -203,7 +203,7 @@
   -->
   <string name="fxa_received_tab_channel_name">Feuggi reçevui</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Notifiche pe-i feuggi reçevue da atri dispoxitivi Firefox.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Notifiche pe-i feuggi reçevue da atri dispoxitivi Praha.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">Feuggio reçevuo</string>
   <!-- %s is the device name -->
@@ -473,7 +473,7 @@
   <!-- An option to connect additional devices -->
   <string name="sync_connect_device">Conetti atro dispoxitivo</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Pe mandâ un feuggio, intra into conto Firefox almeno inte \'n atro dispoxitivo.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Pe mandâ un feuggio, intra into conto Praha almeno inte \'n atro dispoxitivo.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">Ò capio!</string>
   <!-- Share error message -->
@@ -785,7 +785,7 @@
   <!-- Text displayed when user has disabled tab syncing in Firefox Sync Account -->
   <string name="synced_tabs_enable_tab_syncing">Pe piaxei ativa a scincroniaçion di feuggi.</string>
   <!-- Text displayed when user has no tabs that have been synced -->
-  <string name="synced_tabs_no_tabs" tools:ignore="BrandUsage">No ti gh\'æ feuggi averti in Firefox inti atri dispoxitivi.</string>
+  <string name="synced_tabs_no_tabs" tools:ignore="BrandUsage">No ti gh\'æ feuggi averti in Praha inti atri dispoxitivi.</string>
   <!-- Text displayed in the synced tabs screen when a user is not signed in to Firefox Sync describing Synced Tabs -->
   <string name="synced_tabs_sign_in_message">Amia \'na lista de tutti i feuggi da-i atri dispoxitivi.</string>
   <!-- Text displayed on a button in the synced tabs screen to link users to sign in when a user is not signed in to Firefox Sync -->

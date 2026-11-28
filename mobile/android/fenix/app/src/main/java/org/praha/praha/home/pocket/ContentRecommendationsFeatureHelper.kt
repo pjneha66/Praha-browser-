@@ -12,16 +12,11 @@ import mozilla.components.support.locale.LocaleManager.getSystemDefault
 /** Utility singleton for providing helper functions related to content recommendations feature flags. */
 object ContentRecommendationsFeatureHelper {
     /** Show Pocket sponsored stories in between Pocket recommended stories on home. */
-    fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
-        return isContentRecommendationsFeatureEnabled(context)
-    }
+    fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean = false
 
     /**
      * Returns true if the current locale is part of the supported locales for content recommendations, and false
      * otherwise.
      */
-    fun isContentRecommendationsFeatureEnabled(context: Context): Boolean {
-        val locale = LocaleManager.getCurrentLocale(context) ?: getSystemDefault()
-        return isContentRecommendationsLocaleSupported(locale)
-    }
+    fun isContentRecommendationsFeatureEnabled(context: Context): Boolean = false
 }

@@ -374,12 +374,12 @@ class Settings(
         )
 
     val canShowCfr: Boolean
-        get() = (currentTimeMillis() - lastCfrShownTimeInMillis) > THREE_DAYS_MS
+        get() = false
 
     val cfrPopupsEnabled by
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_cfr_popups_enabled),
-            default = { FxNimbus.features.enablePopups.value().cfrPopupsEnabled },
+            default = { false },
         )
 
     val inAppMessagesEnabled by
@@ -2081,34 +2081,15 @@ class Settings(
         )
 
     /** Check to see if we should open the link in an external app */
-    fun shouldOpenLinksInApp(isCustomTab: Boolean = false): Boolean {
-        return when (openLinksInExternalApp) {
-            appContext.getString(R.string.pref_key_open_links_in_apps_always) -> true
-            appContext.getString(R.string.pref_key_open_links_in_apps_ask) -> true
-            // Some applications will not work if custom tab never open links in apps, return true if it's custom tab
-            appContext.getString(R.string.pref_key_open_links_in_apps_never) -> isCustomTab
-            else -> false
-        }
-    }
+    fun shouldOpenLinksInApp(isCustomTab: Boolean = false): Boolean = false
 
     /** Check to see if we need to prompt the user if the link can be opened in an external app */
-    fun shouldPromptOpenLinksInApp(): Boolean {
-        return when (openLinksInExternalApp) {
-            appContext.getString(R.string.pref_key_open_links_in_apps_always) -> false
-            appContext.getString(R.string.pref_key_open_links_in_apps_ask) -> true
-            appContext.getString(R.string.pref_key_open_links_in_apps_never) -> true
-            else -> true
-        }
-    }
+    fun shouldPromptOpenLinksInApp(): Boolean = false
 
     var openLinksInExternalApp by
         stringPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_open_links_in_apps),
-            default =
-                when (openLinksInExternalAppOld) {
-                    true -> appContext.getString(R.string.pref_key_open_links_in_apps_ask)
-                    false -> appContext.getString(R.string.pref_key_open_links_in_apps_never)
-                },
+            default = appContext.getString(R.string.pref_key_open_links_in_apps_never),
         )
 
     var openLinksInYoutube by
@@ -2418,11 +2399,11 @@ class Settings(
             default = { isAutofillSupported },
         )
 
-    /** Indicates if the Contile functionality should be visible. */
+    /** Indicates if the Contile functionality should be visible. Disabled in Praha Browser. */
     var showContileFeature by
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
-            default = true,
+            default = false,
         )
 
     /** Blocklist used to filter items from the home screen that have previously been removed. */
@@ -2817,7 +2798,7 @@ class Settings(
     var showSponsoredSuggestions by
         lazyFeatureFlagBooleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
-            defaultValue = { enableFxSuggest },
+            defaultValue = { false },
             featureFlag = FeatureFlags.FX_SUGGEST,
         )
 

@@ -85,6 +85,24 @@ class WebAppShortcutManager(
                 if (supportWebApps && manifest != null) {
                     emitPwaInstallFact()
                     buildWebAppShortcut(context, manifest)
+                } else if (supportWebApps) {
+                    emitPwaInstallFact()
+                    val targetName = overrideShortcutName?.ifBlank { null }
+                        ?: session.content.title.ifBlank { null }
+                        ?: fallbackLabel
+                    val syntheticManifest = WebAppManifest(
+                        name = targetName,
+                        shortName = targetName,
+                        startUrl = session.content.url,
+                        display = WebAppManifest.DisplayMode.STANDALONE,
+                    )
+                    val fallbackIcon = session.content.icon
+                        ?.takeUnless { it.isRecycled }
+                        ?.let {
+                            val bitmapCopy = it.copy(it.config ?: android.graphics.Bitmap.Config.ARGB_8888, false)
+                            IconCompat.createWithBitmap(bitmapCopy)
+                        }
+                    buildWebAppShortcut(context, syntheticManifest, fallbackIcon)
                 } else {
                     buildBasicShortcut(context, session, overrideShortcutName)
                 }
@@ -166,6 +184,7 @@ class WebAppShortcutManager(
     suspend fun buildWebAppShortcut(
         context: Context,
         manifest: WebAppManifest,
+        fallbackIcon: IconCompat? = null,
     ): ShortcutInfoCompat? {
         val shortcutIntent =
             Intent(context, WebAppLauncherActivity::class.java).apply {
@@ -184,7 +203,8 @@ class WebAppShortcutManager(
                 .setShortLabel(shortLabel.ifBlank { fallbackLabel })
                 .setIntent(shortcutIntent)
 
-        buildIconFromManifest(manifest)?.let {
+        val icon = buildIconFromManifest(manifest) ?: fallbackIcon
+        icon?.let {
             builder.setIcon(it)
         }
 

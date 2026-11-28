@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mozilla.experiments.nimbus.internal.FirefoxLabsEnrollStatus
-import org.mozilla.experiments.nimbus.internal.PrahaLabsMetadata
+import org.mozilla.experiments.nimbus.internal.FirefoxLabsMetadata
 import org.mozilla.experiments.nimbus.internal.FirefoxLabsUnenrollStatus
 import org.praha.praha.settings.labs.LabsItem
 import org.praha.praha.settings.labs.fake.FakeNimbusApi
@@ -33,7 +33,7 @@ import org.robolectric.RobolectricTestRunner
 class LabsMiddlewareTest {
 
     private lateinit var settings: Settings
-    private var labs: List<PrahaLabsMetadata> = emptyList()
+    private var labs: List<FirefoxLabsMetadata> = emptyList()
     private var labsThrows = false
     private var enrollThrows = false
     private var unenrollAllThrows = false
@@ -86,7 +86,7 @@ class LabsMiddlewareTest {
         requiresRestart: Boolean = false,
         feedbackUrl: String? = null,
     ) =
-        PrahaLabsMetadata(
+        FirefoxLabsMetadata(
             slug = slug,
             titleStringId = titleStringId,
             descriptionStringId = descriptionStringId,

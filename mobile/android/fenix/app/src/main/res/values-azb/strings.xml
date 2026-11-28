@@ -160,7 +160,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">دسکتاپ سایت</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">آناصفحه‌یه آرتیر</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Text for notifying users that Xiaomi devices require additional permissions to add to home screen -->
   <string name="browser_menu_add_to_homescreen_xiaomi">شیائومی دستگاه‌لاریندا آناصفحه‌یه شورتکات آرتیرماق اوچون آرتیق اجازه‌لره احتیاج اولا بیلر. لطفاً تنظیملریزی چک ائله‌یین.</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->

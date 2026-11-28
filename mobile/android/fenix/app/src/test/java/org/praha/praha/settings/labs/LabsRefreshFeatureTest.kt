@@ -14,7 +14,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mozilla.experiments.nimbus.internal.PrahaLabsMetadata
+import org.mozilla.experiments.nimbus.internal.FirefoxLabsMetadata
 import org.praha.praha.settings.labs.fake.FakeNimbusApi
 import org.praha.praha.settings.labs.middleware.LabsMiddleware
 import org.praha.praha.settings.labs.store.LabsAction
@@ -50,9 +50,9 @@ class LabsRefreshFeatureTest {
     @Test
     fun `WHEN Nimbus applies updates THEN labs are refreshed AND a dropped lab is deactivated`() =
         runTest(UnconfinedTestDispatcher()) {
-            var labs: List<PrahaLabsMetadata> =
+            var labs: List<FirefoxLabsMetadata> =
                 listOf(
-                    PrahaLabsMetadata(
+                    FirefoxLabsMetadata(
                         slug = "lab-1",
                         titleStringId = "firefox_labs_test_lab_title",
                         descriptionStringId = "firefox_labs_test_lab_description",

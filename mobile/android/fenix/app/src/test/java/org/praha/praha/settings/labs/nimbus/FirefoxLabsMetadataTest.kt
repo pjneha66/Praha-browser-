@@ -9,12 +9,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mozilla.experiments.nimbus.internal.PrahaLabsMetadata
+import org.mozilla.experiments.nimbus.internal.FirefoxLabsMetadata
 import org.praha.praha.R
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class PrahaLabsMetadataTest {
+class FirefoxLabsMetadataTest {
 
     private fun firefoxLabsMetadata(
         slug: String,
@@ -24,7 +24,7 @@ class PrahaLabsMetadataTest {
         requiresRestart: Boolean = false,
         feedbackUrl: String? = null,
     ) =
-        PrahaLabsMetadata(
+        FirefoxLabsMetadata(
             slug = slug,
             titleStringId = titleStringId,
             descriptionStringId = descriptionStringId,

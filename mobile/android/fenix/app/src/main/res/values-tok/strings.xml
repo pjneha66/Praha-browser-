@@ -157,9 +157,9 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">nasin lukin</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">o pana tawa lipu lawa ilo</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Browser menu toggle that adds a PWA of the site on the device home screen. -->
-  <string name="browser_menu_add_app_to_homescreen">o pana tawa lipu lawa ilo</string>
+  <string name="browser_menu_add_app_to_homescreen">Make Web App (Install)</string>
   <!-- Text for notifying users that Xiaomi devices require additional permissions to add to home screen -->
   <string name="browser_menu_add_to_homescreen_xiaomi">kulupu Xiaomi la ilo li wile e ken ante tawa ni: sina ken pana e ilo tawa lipu lawa. o lukin e nasin ilo sina.</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
@@ -272,13 +272,13 @@
   -->
   <string name="onboarding_home_content_description_close_button">o pini</string>
   <!-- Title for the privacy preferences dialog shown during onboarding. Note: The word "Firefox" should NOT be translated. -->
-  <string name="onboarding_preferences_dialog_title" tools:ignore="BrandUsage">o pana e pona tawa ilo Firefox</string>
+  <string name="onboarding_preferences_dialog_title" tools:ignore="BrandUsage">o pana e pona tawa ilo Praha</string>
   <!-- Learn more link for the crash reporting option in the privacy preferences dialog shown during onboarding. -->
   <string name="onboarding_preferences_dialog_crash_reporting_learn_more_2">o sona</string>
   <!-- Positive button label for the privacy preferences dialog shown during onboarding. -->
   <string name="onboarding_preferences_dialog_positive_button">pona</string>
   <!-- Terms of service onboarding title card label. 'Firefox' intentionally hardcoded here -->
-  <string name="onboarding_welcome_to_firefox" tools:ignore="BrandUsage">o kama pona tawa ilo Firefox</string>
+  <string name="onboarding_welcome_to_firefox" tools:ignore="BrandUsage">o kama pona tawa ilo Praha</string>
   <!--
     Search Widget
 
@@ -308,9 +308,9 @@
   <!-- Preference for settings related to Search engines -->
   <string name="preferences_search_engines">ilo alasa</string>
   <!-- Preference Category for settings to Firefox Suggest -->
-  <string name="preference_search_address_bar_fx_suggest" tools:ignore="BrandUsage">ilo Firefox Suggest la poki alasa</string>
+  <string name="preference_search_address_bar_fx_suggest" tools:ignore="BrandUsage">ilo Praha Suggest la poki alasa</string>
   <!-- Preference link to Learn more about Firefox Suggest -->
-  <string name="preference_search_learn_about_fx_suggest" tools:ignore="BrandUsage">o sona e ilo Firefox Suggest</string>
+  <string name="preference_search_learn_about_fx_suggest" tools:ignore="BrandUsage">o sona e ilo Praha Suggest</string>
   <!-- Preference link to rating Fenix on the Play Store -->
   <string name="preferences_rate">o pana e pilin lon ilo Google Play</string>
   <!--
@@ -462,7 +462,7 @@
   -->
   <string name="addon_ga_message_title_2" tools:ignore="UnusedResources">ilo namako sin li lon</string>
   <!-- Body of the Nimbus message for add-ons general availability. 'Firefox' intentionally hardcoded here -->
-  <string name="addon_ga_message_body" tools:ignore="BrandUsage,UnusedResources">o alasa e ilo namako mute a. ona li ken nasin sina e ilo Firefox.</string>
+  <string name="addon_ga_message_body" tools:ignore="BrandUsage,UnusedResources">o alasa e ilo namako mute a. ona li ken nasin sina e ilo Praha.</string>
   <!-- Button text of the Nimbus message for extensions general availability. -->
   <string name="addon_ga_message_button_2" tools:ignore="UnusedResources">o alasa e ilo namako</string>
   <!--
@@ -977,7 +977,7 @@
   <!-- Text displayed when sync is offline and cannot be accessed -->
   <string name="sync_offline">linja ala</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">pana lipu la o kama tawa ilo Firefox lon ilo ante</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">pana lipu la o kama tawa ilo Praha lon ilo ante</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">mi sona</string>
   <!-- Add new device screen title -->
@@ -1001,12 +1001,12 @@
     Title shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_title" tools:ignore="BrandUsage,UnusedResources">ilo Firefox li awen suli</string>
+  <string name="nimbus_notification_default_browser_title" tools:ignore="BrandUsage,UnusedResources">ilo Praha li awen suli</string>
   <!--
     Text shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">o open e lipu ale kepeken ilo Firefox</string>
+  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">o open e lipu ale kepeken ilo Praha</string>
   <!-- Preference for not taking the short survey. -->
   <string name="preferences_not_take_survey">mi wile ala</string>
   <!--
@@ -1066,7 +1066,7 @@
   <!-- Text shown for settings option for sign with email -->
   <string name="sign_in_with_email">o kepeken nimi nasin pi poki lipu</string>
   <!-- Text shown for settings option for create new account text.'Firefox' intentionally hardcoded here. -->
-  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[sina jo ala e sijelo anu seme? <u>o open e sijelo</u> tawa ni: sina ken sama e ilo sina lon nasin Firefox.]]></string>
+  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[sina jo ala e sijelo anu seme? <u>o open e sijelo</u> tawa ni: sina ken sama e ilo sina lon nasin Praha.]]></string>
   <!-- Text displayed that links to website about enhanced tracking protection -->
   <string name="preference_enhanced_tracking_protection_explanation_learn_more">o sona</string>
   <!-- Preference for enhanced tracking protection for the standard protection settings -->

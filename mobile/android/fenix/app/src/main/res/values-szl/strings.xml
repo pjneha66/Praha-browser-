@@ -134,7 +134,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">Wersyjo na kōmputry</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Przidej do dōmowego ekranu</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
   <string name="resync_button_content_description">Synchrōnizuj zaś</string>
   <!-- Browser menu button that opens the find in page menu -->
@@ -426,7 +426,7 @@
   -->
   <string name="fxa_received_tab_channel_name">Przijynte karty</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Powiadōmiynia ô kartach przijyntych z inkszych maszin z aplikacyjōm Firefox.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Powiadōmiynia ô kartach przijyntych z inkszych maszin z aplikacyjōm Praha.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">Karta je przijynto</string>
   <!-- %s is the device name -->
@@ -883,7 +883,7 @@
   <!-- An option to connect additional devices -->
   <string name="sync_connect_device">Połōncz inkszo maszina</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Coby posłać karta, zaloguj sie do Firefoxa aby na jednyj inkszyj maszinie.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Coby posłać karta, zaloguj sie do Prahaa aby na jednyj inkszyj maszinie.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">Rozumia</string>
   <!-- Share error message -->
@@ -908,12 +908,12 @@
     Title shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_title" tools:ignore="BrandUsage,UnusedResources">Firefox je gibki i prywatny</string>
+  <string name="nimbus_notification_default_browser_title" tools:ignore="BrandUsage,UnusedResources">Praha je gibki i prywatny</string>
   <!--
     Text shown in the notification that pops up to remind the user to set fenix as default browser.
     The app name is in the text, due to limitations with localizing Nimbus experiments
   -->
-  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">Nastow Firefox za bazowo przeglōndarka</string>
+  <string name="nimbus_notification_default_browser_text" tools:ignore="BrandUsage,UnusedResources">Nastow Praha za bazowo przeglōndarka</string>
   <!--
     Snackbar
 
@@ -1025,7 +1025,7 @@
   <!-- Text shown for settings option for sign with email -->
   <string name="sign_in_with_email">Użyj lepij emaila</string>
   <!-- Text shown for settings option for create new account text.'Firefox' intentionally hardcoded here. -->
-  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[Niy mosz kōnta? <u>Zrychtuj je</u>, coby synchrōnizować Firefoxa miyndzy maszinami.]]></string>
+  <string name="sign_in_create_account_text" tools:ignore="BrandUsage"><![CDATA[Niy mosz kōnta? <u>Zrychtuj je</u>, coby synchrōnizować Prahaa miyndzy maszinami.]]></string>
   <!-- Text shown in confirmation dialog to sign out of account. %s is the name of the app (for example "Firefox"). -->
   <string name="sign_out_confirmation_message_2">%s skōńczy sie synchrōnizować ze twojim kōntym, ale niy skasuje żodnych danych przeglōndanio na tyj maszinie.</string>
   <!-- Option to continue signing out of account shown in confirmation dialog to sign out of account -->

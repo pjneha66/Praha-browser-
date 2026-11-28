@@ -133,7 +133,8 @@ class SearchEngineFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragm
 
         val showSponsoredSuggestionsPreference =
             requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_sponsored_suggestions).apply {
-                isChecked = context.components.settings.showSponsoredSuggestions
+                isVisible = false
+                isChecked = false
                 summary =
                     getString(
                         R.string.preferences_show_sponsored_suggestions_summary,

@@ -9,7 +9,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import org.mozilla.experiments.nimbus.NimbusInterface
 import org.mozilla.experiments.nimbus.internal.FirefoxLabsEnrollStatus
-import org.mozilla.experiments.nimbus.internal.PrahaLabsMetadata
+import org.mozilla.experiments.nimbus.internal.FirefoxLabsMetadata
 import org.mozilla.experiments.nimbus.internal.FirefoxLabsUnenrollStatus
 import org.praha.praha.nimbus.TestNimbusApi
 
@@ -20,7 +20,7 @@ import org.praha.praha.nimbus.TestNimbusApi
  */
 internal class FakeNimbusApi(
     context: Context,
-    private val labsProvider: () -> List<PrahaLabsMetadata> = { emptyList() },
+    private val labsProvider: () -> List<FirefoxLabsMetadata> = { emptyList() },
     private val enrolledSlugs: MutableList<String> = mutableListOf(),
     private val unenrolledSlugs: MutableList<String> = mutableListOf(),
     private val enrollStatusProvider: () -> FirefoxLabsEnrollStatus = { FirefoxLabsEnrollStatus.ENROLLED },
@@ -39,7 +39,7 @@ internal class FakeNimbusApi(
         unregisteredObservers.add(observer)
     }
 
-    override fun getAvailableFirefoxLabs(): Deferred<List<PrahaLabsMetadata>> = CompletableDeferred(labsProvider())
+    override fun getAvailableFirefoxLabs(): Deferred<List<FirefoxLabsMetadata>> = CompletableDeferred(labsProvider())
 
     override fun enrollInFirefoxLab(slug: String): Deferred<FirefoxLabsEnrollStatus> {
         enrolledSlugs.add(slug)

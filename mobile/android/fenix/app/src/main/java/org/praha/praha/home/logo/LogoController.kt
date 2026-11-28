@@ -5,7 +5,7 @@
 package org.praha.praha.home.logo
 
 import android.content.Context
-import org.praha.praha.longfox.LongFoxFeatureApi
+import org.mozilla.fenix.longfox.LongFoxFeatureApi
 
 /** Controller for launching the LongFox feature. */
 class LogoController(

@@ -131,7 +131,7 @@ import org.praha.praha.historymetadata.DefaultHistoryMetadataService
 import org.praha.praha.historymetadata.HistoryMetadataMiddleware
 import org.praha.praha.historymetadata.HistoryMetadataService
 import org.praha.praha.home.topsites.FenixDefaultTopSitesProvider
-import org.praha.praha.longfox.LongFoxFeature
+import org.mozilla.fenix.longfox.LongFoxFeature
 import org.praha.praha.media.MediaSessionService
 import org.praha.praha.nimbus.BaselineFpp
 import org.praha.praha.nimbus.FingerprintingProtection
@@ -269,6 +269,14 @@ class Core(
             )
             .also {
                 WebCompatFeature.install(it)
+                it.installBuiltInWebExtension(
+                    id = "uBlock0@raymondhill.net",
+                    url = "resource://android/assets/extensions/ublock/",
+                )
+                it.installBuiltInWebExtension(
+                    id = "media-downloader@prahabrowser.org",
+                    url = "resource://android/assets/extensions/media-downloader/",
+                )
             }
     }
 
@@ -392,7 +400,7 @@ class Core(
                 ),
                 RecordingDevicesMiddleware(context, context.components.notificationsDelegate, applicationScope),
                 PromptMiddleware(applicationScope),
-                AdsTelemetryMiddleware(adsTelemetry),
+                // AdsTelemetryMiddleware(adsTelemetry), // Disabled: No partner ads telemetry
                 LastMediaAccessMiddleware(),
                 HistoryMetadataMiddleware(historyMetadataService),
                 ProtectionsDashboardMiddleware(protectionsStorage),
@@ -439,13 +447,12 @@ class Core(
                 // Install the "icons" WebExtension to automatically load icons for every visited website.
                 icons.install(engine, this)
 
-                applicationScope.launch {
-                    val providerList = serpTelemetryRepository.updateProviderList()
-                    // Install the "ads" WebExtension to get the links in an partner page.
-                    adsTelemetry.install(engine, this@apply, providerList)
-                    // Install the "cookies" WebExtension and tracks user interaction with SERPs.
-                    searchTelemetry.install(engine, this@apply, providerList)
-                }
+                // Disabled: No partner ads or search tracking WebExtensions injected
+                // applicationScope.launch {
+                //     val providerList = serpTelemetryRepository.updateProviderList()
+                //     adsTelemetry.install(engine, this@apply, providerList)
+                //     searchTelemetry.install(engine, this@apply, providerList)
+                // }
 
                 WebNotificationFeature(
                     context,

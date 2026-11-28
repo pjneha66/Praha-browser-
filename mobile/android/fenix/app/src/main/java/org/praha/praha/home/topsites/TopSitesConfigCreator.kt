@@ -42,8 +42,8 @@ internal fun getTopSitesConfig(
                 },
             providerConfig =
                 TopSitesProviderConfig(
-                    showProviderTopSites = settings.showContileFeature,
-                    limit = limit,
+                    showProviderTopSites = false,
+                    limit = 0,
                     maxThreshold = TOP_SITES_PROVIDER_MAX_THRESHOLD,
                     providerFilter = { topSite ->
                         when (store.state.search.selectedOrDefaultSearchEngine?.name) {

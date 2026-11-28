@@ -577,7 +577,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
 
                 resources.getString(R.string.pref_key_firefox_labs) -> {
                     SettingsMetrics.firefoxLabs.record()
-                    SettingsFragmentDirections.actionSettingsFragmentToPrahaLabsFragment()
+                    SettingsFragmentDirections.actionSettingsFragmentToFirefoxLabsFragment()
                 }
 
                 resources.getString(R.string.pref_key_sync_debug) -> {
@@ -751,9 +751,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
         val preferenceAmoCollectionOverride =
             findPreference<Preference>(getPreferenceKey(R.string.pref_key_override_amo_collection))
 
-        val show =
-            (customExtensionCollectionFeature &&
-                (settings.amoCollectionOverrideConfigured() || settings.showSecretDebugMenuThisSession))
+        val show = true
         preferenceAmoCollectionOverride?.apply {
             isVisible = show
             summary = settings.overrideAmoCollection.ifEmpty { null }
@@ -898,7 +896,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment 
     @VisibleForTesting
     internal fun setupInstallAddonFromFilePreference(settings: Settings) {
         with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
-            isVisible = settings.showSecretDebugMenuThisSession
+            isVisible = true
         }
     }
 

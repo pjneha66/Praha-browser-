@@ -1,24 +1,98 @@
-{
-  "data": [
-    {
-      "url": "https://www.google.com/",
-      "order": 0,
-      "title": "Google",
-      "schema": 1,
-      "exclude_locales": [],
-      "exclude_regions": [
-        "CN",
-        "RU",
-        "TR",
-        "KZ",
-        "BY"
-      ],
-      "include_locales": [],
-      "include_regions": [],
-      "exclude_experiments": [],
-      "include_experiments": [],
-      "id": "",
-      "last_modified": 1
-    }
-  ]
-}
+[
+  {
+    "id": 100,
+    "title": "Media Hub",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html",
+    "order": 0
+  },
+  {
+    "id": 101,
+    "title": "OSINT4ALL",
+    "url": "https://start.me/p/L1rEYQ/osint4all",
+    "order": 1
+  },
+  {
+    "id": 102,
+    "title": "BeckyFinds",
+    "url": "https://pjneha66.github.io/beckyfinds/",
+    "order": 2
+  },
+  {
+    "id": 103,
+    "title": "FMHY",
+    "url": "https://fmhy.net/",
+    "order": 3
+  },
+  {
+    "id": 104,
+    "title": "YouTube",
+    "url": "https://www.youtube.com/",
+    "order": 4
+  },
+  {
+    "id": 105,
+    "title": "YT Music",
+    "url": "https://music.youtube.com/",
+    "order": 5
+  },
+  {
+    "id": 106,
+    "title": "Movies & Series",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#movies",
+    "order": 6
+  },
+  {
+    "id": 107,
+    "title": "Anime & Toons",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#anime",
+    "order": 7
+  },
+  {
+    "id": 108,
+    "title": "Comics Hub",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#comics",
+    "order": 8
+  },
+  {
+    "id": 109,
+    "title": "Manga Hub",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#manga",
+    "order": 9
+  },
+  {
+    "id": 110,
+    "title": "Books & Novels",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#books",
+    "order": 10
+  },
+  {
+    "id": 111,
+    "title": "K-Drama Hub",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#drama",
+    "order": 11
+  },
+  {
+    "id": 112,
+    "title": "Sports & Live TV",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#sports",
+    "order": 12
+  },
+  {
+    "id": 113,
+    "title": "Movie Downloads",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#downloads",
+    "order": 13
+  },
+  {
+    "id": 114,
+    "title": "BeckyFinds Vault",
+    "url": "https://pjneha66.github.io/beckyfinds/hub.html#beckyfinds",
+    "order": 14
+  },
+  {
+    "id": 115,
+    "title": "Archive",
+    "url": "https://archive.org/",
+    "order": 15
+  }
+]

@@ -47,6 +47,30 @@ class FenixDefaultTopSitesProvider(
         val region = browserStore.state.search.region?.current ?: RegionState.Default.current
         val experiments = experiments()
 
+        val osint4all = TopSite.Default(
+            id = 1001L,
+            title = "OSINT4ALL",
+            url = "https://start.me/p/L1rEYQ/osint4all",
+            createdAt = null,
+        )
+
+        val beckyfinds = TopSite.Default(
+            id = 1002L,
+            title = "BeckyFinds",
+            url = "https://pjneha66.github.io/beckyfinds/",
+            createdAt = null,
+        )
+
+        val fmhy = TopSite.Default(
+            id = 1003L,
+            title = "FMHY",
+            url = "https://fmhy.net/",
+            createdAt = null,
+        )
+
+        val customSites = listOf(osint4all, beckyfinds, fmhy)
+        val customUrls = customSites.map { it.url }.toSet()
+
         val defaultSites =
             topSitesList(region = region, experiments = experiments).map {
                 TopSite.Default(
@@ -57,7 +81,8 @@ class FenixDefaultTopSitesProvider(
                 )
             }
 
-        return with(blocklistHandler) { defaultSites.filteredByBlocklist() }
+        val combined = customSites + defaultSites.filter { it.url !in customUrls }
+        return with(blocklistHandler) { combined.filteredByBlocklist() }
     }
 
     private suspend fun topSitesList(region: String, experiments: Set<String>): List<DefaultTopSiteItem> {

@@ -8,12 +8,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
@@ -21,20 +21,23 @@ import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.praha.praha.R
 import org.praha.praha.home.ui.HomepageTestTag.HOMEPAGE_WORDMARK_LOGO
 import org.praha.praha.home.ui.HomepageTestTag.HOMEPAGE_WORDMARK_TEXT
+import org.praha.praha.theme.PrahaTheme
 
 /** Semantic property for accessing a Composable item's current resource property. */
 internal val ResourceId = SemanticsPropertyKey<Int>("ResourceId")
 internal var SemanticsPropertyReceiver.resourceId by ResourceId
 
-private val LOGO_HEIGHT = 40.dp
-private val LOGO_PADDING = 10.dp
+private val LOGO_HEIGHT = 42.dp
+private val LOGO_PADDING = 12.dp
 
 /**
- * The Firefox logo followed by the Firefox wordmark.
+ * The Praha logo followed by the Praha wordmark.
  *
  * @param wordmarkTextColor Tint applied to the wordmark text, or null to leave it untinted.
  * @param modifier [Modifier] to be applied to the layout.
@@ -61,25 +64,26 @@ internal fun Logo() {
                 .semantics {
                     testTagsAsResourceId = true
                     testTag = HOMEPAGE_WORDMARK_LOGO
-                    resourceId = R.attr.fenixWordmarkLogo
+                    resourceId = R.drawable.ic_launcher_foreground
                 }
                 .padding(end = LOGO_PADDING),
-        painter = painterResource(getAttr(R.attr.fenixWordmarkLogo)),
-        contentDescription = null,
+        painter = painterResource(R.drawable.ic_launcher_foreground),
+        contentDescription = stringResource(R.string.app_name),
     )
 }
 
 @Composable
 internal fun Wordmark(color: Color?) {
-    Image(
+    Text(
+        text = "Praha",
+        style = MaterialTheme.typography.headlineMedium,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 0.5.sp,
+        color = color ?: MaterialTheme.colorScheme.onSurface,
         modifier =
             Modifier.semantics {
-                    testTagsAsResourceId = true
-                    testTag = HOMEPAGE_WORDMARK_TEXT
-                }
-                .height(dimensionResource(R.dimen.wordmark_text_height)),
-        painter = painterResource(getAttr(R.attr.fenixWordmarkText)),
-        colorFilter = color?.let { ColorFilter.tint(it) },
-        contentDescription = stringResource(R.string.app_name),
+                testTagsAsResourceId = true
+                testTag = HOMEPAGE_WORDMARK_TEXT
+            },
     )
 }

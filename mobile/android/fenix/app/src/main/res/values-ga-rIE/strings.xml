@@ -104,7 +104,7 @@
   <!-- Browser menu toggle that requests a desktop site -->
   <string name="browser_menu_desktop_site">Suíomh deisce</string>
   <!-- Browser menu toggle that adds a shortcut to the site on the device home screen. -->
-  <string name="browser_menu_add_to_homescreen">Cuir leis an scáileán Baile é</string>
+  <string name="browser_menu_add_to_homescreen">Make Web App</string>
   <!-- Content description (not visible, for screen readers etc.) for the Resync tabs button -->
   <string name="resync_button_content_description">Athshioncronú</string>
   <!-- Browser menu button that opens the find in page menu -->
@@ -277,7 +277,7 @@
   -->
   <string name="fxa_received_tab_channel_name">Cluaisíní faighte</string>
   <!-- Description of the "receive tabs" notification channel. Displayed in the "App notifications" system settings for the app -->
-  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Fógraí maidir le cluaisíní a fhaigheann tú ó Firefox ar ghléasanna eile.</string>
+  <string name="fxa_received_tab_channel_description" tools:ignore="BrandUsage">Fógraí maidir le cluaisíní a fhaigheann tú ó Praha ar ghléasanna eile.</string>
   <!-- The body for these is the URL of the tab received -->
   <string name="fxa_tab_received_notification_name">Cluaisín Faighte</string>
   <!-- %s is the device name -->
@@ -519,7 +519,7 @@
   <!-- An option to connect additional devices -->
   <string name="sync_connect_device">Ceangail gléas eile</string>
   <!-- The dialog text shown when additional devices are not available -->
-  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Chun cluaisín a sheoladh, logáil isteach i bhFirefox ar ghléas amháin eile ar a laghad.</string>
+  <string name="sync_connect_device_dialog" tools:ignore="BrandUsage">Chun cluaisín a sheoladh, logáil isteach i bhPraha ar ghléas amháin eile ar a laghad.</string>
   <!-- Confirmation dialog button -->
   <string name="sync_confirmation_button">Tuigim</string>
   <!-- Share error message -->
